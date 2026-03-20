@@ -3,7 +3,7 @@
     user-select: none;
 }
 
-.productcardcontainer{
+.productCardContainer{
     padding: 0.5rem;
     display: flex;
     justify-content: flex-start;
