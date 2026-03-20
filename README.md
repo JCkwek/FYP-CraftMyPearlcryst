@@ -1,10 +1,8 @@
-Frontend
-To run-> npm start
-To install
-- npm install react-router-dom (for router)
+1. Frontend
+- npm start (run)
+- npm install react-router-dom (install for router)
 
-Backend
-To run-> npm run dev
-To install
+2. Backend
+- npm run dev (run)
 - npm install express
 - npm install --save-dev nodemon
