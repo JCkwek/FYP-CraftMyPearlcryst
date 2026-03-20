@@ -1,0 +1,12 @@
+.products{
+    padding: 0.5rem;
+    user-select: none;
+}
+
+.productcardcontainer{
+    padding: 0.5rem;
+    display: flex;
+    justify-content: flex-start;
+    gap: 0.2rem;
+    /* background-color: purple; */
+}

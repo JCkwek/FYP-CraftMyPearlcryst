@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display&family=Poppins&display=swap');
+
+.topNav{
+    padding: 0.8rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    grid-area: topnav;
+    align-items: center;
+    letter-spacing: 0.5px;
+    font-style: italic;
+    font-family: 'Playfair Display', serif;
+    background-color: #D8A7B1;
+    color: white;
+}

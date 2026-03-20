@@ -1,0 +1,32 @@
+.productCard{
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    background-color: white;
+    width: 10rem;
+    height: 15rem;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.productCard:hover {
+    transform: scale(1.05); /* slightly enlarge */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* stronger shadow */
+    cursor: pointer;
+}
+
+.productCardImageContainer{
+    padding: 0.5rem;
+    width: 9rem;
+    height: 9rem;
+    background-color: white;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* border: solid 1px; */
+}
+

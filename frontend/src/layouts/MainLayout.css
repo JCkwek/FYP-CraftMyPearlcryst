@@ -1,0 +1,29 @@
+.mainlayout{
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 8rem 1fr;
+     grid-template-areas:
+        "topnav topnav"
+        "sidenav content";
+    height: 100vh;
+    overflow: hidden; /* stops the whole page from scrolling */
+}
+
+.contentContainer {
+    grid-area: content;
+    padding: 0.4rem;
+    background-color: #e7e4e4; 
+    /* background-color: white; */
+    overflow: hidden;
+    height: 100vh;
+}
+
+.contentCard {
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    min-height: 100%;
+    box-shadow: 0 4px 12px rgba(0.5, 0.5, 0.5, 0.5);
+    overflow-y: auto;
+    height: 100vh;
+}

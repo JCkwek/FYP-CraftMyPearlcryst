@@ -1,0 +1,36 @@
+.sideNav{
+    padding: 1rem 0;
+    grid-area: sidenav;
+    box-shadow: 8px 0 15px -5px rgba(0, 0, 0, 0.1);
+    border: 1px solid #eee;
+}
+
+.sideNavTabContainer{
+    padding: 0.5rem 0;
+    display: flex;
+    justify-content:center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sideNavTab{
+    text-decoration: none;
+    color: black;
+    padding: 0.5rem 1rem;
+    width: 100%;
+    display: block;
+    transition: background-color 0.2s ease;
+    cursor: pointer;      
+    user-select: none; 
+}
+
+.sideNavTab:hover{
+    background-color: #eee;
+}
+
+.sideNavTab.active{
+    background-color: #d8a7b1;
+    color: white;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
