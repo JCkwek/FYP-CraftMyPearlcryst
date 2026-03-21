@@ -2,6 +2,8 @@ import style from './Home.module.css';
 import {useState, useEffect} from 'react';
 import Banner from '../components/Banner';
 import { getBanners } from '../api/bannerApi';
+import WelcomeSection from '../components/WelcomeSection';
+import SpecialtiesSection from '../components/SpecialtiesSection';
 
 
 function Home(){
@@ -26,8 +28,8 @@ return(
       <div className={style.home}>
         <Banner banners={banners} />
         <div className={style.homeContainer}>
-          <h1>Home</h1>
-          <p>Pearlcryst</p>
+          <WelcomeSection />
+          <SpecialtiesSection />
         </div>
    
       </div>

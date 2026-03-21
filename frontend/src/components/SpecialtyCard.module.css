@@ -1,0 +1,9 @@
+.specialtyCardContainer{
+    padding: 1rem;
+    align-items: center;
+    border: solid  1px;
+    width: 13rem;
+    height: 15rem;
+    border-radius: 1rem;
+    
+}
