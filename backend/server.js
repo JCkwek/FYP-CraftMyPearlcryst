@@ -13,11 +13,12 @@ app.use('/uploads', express.static('uploads'));
 // Routes
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
+const bannerRoutes = require('./routes/bannerRoutes');
 
 // Mount routes
 app.use('/users', userRoutes);
 app.use('/products', productRoutes);
-
+app.use('/banners',bannerRoutes);
 
 const sequelize = require('./models/db');
 

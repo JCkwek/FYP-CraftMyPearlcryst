@@ -1,4 +1,8 @@
 .home{
-    padding: 0.5rem;
+    /* padding: 0.5rem; */
     /* background-color: aqua; */
+}
+
+.homeContainer{
+    padding: 1rem;
 }

@@ -1,5 +1,4 @@
 import styles from './ProductCard.module.css' 
-import { Link } from 'react-router-dom';
 
 function ProductCard({product}){
      if (!product) return null;
