@@ -27,10 +27,30 @@ const Product = sequelize.define('Product', {
   product_availability: {
     type: DataTypes.BOOLEAN,
     defaultValue: true
+  },
+
+  product_type: {
+    type: DataTypes.STRING(100),
+    allowNull: true
+  },
+  product_material: {
+    type: DataTypes.STRING(100),
+    allowNull: true
+  },
+  created_at: {
+  type: DataTypes.DATE,
+  defaultValue: DataTypes.NOW
+  },
+  updated_at: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
   }
+
 }, {
   tableName: 'products',
-  timestamps: false
+  timestamps: true,
+  createdAt: 'created_at',   
+  updatedAt: 'updated_at'
 });
 
 module.exports = { Product };

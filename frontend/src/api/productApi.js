@@ -2,12 +2,13 @@ import axios from 'axios';
 
 const BASE_URL = 'http://localhost:3000'; // backend URL
 
-export const getProducts = async () => {
-  const res = await axios.get(`${BASE_URL}/products`);
+export const getProducts = async ({query, type, onlyAvailable}) => {
+  const params = new URLSearchParams();
+  if (query) params.append('q', query);
+  if (type) params.append('type', type);
+  if (onlyAvailable) params.append('available', 'true');
+
+  const res = await axios.get(`${BASE_URL}/products?${params.toString()}`);
   return res.data; //returns array of products
 };
 
-export const searchProducts = async (query) =>{
-  const res = await axios.get(`${BASE_URL}/products?q=${query}`);
-  return res.data;
-}

@@ -2,6 +2,7 @@
   width: 100%;
   height: 22rem; /* fixed height */
   overflow: hidden;
+  border-radius: 0.5rem 0.5rem 0 0;
 }
 
 /* Make sure images fill the container */
@@ -11,3 +12,7 @@
   object-fit: cover;
   object-position: center;
 }
+
+/* .carousel h3{
+    color: black;
+} */

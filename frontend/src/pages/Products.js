@@ -1,6 +1,6 @@
 import style from "./Products.module.css";
 import {useState, useEffect} from 'react';
-import { getProducts, searchProducts } from '../api/productApi';
+import { getProducts } from '../api/productApi';
 import ProductCard from "../components/ProductCard";
 import SearchBar from "../components/SearchBar";
 
@@ -13,10 +13,13 @@ function Products(){
         fetchProducts();
     },[]);
 
-    const fetchProducts = async () => {
+    const fetchProducts = async (searchValue = '') => {
         try{
             setLoading(true);
-            const res = await getProducts();
+            const res = await getProducts({
+                query: searchValue,
+                onlyAvailable: true
+            });
             console.log(res);
             setProducts(res);
         }catch(err){
@@ -27,16 +30,7 @@ function Products(){
     };
 
     const handleSearch = async () =>{
-        try{
-            if(!search){
-                fetchProducts(); //if no search input, show all
-                return;
-            }
-            const res = await searchProducts(search);
-            setProducts(res);
-        }catch(err){
-            console.error("Search product error:", err);
-        }
+        fetchProducts(search);     
     };
 
 

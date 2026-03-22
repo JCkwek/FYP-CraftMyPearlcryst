@@ -14,7 +14,7 @@ function Banner({banners}){
                 />
                 <Carousel.Caption>
                     <h3>{banner.title}</h3>
-                    <p>Some description</p>
+                    {/* <p>Some description</p> */}
                 </Carousel.Caption>
                 </Carousel.Item>
             ))}

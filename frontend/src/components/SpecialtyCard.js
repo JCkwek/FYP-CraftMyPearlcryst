@@ -3,9 +3,11 @@ import styles from './SpecialtyCard.module.css';
 function SpecialtyCard({icon, title, desc}){
     return(
         <div className={styles.specialtyCardContainer}>
-            <div>{icon}</div>
-            <h4>{title}</h4>
-            <p>{desc}</p>
+            <div className={styles.specialtyCardIcon}>{icon}</div>
+            <div className={styles.specialtyCardInfo}>
+                <h5>{title}</h5>
+                <p>{desc}</p>
+            </div>
         </div>
     )
 }

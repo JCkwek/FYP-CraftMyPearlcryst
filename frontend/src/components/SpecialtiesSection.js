@@ -1,23 +1,23 @@
 import styles from './SpecialtiesSection.module.css'
 import SpecialtyCard from './SpecialtyCard'
-import { FaGem, FaMagic, FaCrown } from 'react-icons/fa';
+import { FaGem, FaMagic, FaCircle } from 'react-icons/fa';
 
 function SpecialtiesSection(){
     const specialties = [
         {
-            icon: <FaGem />,
+            icon: < FaCircle />,
             title: "Pear Jewelry",
             desc: "Elegant handcrafted designs using freshwater pearls."
         },
         {
-            icon: <FaCrown/>,
+            icon: <FaGem/>,
             title: "Crystal Designs",
             desc: "Unique crystal jewelry with modern and timeless styles."
         },
         {
             icon: <FaMagic />,
             title: "Custom Creation",
-            desc: "Customize our existing jewelry or design your own piece with our AI assistance"
+            desc: "Customize our jewelry or design your own with our AI assistance"
         }
     ];
 

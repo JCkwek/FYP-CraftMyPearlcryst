@@ -9,7 +9,6 @@
     overflow: hidden; /* stops the whole page from scrolling */
 }
 
-
 .contentContainer {
     grid-area: content;
     padding: 0.4rem;
@@ -17,7 +16,6 @@
     height: 100%;
     overflow-y: auto;
 }
-
 
 .contentCard {
     background-color: white;

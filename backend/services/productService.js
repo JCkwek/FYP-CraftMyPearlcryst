@@ -1,20 +1,28 @@
 const { Product } = require('../models/productModel');
-const {Op} = require('sequelize');
+const {Op, where} = require('sequelize');
 
-const getProducts = async (query) => {
-     console.log("QUERY:", query);
-    if(query){
-        //search
-        return await Product.findAll({
-            where: {
-                product_name: {
-                    [Op.like]: `%${query}%`
-                }
-            }
-        });
+const getProducts = async ({ query, type, onlyAvailable }) => {
+    let whereClause = {};
+
+    // search
+    if (query) {
+        whereClause.product_name = {
+            [Op.like]: `%${query}%`
+        };
     }
-    //default return all
-  return await Product.findAll();
-};
 
-module.exports = { getProducts };
+    // filter by type (bracelet, necklace, etc.)
+    if (type) {
+        whereClause.product_type = type;
+    }
+
+    // availability filter
+    if (onlyAvailable === true) {
+        whereClause.product_availability = true;
+    }
+
+    return await Product.findAll({
+        where: whereClause
+    });
+};
+module.exports = { getProducts};
