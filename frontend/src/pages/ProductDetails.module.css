@@ -1,0 +1,8 @@
+.productDetails{
+    padding: 1rem;
+}
+.productDetailsContentContainer{
+    padding: 2rem;
+    display: flex;
+    justify-content:space-evenly;
+}

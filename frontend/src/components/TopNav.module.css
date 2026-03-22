@@ -10,4 +10,7 @@
     font-family: 'Playfair Display', serif;
     background-color: #D8A7B1;
     color: white;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
 }

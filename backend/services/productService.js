@@ -26,5 +26,8 @@ const getProducts = async ({ query, type, onlyAvailable, limit, latest }) => {
     });
 };
 
+const getProductById = async (id) => {
+    return await Product.findByPk(id);
+};
 
-module.exports = { getProducts};
+module.exports = { getProducts, getProductById };

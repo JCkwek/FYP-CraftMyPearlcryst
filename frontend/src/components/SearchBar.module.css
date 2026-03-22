@@ -10,6 +10,12 @@
   border: 1px solid #eee;
 }
 
+.searchBarContainer:hover,
+.searchBarContainer:focus-within{
+  border: 1px solid #cfcece ;
+  box-shadow: 0 0 6px rgba(207, 206, 206, 0.6);
+}
+
 .searchInput {
   border: none;
   outline: none;

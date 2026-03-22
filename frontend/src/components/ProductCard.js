@@ -1,10 +1,20 @@
 import styles from './ProductCard.module.css' 
+import { useNavigate } from 'react-router-dom';
 
 function ProductCard({product}){
+    const navigate = useNavigate();
+
      if (!product) return null;
 
+     const handleClick = () => {
+        navigate(`/products/${product.product_id}`); 
+     }
+
     return(
-        <div className={styles.productCard}>
+        <div 
+            className={styles.productCard}
+            onClick={handleClick}
+            >
             <div className={styles.productCardImageContainer}>
                 {product.product_image && (
                     <img
@@ -17,7 +27,6 @@ function ProductCard({product}){
             <div className={styles.productCardDetails}>
                 <h6>{product.product_name}</h6>
                 <p>RM {product.product_price}</p>
-            {/* <p>{product.product_desc}</p> */}
             </div>
         </div>
     )

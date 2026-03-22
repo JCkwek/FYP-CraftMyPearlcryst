@@ -18,4 +18,21 @@ const getProducts = async (req, res) => {
     }
 };
 
-module.exports = { getProducts };
+const getProductById = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const product = await productService.getProductById(id);
+
+        if (!product) {
+            return res.status(404).json({ message: "Error fetching product details" });
+        }
+
+        res.json(product);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Server error" });
+    }
+}
+
+module.exports = { getProducts, getProductById};
