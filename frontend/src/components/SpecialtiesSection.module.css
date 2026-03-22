@@ -7,4 +7,6 @@
     padding: 1rem;
     display: flex;
     justify-content: space-evenly;
+    gap: 1rem;
+    flex-wrap: wrap;
 }

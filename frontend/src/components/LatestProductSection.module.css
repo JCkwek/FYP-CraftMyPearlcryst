@@ -1,0 +1,41 @@
+.latestProductContainer{
+    padding: 1rem;
+    text-align: center;
+}
+
+.latestProductColumnContainer{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+.productCardContainer{
+    padding: 1rem;
+    display: flex;
+    justify-content: space-evenly;
+    gap: 1rem; 
+    width: 75%;
+    flex-wrap: wrap;
+}
+
+.viewMoreContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    margin: 1rem;
+}
+
+.viewMoreBtn {
+    padding: 0.6rem 1.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    background-color: #D8A7B1; /* your pink */
+    color: white;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.viewMoreBtn:hover {
+    background-color: #c48f9a;
+}
+
