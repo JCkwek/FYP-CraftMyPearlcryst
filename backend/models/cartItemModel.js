@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
+const {Product} = require('./productModel');
 
 const CartItem = sequelize.define('CartItem', {
     cart_item_id: {
@@ -13,7 +14,8 @@ const CartItem = sequelize.define('CartItem', {
     },
     product_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {model: 'products', key: 'product_id'}
     },
     quantity: {
         type: DataTypes.INTEGER,
@@ -24,4 +26,6 @@ const CartItem = sequelize.define('CartItem', {
     timestamps: false
 });
 
-module.exports = CartItem;
+CartItem.belongsTo(Product, { foreignKey: 'product_id' });
+Product.hasMany(CartItem, { foreignKey: 'product_id' });
+module.exports = {CartItem};

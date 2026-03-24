@@ -5,10 +5,35 @@ import axios from 'axios';
 import BackButton from '../components/buttons/BackButton';
 import ProductInfo from '../components/productDetail/ProductInfo';
 import ProductImage from '../components/productDetail/ProductImage';
+import { useNavigate } from 'react-router-dom'; 
 
 function ProductDetails(){
+    const navigate = useNavigate();
     const { id } = useParams(); 
     const [product, setProduct] = useState(null);
+
+    const handleAddToCart = async () => {
+        const token = localStorage.getItem('token');
+        if(!token){
+            alert("Please login to add items to your cart. ");
+            navigate('/login');
+            return;
+        }
+
+        try{
+            await axios.post('http://localhost:3000/cart', {
+                productId: product.product_id,
+                quantity:1
+            }, {
+                headers:{ Authorization:`Bearer ${token}`}
+            });
+
+            alert("Added to cart successfully!");
+        }catch(err){
+            console.error("Error adding to cart:", err);
+            alert("Failed to add to cart.");
+        }
+    }
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -35,7 +60,7 @@ function ProductDetails(){
                     <ProductInfo product={product}/>
                     <div className={styles.productDetailsButtons}>
                         <button className={styles.customiseButton}>Customise</button>
-                        <button className={styles.addToCartButton}>Add To Cart</button>
+                        <button className={styles.addToCartButton} onClick={handleAddToCart}>Add To Cart</button>
                     </div>
                 </div>
             </div>

@@ -9,3 +9,28 @@
 .cartItemContainer{
     padding: 1rem;
 }
+
+.cartHeader{
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+}
+.cartItemHeader{
+    width: 60%;
+    text-align: center;
+}
+
+.cartQtyTotHeaderContainer{
+    width: 40%;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    gap: 1rem;
+    text-align: center;
+}
+.cartItemHeader{
+    width: 60%;
+}
+.cartQtyHeader{
+    width: 60%;
+}

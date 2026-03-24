@@ -18,6 +18,7 @@ const productRoutes = require('./routes/productRoutes');
 const bannerRoutes = require('./routes/bannerRoutes');
 const authRoutes = require("./routes/auth");
 const profileRoutes = require('./routes/profileRoutes');
+const cartRoutes = require('./routes/cartRoute');
 
 // Mount routes
 app.use('/users', userRoutes);
@@ -25,6 +26,7 @@ app.use('/products', productRoutes);
 app.use('/banners',bannerRoutes);
 app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
+app.use('/cart', cartRoutes);
 
 const sequelize = require('./db');
 
