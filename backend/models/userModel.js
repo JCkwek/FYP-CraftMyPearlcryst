@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('./db');
+const sequelize = require('../db');
 
 const User = sequelize.define('User', {
  user_id: {
@@ -25,7 +25,7 @@ const User = sequelize.define('User', {
   },
   user_type: {
     type: DataTypes.STRING,
-    defaultValue: 'user'
+    defaultValue: 'customer'
   }
 }, {
   tableName: 'users',
