@@ -14,3 +14,24 @@
     display: flex;
     justify-content: space-between;
 }
+
+.topNavButtonsContainer{
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.topNavButton{
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    user-select: none;
+    background-color: transparent;
+}
+
+.topNavButtonIcon{
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: white;
+}

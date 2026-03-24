@@ -31,8 +31,15 @@ function ProductDetails(){
             <BackButton />
             <div className={styles.productDetailsContentContainer}>
                 <ProductImage product={product}/>
-                <ProductInfo product={product}/>
+                <div className={styles.productDetailsInfo}>
+                    <ProductInfo product={product}/>
+                    <div className={styles.productDetailsButtons}>
+                        <button className={styles.customiseButton}>Customise</button>
+                        <button className={styles.addToCartButton}>Add To Cart</button>
+                    </div>
+                </div>
             </div>
+
 
         </div>
     )

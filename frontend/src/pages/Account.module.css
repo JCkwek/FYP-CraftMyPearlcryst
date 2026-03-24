@@ -1,0 +1,59 @@
+.account{
+    padding: 1rem;
+    user-select: none;
+}
+
+.accountContentContainer{
+    padding: 1rem;
+}
+
+.loggedIn{
+    padding: 1rem;
+    text-align: center;
+}
+
+.logoutButton{
+    margin-top: 1rem;
+    padding: 0.5rem 1.5rem;
+    border: none;
+    background-color: #D8A7B1;
+    color: white;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.logoutButton:hover{
+    background-color: #ca99a3;
+}
+
+.accountSectionsContainer{
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+}
+.accountProfileSection{
+    padding: 1rem;
+    border-radius: 0.5rem;
+    width: 40rem;
+    color: white;
+    background-color: green;
+    cursor: pointer;
+}
+
+.accountOrdersSection{
+    padding: 1rem;
+    border-radius: 0.5rem;
+    width: 40rem;
+    color: white;
+    background-color: green;
+    cursor: pointer;
+}
+
+.accountOrdersSection:hover{
+    background-color: rgb(1, 103, 1);
+}
+
