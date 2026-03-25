@@ -1,5 +1,8 @@
-.cart{
-    padding: 1rem;
+.cart {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    user-select: none;
 }
 
 .cartContentContainer{
@@ -20,17 +23,68 @@
     text-align: center;
 }
 
-.cartQtyTotHeaderContainer{
-    width: 40%;
-    display: flex;
-    justify-content: center;
-    flex-direction: row;
+/* Define a shared grid: 
+   4fr (Item) | 1fr (Qty) | 1fr (Total) | 0.5fr (Delete) */
+.cartHeader, 
+:global(.cartItemCardContentContainer) { 
+    display: grid;
+    grid-template-columns: 4fr 1fr 1fr 0.5fr; 
+    align-items: center;
     gap: 1rem;
+    padding: 1rem 0;
+}
+
+.cartHeader {
+    border-bottom: 2px solid #e0e0e0;
+    margin-bottom: 1rem;
     text-align: center;
 }
-.cartItemHeader{
-    width: 60%;
+
+.cartItemHeader { 
+    text-align: left; 
+    padding-left: 1rem; 
 }
-.cartQtyHeader{
-    width: 60%;
+
+.cartQtyTotHeaderContainer {
+    display: contents; /* Allows children to behave as grid items */
+}
+
+.loadingContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+}
+/* summary */
+
+.cartSummary {
+    margin-top: 2rem;
+    padding: 2rem;
+    border-top: 2px solid #eee;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Push everything to the right */
+    gap: 1rem;
+}
+
+.grandTotalRow {
+    font-size: 1.2rem;
+    font-weight:bold;
+    display: flex;
+    gap: 2rem;
+}
+
+.checkoutBtn {
+    padding: 1rem 2rem;
+    background-color: #f0c14b; /* Gold/Yellow checkout style */
+    border: none;
+    color: white;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.checkoutBtn:hover {
+    background-color: #ddb347;
 }

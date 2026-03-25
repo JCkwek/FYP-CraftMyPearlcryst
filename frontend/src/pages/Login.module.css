@@ -24,7 +24,7 @@
     width: 30%;
     border-bottom: 1px solid black;
     outline: none;
-    /* background-color: yellow; */
+    text-align: center;
 }
 .loginFormInput input:hover{
     border-bottom: 1px solid #D8A7B1;

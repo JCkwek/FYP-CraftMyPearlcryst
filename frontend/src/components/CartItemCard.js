@@ -1,14 +1,17 @@
-import styles from './CartItemCard.module.css'
+import styles from './CartItemCard.module.css';
+// react-icons FaTrash . 
 
-function CartItemCard({item}){
+
+function CartItemCard({ item, onUpdateQty, onDelete }) {
     const product = item.Product;
-
     const itemPrice = parseFloat(product?.product_price) || 0;
     const itemTotal = (itemPrice * item.quantity).toFixed(2);
 
-    return(
+    return (
         <div className={styles.cartItemCardContainer}>
             <div className={styles.cartItemCardContentContainer}>
+                
+                {/* product details */}
                 <div className={styles.cardItemDetailsContainer}>
                     <div className={styles.cartItemImageContainer}>
                         <img 
@@ -18,12 +21,36 @@ function CartItemCard({item}){
                     </div>
                     <div className={styles.cartItemInfoContainer}>
                         <h4>{product?.product_name || `Product ID: ${item.product_id}`}</h4>
-                        <p>price: RM {itemPrice.toFixed(2)}</p>
+                        <p>RM {itemPrice.toFixed(2)}</p>
                     </div>
                 </div>
-                <div className={styles.cartItemQtyTotContainer}>
-                    <div className={styles.quantityContainer}><p>{item.quantity}</p></div>
-                    <div className={styles.totalContainer}><p>RM {itemTotal}</p></div>
+
+                {/* quantity */}
+                <div className={styles.quantityContainer}>
+                    <button
+                        className={styles.quantityUpdateButton} 
+                        onClick={() => onUpdateQty(item.product_id, 'decrement')}
+                        disabled={item.quantity <= 1}
+                    > - </button>
+                    <div className={styles.quantityTextContainer}>{item.quantity}</div>
+                    <button 
+                        className={styles.quantityUpdateButton}
+                        onClick={() => onUpdateQty(item.product_id, 'increment')}
+                    > + </button>
+                </div>
+
+                {/* total */}
+                <div className={styles.totalContainer}>RM {itemTotal}</div>
+
+                {/* delete */}
+                <div className={styles.deleteContainer}>
+                    <button 
+                        className={styles.deleteButton}
+                        onClick={() => onDelete(item.product_id)}
+                        title="Remove item"
+                    >
+                        &times;
+                    </button>
                 </div>
                 
             </div>

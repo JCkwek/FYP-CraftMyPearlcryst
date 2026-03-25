@@ -31,7 +31,7 @@ function Account() {
                 {!token ? (
                     <div className={styles.notLoggedIn}>
                         <p>
-                            Login to view your orders and manage your account
+                            Login to view your orders and manage your account.
                         </p>
 
                         <button

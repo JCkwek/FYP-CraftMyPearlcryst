@@ -12,7 +12,7 @@
     text-align: center;
 }
 
-.logoutButton{
+.loginButton, .logoutButton{
     margin-top: 1rem;
     padding: 0.5rem 1.5rem;
     border: none;
@@ -23,7 +23,7 @@
     user-select: none;
 }
 
-.logoutButton:hover{
+.loginButton:hover, .logoutButton:hover{
     background-color: #ca99a3;
 }
 

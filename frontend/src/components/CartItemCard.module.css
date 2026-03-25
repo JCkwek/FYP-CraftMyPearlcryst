@@ -1,61 +1,74 @@
-.cartItemCardContainer{
-    padding: 1rem;
+.cartItemCardContainer {
+    border-bottom: 1px solid #eee;
+    width: 100%;
 }
 
-.cartItemCardContentContainer{
-    height: 11rem;
-    display: flex;
-    justify-content: space-between;
+.cartItemCardContentContainer {
+    display: grid;
+    /* must match the Cart.js header grid exactly */
+    grid-template-columns: 4fr 1fr 1fr 0.5fr; 
+    align-items: center;
+    padding: 1rem 0;
+    gap: 1rem;
 }
 
-.cardItemDetailsContainer{
-    width: 60%;
+.cardItemDetailsContainer {
     display: flex;
-    justify-content: start;
+    align-items: center;
     gap: 1rem;
     padding: 0.5rem;
-    border: 1px solid;
     border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.cardItemDetailsContainer:hover{
+    transform: scale(1.05); 
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); 
 }
 
-.cartItemImageContainer{
-    padding: 1rem;
-    border: 1px solid;
+.cartItemImageContainer img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.quantityContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.quantityUpdateButton {
+    padding: 0.2rem 0.6rem;
+    cursor: pointer;
+    background: #f0f0f0;
+    border: 1px solid #ccc;
     border-radius: 0.5rem;
-    height: 10rem;
-    width: 9rem;
-    overflow: hidden;
+}
+
+.totalContainer {
+    text-align: center;
+    font-weight: 600;
+}
+
+.deleteContainer {
     display: flex;
     justify-content: center;
-    align-items: center;
 }
 
-.cartItemImageContainer img{
-    border-radius: 0.5rem;
-    height: 9rem;
-    width: 8rem;
+.deleteButton {
+    background: none;
+    border: none;
+    color: #ff4d4d;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s;
 }
 
-.cartItemInfoContainer{
-    padding: 1rem;
-    width: 27rem; 
-}
-
-.cartItemQtyTotContainer{
-    width: 40%;
-    display: flex;
-    justify-content: end;
-    flex-direction: row;
-    gap: 1rem;
-    padding: 1rem;
-}
-
-.quantityContainer{
-    padding: 1rem;
-    width: 60%;
-    text-align: center;
-}
-
-.totalContainer{
-    padding: 1rem;
+.deleteButton:hover {
+    transform: scale(1.2);
 }
