@@ -1,5 +1,4 @@
 import styles from './Cart.module.css';
-import BackButton from '../components/buttons/BackButton';
 import CartItemCard from '../components/CartItemCard';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -50,7 +49,6 @@ function Cart() {
     const handleDeleteItem = async (productId) => {
         try {
             const token = localStorage.getItem('token');
-            // You'll need to create this endpoint in your backend
             await axios.delete(`http://localhost:3000/cart/${productId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -67,9 +65,24 @@ function Cart() {
         return acc + (price * item.quantity);
     }, 0);
 
+    const handleCheckout = async () => {
+        try{
+            const token = localStorage.getItem('token');
+            const res = await axios.post('http://localhost:3000/orders/checkout', 
+                {cartItems},
+                {headers: {Authorization: `Bearer ${token}`}}
+            );
+            //redirect to stripe
+            if(res.data.url){
+                window.location.href = res.data.url;
+            }
+        }catch(err){
+            console.error("Checkout Error:", err);
+        }
+    }
+
     return (
         <div className={styles.cart}>
-            <BackButton />
             <div className={styles.cartContentContainer}>
                 <h2>Your Cart</h2>
                 <div className={styles.cartItemContainer}>
@@ -96,7 +109,7 @@ function Cart() {
                                     <span>Grand Total:</span>
                                     <span className={styles.grandTotalAmount}>RM {grandTotal.toFixed(2)}</span>
                                 </div>
-                                <button className={styles.checkoutBtn}>Proceed to Checkout</button>
+                                <button className={styles.checkoutBtn} onClick={handleCheckout}>Proceed to Checkout</button>
                             </div>
                         </>
                     ) : (

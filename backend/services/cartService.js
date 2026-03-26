@@ -1,4 +1,4 @@
-const  {CartItem}  = require('../models/cartItemModel');
+const {CartItem}  = require('../models/cartItemModel');
 const {Op, where} = require('sequelize');
 const { Product } = require('../models/productModel');
 
@@ -46,6 +46,21 @@ const updateQuantity = async (userId, productId, action) => {
     }
 };
 
-module.exports = {addToCart, getAllCartItem, updateQuantity}
+const deleteCartItem = async (userId, productId) => {
+    return await CartItem.destroy({
+        where: {
+            user_id: userId,
+            product_id: productId
+        }
+    });
+};
+
+const clearCart = async (userId) => {
+    return await CartItem.destroy({
+        where: {user_id: userId}
+    });
+};
+
+module.exports = {addToCart, getAllCartItem, updateQuantity, deleteCartItem ,clearCart}
 
 

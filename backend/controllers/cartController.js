@@ -79,6 +79,49 @@ const updateQuantity = async (req,res) => {
         res.status(500).json({error: "Failed to update cart item quantity"})
     }
 }
+
+const deleteCartItem = async (req,res) => {
+    try{
+        //get token
+        const authHeader = req.headers.authorization;
+        if(!authHeader){
+            return res.status(401).json({error: "No token provided"});
+        }
+        const token = authHeader.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log("Decoded Token:", decoded);
+
+        //set id from token
+        const userId = decoded.id;
+        
+        const {productId} = req.params;
+
+        await cartService.deleteCartItem(userId, productId);
+        res.status(200).json({message: "Item removed from cart"});
+    }catch(err){
+        res.status(500).json({error: err.message});
+    }
+}
+
+const clearCart = async (req, res) => {
+    try{
+        //get token
+        const authHeader = req.headers.authorization;
+        if(!authHeader){
+            return res.status(401).json({error: "No token provided"});
+        }
+        const token = authHeader.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log("Decoded Token:", decoded);
+        //set id from token
+        const userId = decoded.id;
+
+        await cartService.clearCart(userId);
+        res.json({message: "Cart cleared successfully"});
+    }catch(err){
+        res.status(500).json({error: "Failed to clear cart"});
+    }
+}
 module.exports = {
-    addToCart, getCart, updateQuantity
+    addToCart, getCart, updateQuantity,deleteCartItem, clearCart
 };
