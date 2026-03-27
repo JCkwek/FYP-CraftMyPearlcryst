@@ -1,6 +1,8 @@
-const { Order } = require('../models/orderModel');
-const { OrderItem } = require('../models/orderItemModel');
-const sequelize = require('../db');
+// const { Order } = require('../models/orderModel');
+// const { OrderItem } = require('../models/orderItemModel');
+// const sequelize = require('../db');
+const { Order, OrderItem, Product, sequelize } = require('../models');
+// const { get } = require('../routes/userRoutes');
 
 const createOrder = async (userId, cartItems, totalAmount, stripeSessionId) => {
     // Start a transaction to ensure both Order and OrderItems are saved together
@@ -44,7 +46,7 @@ const getOrdersByUserId = async (userId) => {
     return await Order.findAll({
         where: { user_id: userId },
         include: ['OrderItems'],
-        order: [['createdAt', DESC]]
+        order: [['createdAt', 'DESC']]
     });
 };
 
@@ -55,10 +57,26 @@ const getOrderDetails = async (orderId, userId) => {
     });
 };
 
+const getMyOrders = async (userId) => {
+    return await Order.findAll({
+        where: {user_id: userId},
+        include: [{
+            model: OrderItem,
+            as: 'OrderItems',
+            include: [{
+            model: Product,
+            as: 'Product'
+            }]
+        }],
+        order: [['createdAt', 'DESC']]
+    })
+}
+
 module.exports = {
     createOrder,
     updateOrderStatus,
     getOrdersByUserId,
-    getOrderDetails
+    getOrderDetails,
+    getMyOrders
 };
 

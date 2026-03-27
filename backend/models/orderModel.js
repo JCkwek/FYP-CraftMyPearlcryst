@@ -43,4 +43,4 @@ const sequelize = require('../db');
         });
     };
 
-    module.exports = {Order};
+    module.exports = Order;

@@ -1,4 +1,5 @@
-const { Product } = require('../models/productModel');
+// const { Product } = require('../models/productModel');
+const { Product } = require('../models');
 const {Op, where} = require('sequelize');
 
 const getProducts = async ({ query, type, onlyAvailable, limit, latest }) => {

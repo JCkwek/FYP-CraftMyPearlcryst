@@ -1,6 +1,7 @@
-const {CartItem}  = require('../models/cartItemModel');
+// const {CartItem}  = require('../models/cartItemModel');
 const {Op, where} = require('sequelize');
-const { Product } = require('../models/productModel');
+// const { Product } = require('../models/productModel');
+const { Product, CartItem } = require('../models')
 
 const addToCart = async (userId, productId, quantity) => {
     const qtyToAdd = parseInt(quantity) || 1; //make sure quantity is number
@@ -30,7 +31,10 @@ const addToCart = async (userId, productId, quantity) => {
 const getAllCartItem = async(userId) => {
      return await CartItem.findAll({
         where: {user_id: userId},
-        include: [{ model: Product }]
+        include: [{ 
+            model: Product,
+            as: 'Product'
+         }]
      });
 };
 

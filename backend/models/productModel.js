@@ -53,4 +53,9 @@ const Product = sequelize.define('Product', {
   updatedAt: 'updated_at'
 });
 
-module.exports = { Product };
+Product.associate = (models) => {
+    Product.hasMany(models.OrderItem, { foreignKey: 'product_id', as: 'OrderItems' });
+    Product.hasMany(models.CartItem, { foreignKey: 'product_id', as: 'CartItems' });
+};
+
+module.exports =  Product ;

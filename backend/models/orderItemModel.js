@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
 
+
 const OrderItem = sequelize.define('OrderItem', {
   id: {
     type: DataTypes.INTEGER,
@@ -31,4 +32,12 @@ const OrderItem = sequelize.define('OrderItem', {
   updatedAt: 'updatedAt'   
 });
 
-module.exports = { OrderItem };
+OrderItem.associate = (models) => {
+
+  console.log("DEBUG - Is Order a valid Model?", !!models.Order?.prototype);
+    console.log("DEBUG - Is Product a valid Model?", !!models.Product?.prototype);
+    OrderItem.belongsTo(models.Order, { foreignKey: 'order_id', as: 'Order' });
+    OrderItem.belongsTo(models.Product, { foreignKey: 'product_id', as: 'Product' });
+};
+
+module.exports =  OrderItem ;

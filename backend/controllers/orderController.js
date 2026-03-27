@@ -1,6 +1,7 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const orderService = require('../services/orderService');
 const cartService = require ('../services/cartService');
+const { OrderItem } = require('../models/orderItemModel');
 
 const checkout = async (req, res) => {
     try{
@@ -65,4 +66,15 @@ const confirmPayment = async (req, res) => {
     }
 };
 
-module.exports = {checkout, confirmPayment};
+const getMyOrders = async (req,res) => {
+    try{
+        const userId = req.user.id;
+        const orders = await orderService.getMyOrders(userId);
+        res.json(orders);
+    }catch(err){
+        console.error("Order service error:", err);
+        res.status(500).json({error: "Failed to fetch orders"});
+    }
+};
+
+module.exports = {checkout, confirmPayment, getMyOrders};

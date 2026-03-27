@@ -5,5 +5,6 @@ const authMiddleware = require('../middleware/authMiddleware');
 
 router.post('/checkout', authMiddleware, orderController.checkout);
 router.get('/confirm', authMiddleware, orderController.confirmPayment);
+router.get('/',authMiddleware, orderController.getMyOrders);
 
 module.exports = router;

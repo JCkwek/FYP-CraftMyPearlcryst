@@ -26,6 +26,19 @@ const CartItem = sequelize.define('CartItem', {
     timestamps: false
 });
 
-CartItem.belongsTo(Product, { foreignKey: 'product_id' });
-Product.hasMany(CartItem, { foreignKey: 'product_id' });
-module.exports = {CartItem};
+// CartItem.belongsTo(Product, { foreignKey: 'product_id' });
+// Product.hasMany(CartItem, { foreignKey: 'product_id' });
+CartItem.associate = (models) => {
+    // A cart item belongs to a specific product
+    CartItem.belongsTo(models.Product, { 
+        foreignKey: 'product_id',
+        as: 'Product' 
+    });
+
+    // A cart item belongs to a specific user
+    CartItem.belongsTo(models.User, { 
+        foreignKey: 'user_id',
+        as: 'User'
+    });
+};
+module.exports = CartItem;

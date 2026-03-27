@@ -1,0 +1,19 @@
+.orderSuccess{
+    padding: 2rem;
+    text-align: center;
+}
+
+.viewMyOrdersBtn{
+    margin-top: 1rem;
+    padding: 0.5rem 1.5rem;
+    border: none;
+    background-color: #D8A7B1;
+    color: white;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.viewMyOrdersBtn:hover{
+    background-color: #ca99a3;
+}
