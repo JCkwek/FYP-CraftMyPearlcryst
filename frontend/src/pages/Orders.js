@@ -36,7 +36,11 @@ function Orders(){
                     {orders.length > 0 ? (
                         orders.map((order) => (
                             <div key={order.order_id} className={styles.orderGroup}>
-                                <h3>Order #{order.order_id}</h3>
+                                <u><h3>Order #{order.order_id}</h3></u>
+                                <h5>Total: RM {order.total_amount}</h5>
+                                <h5>Date:  {new Date(order.createdAt).toLocaleString()}</h5>
+                                {/* <h5>Payment method: </h5> */}
+                                <h5>Order item(s): </h5>
                                 {order.OrderItems.map((item) => (
                                     <OrderItemCard 
                                         key={item.id} 
@@ -45,8 +49,7 @@ function Orders(){
                                     />
                                 ))   
                                 }
-
-                                <h3>Total: RM {order.total_amount}</h3>
+                                
                             </div>
                         ))
                     ) : (

@@ -16,12 +16,20 @@ function OrderItemCard({ item , status}) {
                             alt={product?.product_name} 
                         />
                     </div>
-                    <div className={styles.orderItemInfoContainer}>
+                    {/*name*/}
+                    <div className={styles.orderItemNameContainer}>
                         <h4>{product?.product_name || `Product ID: ${item.product_id}`}</h4>
-                        <p>RM {itemPrice.toFixed(2)}</p>
                     </div>
-                    <div className={styles.quantityTextContainer}>
-                        {item.quantity}
+                    {/*price*/}
+                    <div className={styles.orderItemPriceContainer}>
+                        RM {itemPrice.toFixed(2)}
+                    </div>
+                    {/* quantity */}
+                    <div className={styles.quantityContainer}>
+                        x {item.quantity}
+                    </div>
+                    {/* status */}
+                    <div className={styles.statusContainer}>
                         {status}
                     </div>
                 </div>
