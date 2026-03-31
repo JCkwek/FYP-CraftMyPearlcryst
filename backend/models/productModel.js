@@ -37,6 +37,11 @@ const Product = sequelize.define('Product', {
     type: DataTypes.STRING(100),
     allowNull: true
   },
+  is_customisable: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false, // Most items (like rings) aren't customisable by default
+    allowNull: false
+  },
   created_at: {
   type: DataTypes.DATE,
   defaultValue: DataTypes.NOW

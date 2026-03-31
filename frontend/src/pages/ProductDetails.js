@@ -1,7 +1,8 @@
 import styles from './ProductDetails.module.css'
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
+import api from '../api';
 import BackButton from '../components/buttons/BackButton';
 import ProductInfo from '../components/productDetail/ProductInfo';
 import ProductImage from '../components/productDetail/ProductImage';
@@ -21,7 +22,7 @@ function ProductDetails(){
         }
 
         try{
-            await axios.post('http://localhost:3000/cart', {
+            await api.post('/cart', {
                 productId: product.product_id,
                 quantity:1
             }, {
@@ -38,7 +39,7 @@ function ProductDetails(){
     useEffect(() => {
         const fetchProduct = async () => {
         try {
-            const res = await axios.get(`http://localhost:3000/products/${id}`);
+            const res = await api.get(`/products/${id}`);
             setProduct(res.data);
         } catch (err) {
             console.error("Error fetching product:", err);
@@ -59,7 +60,9 @@ function ProductDetails(){
                 <div className={styles.productDetailsInfo}>
                     <ProductInfo product={product}/>
                     <div className={styles.productDetailsButtons}>
-                        <button className={styles.customiseButton}>Customise</button>
+                        {product.is_customisable && (
+                            <button className={styles.customiseButton}>Customise</button>
+                        )}
                         <button className={styles.addToCartButton} onClick={handleAddToCart}>Add To Cart</button>
                     </div>
                 </div>
