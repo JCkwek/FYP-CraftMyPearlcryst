@@ -39,8 +39,13 @@ const Product = sequelize.define('Product', {
   },
   is_customisable: {
     type: DataTypes.BOOLEAN,
-    defaultValue: false, // Most items (like rings) aren't customisable by default
+    defaultValue: false, 
     allowNull: false
+  },
+  product_size: {
+    type: DataTypes.JSON,
+    allowNull: true,
+    comment: "Stores fixed sizes as [5,6,7] or custom ranges as {min:16, max:30, pricePerInch:5}"
   },
   created_at: {
   type: DataTypes.DATE,
