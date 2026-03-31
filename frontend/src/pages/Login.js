@@ -1,22 +1,31 @@
 import styles from './Login.module.css'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import BackButton from '../components/buttons/BackButton';
-import axios from 'axios'
+// import axios from 'axios';
+import api from '../api';
 
 function Login() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate()
 
-    const token = localStorage.getItem('token')
-    const user = JSON.parse(localStorage.getItem('user'))
+    // const user = JSON.parse(localStorage.getItem('user'))
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            navigate('/account');
+        }
+    }, [navigate]);
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
+        setLoading(true);
 
     try {
-        const res = await axios.post('http://localhost:3000/auth/login', {
+        const res = await api.post('/auth/login', {
             email,
             password
         });
@@ -28,6 +37,8 @@ function Login() {
     } catch (err) {
         console.error(err.response?.data?.error || err.message)
         alert(err.response?.data?.error || "Login failed")
+    }finally{
+        setLoading(false);
     }
     }
 
@@ -35,7 +46,7 @@ function Login() {
         <div className={styles.login}>
             <BackButton />
             <div className={styles.loginCard}>
-                <h2 className={styles.title}>Welcome Back</h2>
+                <h2>Welcome Back</h2>
                 <form onSubmit={handleSubmit} className={styles.loginForm}>
                     <div className={styles.loginFormInput}>
                         <label>Email</label>
@@ -59,15 +70,19 @@ function Login() {
                         />
                     </div>
 
-                    <button type="submit" className={styles.loginButton}>
-                        Login
+                    <button 
+                        type="submit" 
+                        className={styles.loginButton}
+                        disabled={loading} //prevent double click
+                    >
+                        { loading? "Logging in...": "Login"}
                     </button>
                 </form>
 
                 <p className={styles.registerText}>
                     Don’t have an account? 
                     <span onClick={() => navigate('/register')}>
-                        Register
+                        <u>Register</u>
                     </span>
                 </p> 
             </div>

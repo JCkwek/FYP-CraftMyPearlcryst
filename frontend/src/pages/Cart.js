@@ -1,7 +1,8 @@
 import styles from './Cart.module.css';
 import CartItemCard from '../components/CartItemCard';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
+import api from '../api';
 
 function Cart() {
     const [cartItems, setCartItems] = useState([]);
@@ -10,10 +11,11 @@ function Cart() {
     useEffect(() => {
         const fetchCart = async () => {
             try {
-                const token = localStorage.getItem('token');
-                const res = await axios.get('http://localhost:3000/cart', {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                // const token = localStorage.getItem('token');
+                // const res = await axios.get('http://localhost:3000/cart', {
+                //     headers: { Authorization: `Bearer ${token}` }
+                // });
+                const res = await api.get('/cart')
                 setCartItems(res.data);
             } catch (err) {
                 console.error("Error fetching cart:", err);
@@ -28,10 +30,10 @@ function Cart() {
 
     const handleUpdateQuantity = async (productId, action) => {
         try{
-            const token = localStorage.getItem('token');
-            await axios.put(`http://localhost:3000/cart/update`, 
+            // const token = localStorage.getItem('token');
+            await api.put(`/cart/update`, 
                 {productId, action},
-                {headers: {Authorization: `Bearer ${token}`}}
+                // {headers: {Authorization: `Bearer ${token}`}}
             );
 
             setCartItems(prevItems => prevItems.map(item => {
@@ -48,9 +50,9 @@ function Cart() {
 
     const handleDeleteItem = async (productId) => {
         try {
-            const token = localStorage.getItem('token');
-            await axios.delete(`http://localhost:3000/cart/${productId}`, {
-                headers: { Authorization: `Bearer ${token}` }
+            // const token = localStorage.getItem('token');
+            await api.delete(`/cart/${productId}`, {
+                // headers: { Authorization: `Bearer ${token}` }
             });
 
             // Remove from local state immediately
@@ -67,10 +69,10 @@ function Cart() {
 
     const handleCheckout = async () => {
         try{
-            const token = localStorage.getItem('token');
-            const res = await axios.post('http://localhost:3000/orders/checkout', 
+            // const token = localStorage.getItem('token');
+            const res = await api.post('/orders/checkout', 
                 {cartItems},
-                {headers: {Authorization: `Bearer ${token}`}}
+                // {headers: {Authorization: `Bearer ${token}`}}
             );
             //redirect to stripe
             if(res.data.url){

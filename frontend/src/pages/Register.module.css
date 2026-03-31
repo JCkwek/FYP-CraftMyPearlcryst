@@ -1,24 +1,22 @@
-.login{
+.register{
     padding: 1rem;
     user-select: none;
-    /* background-color: red; */
-    
 }
-.loginCard{
+
+.registerCard{
     padding: 1rem;
     text-align: center;
 }
 
-.loginForm{
-    padding: 1rem;
-    /* background-color: green; */
-}
-
-.loginFormInput{
+.registerForm{
     padding: 1rem;
 }
 
-.loginFormInput input{
+.registerFormInput{
+    padding: 1rem;
+}
+
+.registerFormInput input{
     border: none;
     padding: 0.5rem;
     width: 30%;
@@ -26,19 +24,14 @@
     outline: none;
     text-align: center;
 }
-.loginFormInput input:hover{
+.registerFormInput input:hover{
     border-bottom: 1px solid #D8A7B1;
 }
-.loginFormInput input:focus{
+.registerFormInput input:focus{
     border-bottom: 2px solid #D8A7B1;
 }
 
-.notLoggedIn{
-    padding: 2rem;
-    text-align: center;
-}
-
-.loginButton{
+.registerButton{
     margin-top: 1rem;
     padding: 0.5rem 1.5rem;
     border: none;
@@ -49,19 +42,6 @@
     user-select: none;
 }
 
-.loginButton:hover{
+.registerButton:hover{
     background-color: #ca99a3;
-}
-
-.loggedIn{
-    padding: 1rem;
-}
-
-.registerText span{
-    padding: 0.5rem;
-    cursor: pointer;
-}
-
-.registerText span:hover{
-    color: #D8A7B1;
 }

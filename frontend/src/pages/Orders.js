@@ -1,7 +1,8 @@
 import styles from './Orders.module.css';
 import BackButton from '../components/buttons/BackButton';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
+import api from '../api';
 import OrderItemCard from '../components/OrderItemCard';
 
 function Orders(){
@@ -11,10 +12,11 @@ function Orders(){
     useEffect(() => {
         const fetchOrders = async () => {
             try{
-                const token = localStorage.getItem('token');
-                const res = await axios.get('http://localhost:3000/orders', {
-                    headers: { Authorization: `Bearer ${token}`}
-                });
+                // const token = localStorage.getItem('token');
+                // const res = await axios.get('http://localhost:3000/orders', {
+                //     headers: { Authorization: `Bearer ${token}`}
+                // });
+                const res = await api.get('/orders');
                 setOrders(res.data);
             }catch(err){
                 console.error("Error fetching orders:", err);

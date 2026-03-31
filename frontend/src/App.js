@@ -10,6 +10,8 @@ import Account from './pages/Account';
 import Login from './pages/Login';
 import Orders from './pages/Orders';
 import OrderSuccess from './pages/OrderSuccess';
+import Register from './pages/Register';
+
 
 function App() {
   return (
@@ -26,7 +28,8 @@ function App() {
           <Route path="account" element={<Account />}/>
           <Route path="/login" element={<Login />}/>
           <Route path="/orders" element={<Orders />}/>
-          <Route path="/checkout-success" element={<OrderSuccess />}></Route>
+          <Route path="/checkout-success" element={<OrderSuccess />} />
+          <Route path="/register" element={<Register />} />
         </Route>
       </Routes>
     </BrowserRouter>

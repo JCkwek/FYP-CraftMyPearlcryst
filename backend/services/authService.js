@@ -5,16 +5,27 @@ const { User } = require("../models");
 // const JWT_SECRET = "jckw@k_fyp_secret_113#";
 const JWT_SECRET = process.env.JWT_SECRET;
 
-const register = async ({ name, email, password }) => {
+const register = async ({ name, email, phone_no ,password }) => {
+
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+        throw new Error("Email is already registered");
+    }
+    
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await User.create({
         name,
         email,
+        phone_no,
         password: hashedPassword,
     });
 
-    return user;
+    // return user;
+
+    // Return user without the password field for security
+    const { password: hashedPwd, ...userWithoutPassword } = user.toJSON();
+    return userWithoutPassword;
 };
 
 const login = async ({ email, password }) => {
