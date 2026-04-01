@@ -1,8 +1,6 @@
 .login{
     padding: 1rem;
     user-select: none;
-    /* background-color: red; */
-    
 }
 .loginCard{
     padding: 1rem;
@@ -11,7 +9,6 @@
 
 .loginForm{
     padding: 1rem;
-    /* background-color: green; */
 }
 
 .loginFormInput{

@@ -45,16 +45,3 @@
 .registerButton:hover{
     background-color: #ca99a3;
 }
-
-.errorBanner{
-    padding: 0.5rem 2rem;
-    margin: 0 auto 15px auto;
-    font-size: 0.85rem;
-    border: solid red 2px;
-    border-radius: 0.5rem;
-    color: red;
-    background-color: rgba(255, 0, 0, 0.2);
-    overflow: hidden;
-    max-width: 80%;
-    width: fit-content;
-}

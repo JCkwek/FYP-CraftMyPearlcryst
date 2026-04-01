@@ -4,11 +4,13 @@ import { useNavigate } from 'react-router-dom'
 import BackButton from '../components/buttons/BackButton';
 // import axios from 'axios';
 import api from '../api';
+import ErrorBanner from '../components/ErrorBanner';
 
 function Login() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
     const navigate = useNavigate()
 
     // const user = JSON.parse(localStorage.getItem('user'))
@@ -35,8 +37,8 @@ function Login() {
         navigate('/account')// Redirect
 
     } catch (err) {
-        console.error(err.response?.data?.error || err.message)
-        alert(err.response?.data?.error || "Login failed")
+        const msg = err.response?.data?.error || "Login failed";
+        setError(msg);
     }finally{
         setLoading(false);
     }
@@ -47,6 +49,7 @@ function Login() {
             <BackButton />
             <div className={styles.loginCard}>
                 <h2>Welcome Back</h2>
+                {error && <ErrorBanner message={error}/>}
                 <form onSubmit={handleSubmit} className={styles.loginForm}>
                     <div className={styles.loginFormInput}>
                         <label>Email</label>
