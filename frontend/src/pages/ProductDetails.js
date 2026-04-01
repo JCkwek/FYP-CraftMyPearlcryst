@@ -12,6 +12,9 @@ function ProductDetails(){
     const navigate = useNavigate();
     const { id } = useParams(); 
     const [product, setProduct] = useState(null);
+    const [selectedSize, setSelectedSize] = useState('');
+    const [isCustomising, setIsCustomising] = useState(false);
+    const [parsedSize, setParsedSize] = useState(null);
 
     const handleAddToCart = async () => {
         const token = localStorage.getItem('token');
@@ -36,6 +39,7 @@ function ProductDetails(){
         }
     }
 
+    //fetch product
     useEffect(() => {
         const fetchProduct = async () => {
         try {
@@ -45,9 +49,34 @@ function ProductDetails(){
             console.error("Error fetching product:", err);
         }
     };
-        fetchProduct();
-        
+        fetchProduct();    
     }, [id]);
+
+    //initialize product size
+    useEffect(() =>{
+        if (product && product.product_size) {
+        let sizeData = product.product_size;
+
+        // If it's a string, we MUST parse it
+        if (typeof sizeData === 'string') {
+            try {
+                sizeData = JSON.parse(sizeData);
+            } catch (e) {
+                console.error("JSON Parse Error:", e);
+            }
+        }
+
+        // Save the cleaned-up data to our new state
+        setParsedSize(sizeData);
+
+        // Set the default selection
+        if (Array.isArray(sizeData)) {
+            setSelectedSize(sizeData[0]);
+        } else if (sizeData?.type === 'range') {
+            setSelectedSize(sizeData.base);
+        }
+    }
+    }, [product]) //only runs when the 'product' state is updated
 
 
 
@@ -59,6 +88,34 @@ function ProductDetails(){
                 <ProductImage product={product}/>
                 <div className={styles.productDetailsInfo}>
                     <ProductInfo product={product}/>
+                    <div className={styles.sizeSelectionArea}>
+                        {/* fixed size selection */}
+                        {Array.isArray(parsedSize) && (
+                            <div>
+                                <label>Select size: </label>
+                                <select value={selectedSize} onChange={(e) => setSelectedSize(e.target.value)}>
+                                    {parsedSize.map(s => <option key={s} value={s}>{s}</option>)}
+                                </select>
+                            </div>
+                        )}
+                        {/* range size selection */}
+                        {parsedSize?.type === 'range' && (
+                            <div>
+                                {!isCustomising ? (
+                                    <p>Standard length: {parsedSize.base}</p>
+                                ) : (
+                                    <input 
+                                        type="range"
+                                        min={parsedSize.min}
+                                        max={parsedSize.max}
+                                        value={selectedSize}
+                                        onChange={(e) => setSelectedSize(e.target.value)}
+                                    />
+                                )
+                            }
+                            </div>
+                        )}
+                    </div>
                     <div className={styles.productDetailsButtons}>
                         {product.is_customisable && (
                             <button className={styles.customiseButton}>Customise</button>
