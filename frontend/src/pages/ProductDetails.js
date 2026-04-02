@@ -27,7 +27,8 @@ function ProductDetails(){
         try{
             await api.post('/cart', {
                 productId: product.product_id,
-                quantity:1
+                quantity:1,
+                size: selectedSize
             }, {
                 headers:{ Authorization:`Bearer ${token}`}
             });
@@ -88,11 +89,11 @@ function ProductDetails(){
                 <ProductImage product={product}/>
                 <div className={styles.productDetailsInfo}>
                     <ProductInfo product={product}/>
-                    <div className={styles.sizeSelectionArea}>
+                    <div className={styles.sizeSelectionContainer}>
                         {/* fixed size selection */}
                         {Array.isArray(parsedSize) && (
-                            <div>
-                                <label>Select size: </label>
+                            <div className={styles.fixedSizeContainer}>
+                                <label>Size: </label>
                                 <select value={selectedSize} onChange={(e) => setSelectedSize(e.target.value)}>
                                     {parsedSize.map(s => <option key={s} value={s}>{s}</option>)}
                                 </select>
@@ -100,9 +101,9 @@ function ProductDetails(){
                         )}
                         {/* range size selection */}
                         {parsedSize?.type === 'range' && (
-                            <div>
+                            <div className={styles.rangeSizeContainer}>
                                 {!isCustomising ? (
-                                    <p>Standard length: {parsedSize.base}</p>
+                                    <p>Length: {parsedSize.base} inch</p>
                                 ) : (
                                     <input 
                                         type="range"
@@ -118,7 +119,22 @@ function ProductDetails(){
                     </div>
                     <div className={styles.productDetailsButtons}>
                         {product.is_customisable && (
-                            <button className={styles.customiseButton}>Customise</button>
+                            <button 
+                                className={styles.customiseButton}
+                                onClick={() => setIsCustomising(true)}
+                            >Customise
+                            </button>
+                        )}
+                        {isCustomising && (
+                            <button 
+                                className={styles.cancelButton}
+                                onClick={() => {
+                                    setIsCustomising(false);
+                                    setSelectedSize(parsedSize.base); // Reset to default
+                                }}
+                            >
+                                Cancel
+                            </button>
                         )}
                         <button className={styles.addToCartButton} onClick={handleAddToCart}>Add To Cart</button>
                     </div>

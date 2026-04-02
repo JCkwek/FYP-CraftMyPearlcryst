@@ -16,9 +16,9 @@ const addToCart = async (req, res) => {
         const userId = decoded.id;
 
         //set data from request body
-        const { productId, quantity } = req.body;
+        const { productId, quantity, size } = req.body;
 
-        const result = await cartService.addToCart(userId, productId, quantity);
+        const result = await cartService.addToCart(userId, productId, quantity, size);
 
         res.json({
             message: "Added to cart",
@@ -52,13 +52,20 @@ const getCart = async (req,res) => {
         res.json(items);
 
     }catch(err){
-        res.status(500).json({error: "Could not fetch cart items"})
+        // res.status(500).json({error: "Could not fetch cart items"})
+        console.error("DETAILED GET_CART ERROR:", err); 
+        res.status(500).json({ error: err.message });   // sends the real error to the browser
+        if (err.name === 'TokenExpiredError' || err.name === 'JsonWebTokenError') {
+            return res.status(401).json({ error: "Session expired. Please login again." });
+        }
+        // Otherwise, it's a real server error (like a DB issue)
+        res.status(500).json({ error: "Could not fetch cart items" });
     }
 }
 
 const updateQuantity = async (req,res) => {
     try{
-        const { productId, action } = req.body;
+        const { cartItemId, action } = req.body;
 
         //get token
         const authHeader = req.headers.authorization;
@@ -72,7 +79,7 @@ const updateQuantity = async (req,res) => {
         //set id from token
         const userId = decoded.id;
 
-        const updatedItem = await cartService.updateQuantity(userId, productId, action);
+        const updatedItem = await cartService.updateQuantity(userId, cartItemId, action);
         res.json(updatedItem);
 
     }catch(err){
@@ -94,9 +101,9 @@ const deleteCartItem = async (req,res) => {
         //set id from token
         const userId = decoded.id;
         
-        const {productId} = req.params;
+        const {cartItemId} = req.params;
 
-        await cartService.deleteCartItem(userId, productId);
+        await cartService.deleteCartItem(userId, cartItemId);
         res.status(200).json({message: "Item removed from cart"});
     }catch(err){
         res.status(500).json({error: err.message});

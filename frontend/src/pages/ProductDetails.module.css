@@ -11,6 +11,19 @@
     display: flex;
     justify-content: space-between;
     flex-direction: column;
+    /* background-color: green; */
+}
+
+.sizeSelectionContainer{
+    padding: 1rem;
+    user-select: none;
+}
+
+.fixedSizeContainer select{
+    margin: 0.5rem;
+    border-radius: 0.2rem;
+    border: 0.1rem #eee solid;
+    cursor: pointer;
 }
 
 .productDetailsButtons{
@@ -46,4 +59,18 @@
 
 .addToCartButton:hover{
     background-color: #5b9159;
+}
+
+.cancelButton{
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background-color: transparent;
+    border: 1px solid rgb(190, 2, 2);
+    color:  rgb(190, 2, 2) ;
+    user-select: none;
+}
+
+.cancelButton:hover{
+    border: 1px solid red;
+    color: red ;
 }

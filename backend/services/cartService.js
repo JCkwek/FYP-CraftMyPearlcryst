@@ -1,9 +1,14 @@
 // const {CartItem}  = require('../models/cartItemModel');
 const {Op, where} = require('sequelize');
 // const { Product } = require('../models/productModel');
-const { Product, CartItem } = require('../models')
+// const { Product, CartItem } = require('../models')
+const { CartItem, Product } = require('../models/index');
+console.log("--- DEBUGGING IMPORTS ---");
+console.log("CartItem Model exists:", !!CartItem);
+console.log("Product Model exists:", !!Product);
+console.log("-------------------------");
 
-const addToCart = async (userId, productId, quantity) => {
+const addToCart = async (userId, productId, quantity, size) => {
     const qtyToAdd = parseInt(quantity) || 1; //make sure quantity is number
 
     const existingItem = await CartItem.findOne({
@@ -15,15 +20,13 @@ const addToCart = async (userId, productId, quantity) => {
 
     if(existingItem){
         return await existingItem.increment('quantity', { by: qtyToAdd });
-        // existingItem.quantity += quantity;
-        // await existingItem.save();
-        // return existingItem;
     }
 
     return await CartItem.create({
         user_id: userId,
         product_id: productId,
-        quantity: qtyToAdd
+        quantity: qtyToAdd,
+        size: size
     });
 
 };
@@ -38,8 +41,8 @@ const getAllCartItem = async(userId) => {
      });
 };
 
-const updateQuantity = async (userId, productId, action) => {
-    const item = await CartItem.findOne({where: {user_id: userId, product_id: productId}});
+const updateQuantity = async (userId, cartItemId, action) => {
+    const item = await CartItem.findOne({where: {user_id: userId, cart_item_id: cartItemId}});
     if(!item) throw new Error("Item not found");
 
     if(action ==='increment'){
@@ -50,11 +53,12 @@ const updateQuantity = async (userId, productId, action) => {
     }
 };
 
-const deleteCartItem = async (userId, productId) => {
+const deleteCartItem = async (userId, cartItemId) => {
+    console.log(`Service attempting to delete: User ${userId}, Item ${cartItemId}`);
     return await CartItem.destroy({
         where: {
             user_id: userId,
-            product_id: productId
+            cart_item_id: cartItemId
         }
     });
 };

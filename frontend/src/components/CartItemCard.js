@@ -21,6 +21,9 @@ function CartItemCard({ item, onUpdateQty, onDelete }) {
                     </div>
                     <div className={styles.cartItemInfoContainer}>
                         <h4>{product?.product_name || `Product ID: ${item.product_id}`}</h4>
+                        {item.size && (
+                            <p className={styles.itemSizeLabel}>Size: {item.size}</p>
+                        )}
                         <p>RM {itemPrice.toFixed(2)}</p>
                     </div>
                 </div>
@@ -29,13 +32,13 @@ function CartItemCard({ item, onUpdateQty, onDelete }) {
                 <div className={styles.quantityContainer}>
                     <button
                         className={styles.quantityUpdateButton} 
-                        onClick={() => onUpdateQty(item.product_id, 'decrement')}
+                        onClick={() => onUpdateQty(item.cart_item_id, 'decrement')}
                         disabled={item.quantity <= 1}
                     > - </button>
                     <div className={styles.quantityTextContainer}>{item.quantity}</div>
                     <button 
                         className={styles.quantityUpdateButton}
-                        onClick={() => onUpdateQty(item.product_id, 'increment')}
+                        onClick={() => onUpdateQty(item.cart_item_id, 'increment')}
                     > + </button>
                 </div>
 
@@ -46,7 +49,7 @@ function CartItemCard({ item, onUpdateQty, onDelete }) {
                 <div className={styles.deleteContainer}>
                     <button 
                         className={styles.deleteButton}
-                        onClick={() => onDelete(item.product_id)}
+                        onClick={() => onDelete(item.cart_item_id)}
                         title="Remove item"
                     >
                         &times;

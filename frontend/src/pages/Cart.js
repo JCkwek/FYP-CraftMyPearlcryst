@@ -28,16 +28,16 @@ function Cart() {
 
     if (loading) return <div className={styles.loadingContainer}><p>Loading your cart...</p></div>;
 
-    const handleUpdateQuantity = async (productId, action) => {
+    const handleUpdateQuantity = async (cartItemId, action) => {
         try{
             // const token = localStorage.getItem('token');
             await api.put(`/cart/update`, 
-                {productId, action},
+                {cartItemId, action},
                 // {headers: {Authorization: `Bearer ${token}`}}
             );
 
             setCartItems(prevItems => prevItems.map(item => {
-                if(item.product_id === productId){
+                if(item.cart_item_id === cartItemId){
                     const newQty = action === 'increment'? item.quantity + 1 : Math.max(1, item.quantity - 1);
                     return {...item, quantity : newQty};
                 }
@@ -48,15 +48,15 @@ function Cart() {
         }
     };
 
-    const handleDeleteItem = async (productId) => {
+    const handleDeleteItem = async (cartItemId) => {
         try {
             // const token = localStorage.getItem('token');
-            await api.delete(`/cart/${productId}`, {
+            await api.delete(`/cart/${cartItemId}`, {
                 // headers: { Authorization: `Bearer ${token}` }
             });
 
             // Remove from local state immediately
-            setCartItems(prev => prev.filter(item => item.product_id !== productId));
+            setCartItems(prev => prev.filter(item => item.cart_item_id !== cartItemId));
         } catch (err) {
             console.error("Failed to delete item", err);
         }

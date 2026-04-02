@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
-const {Product} = require('./productModel');
+// const {Product} = require('./productModel');
 
 const CartItem = sequelize.define('CartItem', {
     cart_item_id: {
@@ -20,6 +20,10 @@ const CartItem = sequelize.define('CartItem', {
     quantity: {
         type: DataTypes.INTEGER,
         defaultValue: 1
+    },
+    size: {
+        type: DataTypes.STRING, // Use STRING to handle "5" (Ring) or "18" (Necklace)
+        allowNull: true
     }
 }, {
     tableName: 'cart_items',
