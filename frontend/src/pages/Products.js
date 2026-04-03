@@ -1,4 +1,4 @@
-import style from "./Products.module.css";
+import styles from "./Products.module.css";
 import {useState, useEffect} from 'react';
 import { getProducts } from '../api/productApi';
 import ProductCard from "../components/ProductCard";
@@ -35,28 +35,30 @@ function Products(){
 
 
  return (
-    <div className={style.products}>
+    <div className={styles.products}>
+        <div className={styles.productsContentContainer}>
       <h1>Products</h1>
       <SearchBar 
         value={search}
         onChange={setSearch}
         onSearch={handleSearch}
       />
-      <div className={style.productList}>
-        <div className={style.productCardContainer}>
+      <div className={styles.productList}>
+        <div className={styles.productCardContainer}>
             {loading ? (
-                <p>Loading...</p>
-            ) : products.length === 0 ? (
-                <p>No products found</p>
-            ) : (
-        products.map((product) => (
-          <ProductCard 
-            key={product.product_id}
-            product={product}
+                    <p>Loading...</p>
+                ) : products.length === 0 ? (
+                    <p>No products found</p>
+                ) : (
+            products.map((product) => (
+            <ProductCard 
+                key={product.product_id}
+                product={product}
             />
-            ))
-        )}
-        </div>
+                ))
+            )}
+            </div>
+            </div>
         </div>
     </div>
   );

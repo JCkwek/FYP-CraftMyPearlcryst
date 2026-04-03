@@ -1,9 +1,10 @@
 .productCard{
     padding: 0.5rem;
     border-radius: 0.5rem;
+    gap: 0.5rem;
     background-color: white;
     width: 10rem;
-    height: 15rem;
+    height: 14rem;
     overflow: hidden;
     display: flex;
     justify-content: space-between;
