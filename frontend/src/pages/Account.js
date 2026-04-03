@@ -1,26 +1,59 @@
 import styles from './Account.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
 
 function Account() {
     const navigate = useNavigate();
-
     const [token, setToken] = useState(null);
     const [user, setUser] = useState(null);
 
-    useEffect(() => {
-        setToken(localStorage.getItem('token'));
-        setUser(JSON.parse(localStorage.getItem('user') || 'null'));
-    }, []);
-
-    // Logout
+        // Logout
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         setToken(null);
         setUser(null);
-        navigate('/login');
+        // navigate('/login');
     };
+
+    useEffect(() => {
+    const checkAuth = () => {
+        const storedToken = localStorage.getItem('token');
+        const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
+
+        if (!storedToken) {
+            setToken(null);
+            setUser(null);
+            return;
+        }
+
+        try {
+            const decoded = jwtDecode(storedToken);
+            const currentTime = Date.now() / 1000;
+
+            if (decoded.exp < currentTime) {
+                console.warn("Token expired, logging out...");
+                handleLogout();
+            } else {
+                setToken(storedToken);
+                setUser(storedUser);
+            }
+        } catch (error) {
+            handleLogout();
+        }
+    };
+
+    // Run once on mount
+    checkAuth();
+
+    // Check every 10 seconds so the user is kicked 
+    // out even if they don't refresh the page
+    const interval = setInterval(checkAuth, 10000);
+    return () => clearInterval(interval); // Cleanup on unmount
+}, []);
+
+
 
     return (
         <div className={styles.account}>

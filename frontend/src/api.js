@@ -25,7 +25,7 @@ api.interceptors.response.use(
             localStorage.setItem('user', null); 
             
             // Force user to Login
-            // window.location.href = '/login'; 
+            window.location.href = '/login'; 
         }
         return Promise.reject(error);
     }

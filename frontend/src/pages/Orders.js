@@ -4,18 +4,22 @@ import { useEffect, useState } from 'react';
 // import axios from 'axios';
 import api from '../api';
 import OrderItemCard from '../components/OrderItemCard';
+import { useNavigate } from 'react-router-dom';
 
 function Orders(){
+    const navigate = useNavigate();
     const [orders, setOrders] = useState([]);
-     const [loading, setLoading] = useState(true); 
+     const [loading, setLoading] = useState(true);
+     
+     const token = localStorage.getItem('token');
 
     useEffect(() => {
+        if (!token) {
+            navigate('/login', { replace: true }); // 'replace: true' wipes the "Orders" from the history stack
+        }
+
         const fetchOrders = async () => {
             try{
-                // const token = localStorage.getItem('token');
-                // const res = await axios.get('http://localhost:3000/orders', {
-                //     headers: { Authorization: `Bearer ${token}`}
-                // });
                 const res = await api.get('/orders');
                 setOrders(res.data);
             }catch(err){
@@ -25,8 +29,9 @@ function Orders(){
             }
         };
         fetchOrders();
-    }, []);
+    }, [token, navigate]);
 
+    if (!token) return null;
     if (loading) return <div className={styles.loadingContainer}><p>Loading your orders...</p></div>;
 
     return(
