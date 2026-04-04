@@ -11,7 +11,6 @@
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    /* background-color: green; */
 }
 
 .sizeSelectionContainer{
@@ -24,6 +23,28 @@
     border-radius: 0.2rem;
     border: 0.1rem #eee solid;
     cursor: pointer;
+}
+
+.rangeSizeContainer{
+    padding: 1rem;
+}
+.rangeSizeInputContainerTop{
+    text-align: center;
+}
+.rangeSizeInputContainerBottom{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    /* background-color: red; */
+    align-items: center;
+}
+.rangeSizeInput{
+    /* accent-color: #d8a7b1; */
+    cursor: pointer;
+    width: 100%;
+}
+.rangeSizeInputText{
+    padding: 0rem 1rem;
 }
 
 .productDetailsButtons{

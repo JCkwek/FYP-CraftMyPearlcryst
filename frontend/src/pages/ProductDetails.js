@@ -25,15 +25,17 @@ function ProductDetails(){
         }
 
         try{
+            const sizeToSend = selectedSize ? selectedSize.toString() : "";
+
             await api.post('/cart', {
                 productId: product.product_id,
                 quantity:1,
-                size: selectedSize
+                size: sizeToSend
             }, {
                 headers:{ Authorization:`Bearer ${token}`}
             });
 
-            alert("Added to cart successfully!");
+            alert(`Added ${product.product_name} (Size: ${sizeToSend}) to cart!`);
         }catch(err){
             console.error("Error adding to cart:", err);
             alert("Failed to add to cart.");
@@ -103,28 +105,43 @@ function ProductDetails(){
                         {parsedSize?.type === 'range' && (
                             <div className={styles.rangeSizeContainer}>
                                 {!isCustomising ? (
-                                    <p>Length: {parsedSize.base} inch</p>
+                                    <div>Length: {parsedSize.base} inch</div>
                                 ) : (
-                                    <input 
-                                        type="range"
-                                        min={parsedSize.min}
-                                        max={parsedSize.max}
-                                        value={selectedSize}
-                                        onChange={(e) => setSelectedSize(e.target.value)}
-                                    />
+                                    <div className={styles.rangeSizeInputContainer} >
+                                        <b>Customise</b>   
+                                        <div className={styles.rangeSizeInputContainerTop}>
+                                            {selectedSize}
+                                        </div>
+                                        <div className={styles.rangeSizeInputContainerBottom}>
+                                            <div className={styles.rangeSizeInputText}>{parsedSize.min}</div>
+                                            <input 
+                                                className={styles.rangeSizeInput}
+                                                type="range"
+                                                min={parsedSize.min}
+                                                max={parsedSize.max}
+                                                value={selectedSize}
+                                                onChange={(e) => setSelectedSize(e.target.value)}
+                                            />
+                                            <div className={styles.rangeSizeInputText}>{parsedSize.max}</div>
+                                        </div>
+                                        
+                                    </div>
                                 )
                             }
                             </div>
                         )}
                     </div>
                     <div className={styles.productDetailsButtons}>
-                        {product.is_customisable && (
+                        {product.is_customisable && !isCustomising && (
                             <button 
                                 className={styles.customiseButton}
-                                onClick={() => setIsCustomising(true)}
+                                onClick={() => setIsCustomising(true)
+                                
+                                }
                             >Customise
                             </button>
                         )}
+                        
                         {isCustomising && (
                             <button 
                                 className={styles.cancelButton}

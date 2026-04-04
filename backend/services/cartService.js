@@ -15,19 +15,27 @@ const addToCart = async (userId, productId, quantity, size) => {
         where: {
             user_id: userId,
             product_id: productId,
+            size: size
         }
     });
 
     if(existingItem){
         return await existingItem.increment('quantity', { by: qtyToAdd });
+    }else{
+        return await CartItem.create({
+            user_id: userId,
+            product_id: productId,
+            quantity,
+            size
+        });
     }
 
-    return await CartItem.create({
-        user_id: userId,
-        product_id: productId,
-        quantity: qtyToAdd,
-        size: size
-    });
+    // return await CartItem.create({
+    //     user_id: userId,
+    //     product_id: productId,
+    //     quantity: qtyToAdd,
+    //     size: size
+    // });
 
 };
 
