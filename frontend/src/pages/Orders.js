@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import api from '../api';
 import OrderItemCard from '../components/OrderItemCard';
 import { useNavigate } from 'react-router-dom';
+import Loading from "../components/Loading";
 
 function Orders(){
     const navigate = useNavigate();
@@ -32,7 +33,7 @@ function Orders(){
     }, [token, navigate]);
 
     if (!token) return null;
-    if (loading) return <div className={styles.loadingContainer}><p>Loading your orders...</p></div>;
+    // if (loading) return <Loading fullPage={false} />;
 
     return(
         <div className={styles.orders}>
@@ -40,7 +41,9 @@ function Orders(){
             <div className={styles.orderContentContainer}>
                 <h2>Orders</h2>
                 <div className={styles.orderItemContainer}>
-                    {orders.length > 0 ? (
+                    { loading?(
+                        <Loading message={"Loading orders..."}/>
+                    ) : orders.length > 0 ? (
                         orders.map((order) => (
                             <div key={order.order_id} className={styles.orderGroup}>
                                 <u><h3>Order #{order.order_id}</h3></u>

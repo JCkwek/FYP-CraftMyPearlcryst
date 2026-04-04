@@ -7,6 +7,7 @@ import BackButton from '../components/buttons/BackButton';
 import ProductInfo from '../components/productDetail/ProductInfo';
 import ProductImage from '../components/productDetail/ProductImage';
 import { useNavigate } from 'react-router-dom'; 
+import Loading from '../components/Loading';
 
 function ProductDetails(){
     const navigate = useNavigate();
@@ -100,7 +101,8 @@ function ProductDetails(){
 
 
 
-    if (!product) return <p>Loading...</p>;
+    // if (!product) return <p>Loading...</p>;
+    if (!product) return <Loading message="Finding the perfect jewelry..." />;
     return(
         <div className={styles.productDetails}>
             <BackButton />

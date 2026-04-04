@@ -3,6 +3,7 @@ import CartItemCard from '../components/CartItemCard';
 import { useEffect, useState } from 'react';
 // import axios from 'axios';
 import api from '../api';
+import Loading from "../components/Loading";
 
 function Cart() {
     const [cartItems, setCartItems] = useState([]);
@@ -25,8 +26,6 @@ function Cart() {
         };
         fetchCart();
     }, []);
-
-    if (loading) return <div className={styles.loadingContainer}><p>Loading your cart...</p></div>;
 
     const handleUpdateQuantity = async (cartItemId, action) => {
         try{
@@ -89,7 +88,9 @@ function Cart() {
             <div className={styles.cartContentContainer}>
                 <h2>Your Cart</h2>
                 <div className={styles.cartItemContainer}>
-                    {cartItems.length > 0 ? (
+                    { loading ? (
+                        <Loading message={"Loading cart..."}/>
+                        ) :cartItems.length > 0 ? (
                         <>
                             <div className={styles.cartHeader}>
                                 <div className={styles.cartItemHeader}><h4>Item</h4></div>
@@ -99,7 +100,7 @@ function Cart() {
                                 </div>
                             </div>
                             {cartItems.map((item) => (
-                                // Ensure you use cart_item_id as the key
+                                // use cart_item_id as the key
                                 <CartItemCard 
                                     key={item.cart_item_id} 
                                     item={item} 

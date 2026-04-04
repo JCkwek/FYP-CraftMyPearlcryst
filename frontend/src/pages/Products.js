@@ -3,6 +3,7 @@ import {useState, useEffect} from 'react';
 import { getProducts } from '../api/productApi';
 import ProductCard from "../components/ProductCard";
 import SearchBar from "../components/SearchBar";
+import Loading from "../components/Loading";
 
 function Products(){
     const [products, setProducts] = useState([]);
@@ -46,7 +47,7 @@ function Products(){
       <div className={styles.productList}>
         <div className={styles.productCardContainer}>
             {loading ? (
-                    <p>Loading...</p>
+                <Loading />
                 ) : products.length === 0 ? (
                     <p>No products found</p>
                 ) : (
