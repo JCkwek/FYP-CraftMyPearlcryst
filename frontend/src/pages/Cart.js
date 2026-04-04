@@ -63,7 +63,8 @@ function Cart() {
     };
 
     const grandTotal = cartItems.reduce((acc,item) => {
-        const price = parseFloat(item.Product?.product_price) || 0;
+        // const price = parseFloat(item.Product?.product_price) || 0;
+        const price = parseFloat(item.price_at_addition) || 0;
         return acc + (price * item.quantity);
     }, 0);
 

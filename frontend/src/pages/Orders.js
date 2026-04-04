@@ -53,6 +53,7 @@ function Orders(){
                                         key={item.id} 
                                         item={item} 
                                         status={order.order_status}
+                                        size={item.size}
                                     />
                                 ))   
                                 }

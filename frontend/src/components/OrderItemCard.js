@@ -1,6 +1,6 @@
 import styles from './OrderItemCard.module.css'; 
 
-function OrderItemCard({ item , status}) {
+function OrderItemCard({ item , status, size}) {
     const product = item.Product;
     const itemPrice = parseFloat(item.price_at_purchase) || 0;
 
@@ -23,6 +23,10 @@ function OrderItemCard({ item , status}) {
                     {/*price*/}
                     <div className={styles.orderItemPriceContainer}>
                         RM {itemPrice.toFixed(2)}
+                    </div>
+                    { /* size */}
+                    <div className={styles.orderItemSizeContainer}>
+                        {size ? `size: ${size}` : 'Standard Size'}
                     </div>
                     {/* quantity */}
                     <div className={styles.quantityContainer}>

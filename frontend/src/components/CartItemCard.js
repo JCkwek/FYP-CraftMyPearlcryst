@@ -4,7 +4,8 @@ import styles from './CartItemCard.module.css';
 
 function CartItemCard({ item, onUpdateQty, onDelete }) {
     const product = item.Product;
-    const itemPrice = parseFloat(product?.product_price) || 0;
+    // const itemPrice = parseFloat(product?.product_price) || 0;
+    const itemPrice = parseFloat(item.price_at_addition) || 0;
     const itemTotal = (itemPrice * item.quantity).toFixed(2);
 
     return (
@@ -22,7 +23,7 @@ function CartItemCard({ item, onUpdateQty, onDelete }) {
                     <div className={styles.cartItemInfoContainer}>
                         <h4>{product?.product_name || `Product ID: ${item.product_id}`}</h4>
                         {item.size && (
-                            <p className={styles.itemSizeLabel}>Size: {item.size}</p>
+                            <div className={styles.itemSizeLabel}>Size: {item.size} inch</div>
                         )}
                         <p>RM {itemPrice.toFixed(2)}</p>
                     </div>

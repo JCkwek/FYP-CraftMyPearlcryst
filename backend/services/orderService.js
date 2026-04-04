@@ -20,7 +20,9 @@ const createOrder = async (userId, cartItems, totalAmount, stripeSessionId) => {
             order_id: order.order_id,
             product_id: item.product_id,
             quantity: item.quantity,
-            price_at_purchase: item.Product.product_price
+            // price_at_purchase: item.Product.product_price
+            size: item.size,
+            price_at_purchase: item.price_at_addition
         }))
 
         //create all OrderItems

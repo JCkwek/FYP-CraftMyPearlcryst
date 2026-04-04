@@ -1,6 +1,6 @@
 import styles from './ProductDetails.module.css'
 import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo} from 'react';
 // import axios from 'axios';
 import api from '../api';
 import BackButton from '../components/buttons/BackButton';
@@ -41,6 +41,22 @@ function ProductDetails(){
             alert("Failed to add to cart.");
         }
     }
+
+    //calculate new price
+    const calculatedPrice = useMemo(() => {
+        if(!product || !parsedSize ) return 0;
+        let total = parseFloat(product.product_price);
+
+        if(parsedSize.type === 'range' && isCustomising){
+            const current = parseFloat(selectedSize);
+            const base  = parseFloat(parsedSize.base);
+            const rate = parseFloat(parsedSize.unitPrice || 0);
+
+            const diff = current - base;
+            total += (diff * rate);
+        }
+        return Math.max (5.00, total); //safety ensure never return RM0 or negative
+    },[product, selectedSize, isCustomising, parsedSize]);
 
     //fetch product
     useEffect(() => {
@@ -90,7 +106,7 @@ function ProductDetails(){
             <div className={styles.productDetailsContentContainer}>
                 <ProductImage product={product}/>
                 <div className={styles.productDetailsInfo}>
-                    <ProductInfo product={product}/>
+                    <ProductInfo product={product} displayPrice={calculatedPrice}/>
                     <div className={styles.sizeSelectionContainer}>
                         {/* fixed size selection */}
                         {Array.isArray(parsedSize) && (

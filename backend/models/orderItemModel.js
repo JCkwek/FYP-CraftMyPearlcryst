@@ -21,6 +21,10 @@ const OrderItem = sequelize.define('OrderItem', {
     type: DataTypes.INTEGER,
     allowNull: false
   },
+  size: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
   price_at_purchase: {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false

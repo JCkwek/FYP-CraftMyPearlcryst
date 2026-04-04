@@ -15,7 +15,9 @@ const checkout = async (req, res) => {
         console.log("CLIENT_URL:", process.env.CLIENT_URL);
 
         const totalAmount = cartItems.reduce((acc, item) => {
-            return acc + (item.Product.product_price*item.quantity);
+            // return acc + (item.Product.product_price*item.quantity);
+            const price = parseFloat(item.price_at_addition) || 0;
+            return acc + (price * item.quantity);
         }, 0);
 
         //create stripe session
@@ -29,10 +31,12 @@ const checkout = async (req, res) => {
                 price_data: {
                     currency: 'myr',
                     product_data: {
-                        name: item.Product.product_name,
+                        // name: item.Product.product_name,
+                        name: `${item.Product.product_name} (size: ${item.size || 'Standard'})`,
                         images: [ `${process.env.CLIENT_URL}/${item.Product.product_image}`],
                     },
-                    unit_amount: Math.round(item.Product.product_price*100),
+                    // unit_amount: Math.round(item.Product.product_price*100),
+                    unit_amount: Math.round(parseFloat(item.price_at_addition)*100),
                 },
                 quantity: item.quantity,
             })),

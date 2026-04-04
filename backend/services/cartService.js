@@ -3,13 +3,44 @@ const {Op, where} = require('sequelize');
 // const { Product } = require('../models/productModel');
 // const { Product, CartItem } = require('../models')
 const { CartItem, Product } = require('../models/index');
-console.log("--- DEBUGGING IMPORTS ---");
-console.log("CartItem Model exists:", !!CartItem);
-console.log("Product Model exists:", !!Product);
-console.log("-------------------------");
+// console.log("--- DEBUGGING IMPORTS ---");
+// console.log("CartItem Model exists:", !!CartItem);
+// console.log("Product Model exists:", !!Product);
+// console.log("-------------------------");
 
 const addToCart = async (userId, productId, quantity, size) => {
     const qtyToAdd = parseInt(quantity) || 1; //make sure quantity is number
+
+    // fetch product details to get base price and custom rules
+    const product = await Product.findByPk(productId);
+    if (!product) throw new Error("Product not found");
+
+    let finalPrice = parseFloat(product.product_price);
+
+    // parse size rules for True-Per-Inch math
+    let sizeInfo = product.product_size;
+    if (typeof sizeInfo === 'string') {
+        try { 
+            sizeInfo = JSON.parse(sizeInfo); 
+        } catch (e) { 
+            sizeInfo = null; 
+        }
+    }
+
+    // calculate new price
+    if (sizeInfo?.type === 'range' && size) {
+        const currentSize = parseFloat(size);
+        const baseSize = parseFloat(sizeInfo.base);
+        const unitPrice = parseFloat(sizeInfo.unitPrice || 0);
+
+        // handles both increase and decrease 
+        const diff = currentSize - baseSize;
+        finalPrice += (diff * unitPrice);
+    }
+
+    // ensure price never drops below a reasonable safety floor (e.g., RM 5)
+    finalPrice = Math.max(5.00, finalPrice);
+
 
     const existingItem = await CartItem.findOne({
         where: {
@@ -25,8 +56,9 @@ const addToCart = async (userId, productId, quantity, size) => {
         return await CartItem.create({
             user_id: userId,
             product_id: productId,
-            quantity,
-            size
+            quantity: qtyToAdd,
+            size,
+            price_at_addition: finalPrice
         });
     }
 

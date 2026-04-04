@@ -24,6 +24,12 @@ const CartItem = sequelize.define('CartItem', {
     size: {
         type: DataTypes.STRING, // Use STRING to handle "5" (Ring) or "18" (Necklace)
         allowNull: true
+    },
+    price_at_addition: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+        defaultValue: 0.00,
+        comment: "The calculated price (Base + Customisation) at the time of adding to cart"
     }
 }, {
     tableName: 'cart_items',

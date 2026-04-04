@@ -18,6 +18,10 @@ const addToCart = async (req, res) => {
         //set data from request body
         const { productId, quantity, size } = req.body;
 
+        if (!productId) {
+            return res.status(400).json({ error: "Product ID is required" });
+        }
+
         const result = await cartService.addToCart(userId, productId, quantity, size);
 
         res.json({
