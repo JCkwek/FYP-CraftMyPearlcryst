@@ -35,7 +35,8 @@ function ProductDetails(){
                 headers:{ Authorization:`Bearer ${token}`}
             });
 
-            alert(`Added ${product.product_name} (Size: ${sizeToSend}) to cart!`);
+            const sizeLabel = sizeToSend ? ` (Size: ${sizeToSend})` : "";
+            alert(`Added ${product.product_name}${sizeLabel} to cart!`);
         }catch(err){
             console.error("Error adding to cart:", err);
             alert("Failed to add to cart.");
@@ -44,10 +45,10 @@ function ProductDetails(){
 
     //calculate new price
     const calculatedPrice = useMemo(() => {
-        if(!product || !parsedSize ) return 0;
+        if(!product ) return 0;
         let total = parseFloat(product.product_price);
 
-        if(parsedSize.type === 'range' && isCustomising){
+        if(parsedSize && parsedSize.type === 'range' && isCustomising){
             const current = parseFloat(selectedSize);
             const base  = parseFloat(parsedSize.base);
             const rate = parseFloat(parsedSize.unitPrice || 0);
