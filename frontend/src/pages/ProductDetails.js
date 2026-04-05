@@ -15,7 +15,36 @@ function ProductDetails(){
     const [product, setProduct] = useState(null);
     const [selectedSize, setSelectedSize] = useState('');
     const [isCustomising, setIsCustomising] = useState(false);
-    const [parsedSize, setParsedSize] = useState(null);
+    // const [parsedSize, setParsedSize] = useState(null);
+
+    //fetch product
+    useEffect(() => {
+        const fetchProduct = async () => {
+        try {
+            const res = await api.get(`/products/${id}`);
+            const fetchedProduct = res.data;
+            setProduct(fetchedProduct);
+
+            //initialize default size from new options array
+            const sizeOption = fetchedProduct.options?.find(opt => 
+                opt.option_name.toLowerCase().includes('size') ||
+                opt.option_name.toLowerCase().includes('length')
+            );
+
+            if(sizeOption){
+                if(sizeOption.option_type === 'list'){
+                    setSelectedSize(sizeOption.values[0]?.visual_value);
+                }else if(sizeOption.option_type === 'range'){
+                    const base = sizeOption.values[0]?.visual_value.split(',')[2];
+                    setSelectedSize(base);
+                }
+            }
+        } catch (err) {
+            console.error("Error fetching product:", err);
+        }
+    };
+        fetchProduct();    
+    }, [id]);
 
     const handleAddToCart = async () => {
         const token = localStorage.getItem('token');
@@ -26,17 +55,15 @@ function ProductDetails(){
         }
 
         try{
-            const sizeToSend = selectedSize ? selectedSize.toString() : "";
-
             await api.post('/cart', {
                 productId: product.product_id,
                 quantity:1,
-                size: sizeToSend
+                size: selectedSize.toString()
             }, {
                 headers:{ Authorization:`Bearer ${token}`}
             });
 
-            const sizeLabel = sizeToSend ? ` (Size: ${sizeToSend})` : "";
+            const sizeLabel = selectedSize.toString() ? ` (Size: ${selectedSize})` : "";
             alert(`Added ${product.product_name}${sizeLabel} to cart!`);
         }catch(err){
             console.error("Error adding to cart:", err);
@@ -44,65 +71,25 @@ function ProductDetails(){
         }
     }
 
-    //calculate new price
+    //calculate dynamic price using price_modifier
     const calculatedPrice = useMemo(() => {
         if(!product ) return 0;
         let total = parseFloat(product.product_price);
 
-        if(parsedSize && parsedSize.type === 'range' && isCustomising){
-            const current = parseFloat(selectedSize);
-            const base  = parseFloat(parsedSize.base);
-            const rate = parseFloat(parsedSize.unitPrice || 0);
-
-            const diff = current - base;
-            total += (diff * rate);
-        }
-        return Math.max (5.00, total); //safety ensure never return RM0 or negative
-    },[product, selectedSize, isCustomising, parsedSize]);
-
-    //fetch product
-    useEffect(() => {
-        const fetchProduct = async () => {
-        try {
-            const res = await api.get(`/products/${id}`);
-            setProduct(res.data);
-        } catch (err) {
-            console.error("Error fetching product:", err);
-        }
-    };
-        fetchProduct();    
-    }, [id]);
-
-    //initialize product size
-    useEffect(() =>{
-        if (product && product.product_size) {
-        let sizeData = product.product_size;
-
-        // If it's a string, we MUST parse it
-        if (typeof sizeData === 'string') {
-            try {
-                sizeData = JSON.parse(sizeData);
-            } catch (e) {
-                console.error("JSON Parse Error:", e);
+        product.options?.forEach(option => {
+            if(option.option_type === 'range' && isCustomising){
+                const config = option.values[0];
+                const [, , base] = config.visual_value.split(',').map(Number);
+                const current = parseFloat(selectedSize) || base;
+                const rate = parseFloat(config.price_modifier || 0);
+                total += (current - base) * rate;
             }
-        }
-
-        // Save the cleaned-up data to our new state
-        setParsedSize(sizeData);
-
-        // Set the default selection
-        if (Array.isArray(sizeData)) {
-            setSelectedSize(sizeData[0]);
-        } else if (sizeData?.type === 'range') {
-            setSelectedSize(sizeData.base);
-        }
-    }
-    }, [product]) //only runs when the 'product' state is updated
+        })
+        return Math.max (5.00, total); //safety ensure never return RM0 or negative
+    },[product, selectedSize, isCustomising]);
 
 
-
-    // if (!product) return <p>Loading...</p>;
-    if (!product) return <Loading message="Finding the perfect jewelry..." />;
+    if (!product) return <Loading />;
     return(
         <div className={styles.productDetails}>
             <BackButton />
@@ -111,20 +98,26 @@ function ProductDetails(){
                 <div className={styles.productDetailsInfo}>
                     <ProductInfo product={product} displayPrice={calculatedPrice}/>
                     <div className={styles.sizeSelectionContainer}>
-                        {/* fixed size selection */}
-                        {Array.isArray(parsedSize) && (
-                            <div className={styles.fixedSizeContainer}>
-                                <label>Size: </label>
-                                <select value={selectedSize} onChange={(e) => setSelectedSize(e.target.value)}>
-                                    {parsedSize.map(s => <option key={s} value={s}>{s}</option>)}
-                                </select>
-                            </div>
-                        )}
-                        {/* range size selection */}
-                        {parsedSize?.type === 'range' && (
-                            <div className={styles.rangeSizeContainer}>
+                        {product.options?.map(option => (
+                            <div key={option.option_id}>
+                                {/* fixed size selection */}
+                                {option.option_type === 'list' && (
+                                    <div className={styles.fixedSizeContainer}>
+                                        <label>{option.option_name} </label>
+                                        <select value={selectedSize} onChange={(e) => setSelectedSize(e.target.value)}>
+                                            {option.values.map(val => (
+                                                <option key={val.value_id} value={val.visual_value}>
+                                                    {val.visual_value}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                )}
+                                {/* range size */}
+                                {option.option_type === 'range' && (
+                                                                <div className={styles.rangeSizeContainer}>
                                 {!isCustomising ? (
-                                    <div>Length: {parsedSize.base} inch</div>
+                                    <div>{option.option_name}: {selectedSize} inch</div>
                                 ) : (
                                     <div className={styles.rangeSizeInputContainer} >
                                         <b>Customise</b>   
@@ -132,23 +125,26 @@ function ProductDetails(){
                                             {selectedSize}
                                         </div>
                                         <div className={styles.rangeSizeInputContainerBottom}>
-                                            <div className={styles.rangeSizeInputText}>{parsedSize.min}</div>
+                                            <div className={styles.rangeSizeInputText}>{option.values[0].visual_value.split(',')[0]}</div>
                                             <input 
                                                 className={styles.rangeSizeInput}
                                                 type="range"
-                                                min={parsedSize.min}
-                                                max={parsedSize.max}
+                                                min={option.values[0].visual_value.split(',')[0]}
+                                                max={option.values[0].visual_value.split(',')[1]}
                                                 value={selectedSize}
                                                 onChange={(e) => setSelectedSize(e.target.value)}
                                             />
-                                            <div className={styles.rangeSizeInputText}>{parsedSize.max}</div>
+                                            <div className={styles.rangeSizeInputText}>{option.values[0].visual_value.split(',')[1]}</div>
                                         </div>
-                                        
                                     </div>
                                 )
                             }
                             </div>
-                        )}
+                                )}
+
+                            </div>
+                        ))}
+
                     </div>
                     <div className={styles.productDetailsButtons}>
                         {product.is_customisable && !isCustomising && (
@@ -166,7 +162,8 @@ function ProductDetails(){
                                 className={styles.cancelButton}
                                 onClick={() => {
                                     setIsCustomising(false);
-                                    setSelectedSize(parsedSize.base); // Reset to default
+                                    const base = product.options.find(o => o.option_type === 'range')?.values[0].visual_value.split(',')[2];
+                                    setSelectedSize(base); // Reset to default
                                 }}
                             >
                                 Cancel

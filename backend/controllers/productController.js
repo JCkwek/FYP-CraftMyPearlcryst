@@ -4,6 +4,9 @@ const getProducts = async (req, res) => {
     try {
         const { q, type, available, limit, latest } = req.query;
 
+        // Validation for limit to prevent NaN errors
+        const parsedLimit = (limit && !isNaN(limit)) ? parseInt(limit) : undefined;
+
         const products = await productService.getProducts({
             query: q,
             type,
@@ -14,7 +17,8 @@ const getProducts = async (req, res) => {
 
         res.status(200).json(products);
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        console.error("Controller Error (getProducts):", err);
+        res.status(500).json({ error: "Internal server error while fetching products" });
     }
 };
 

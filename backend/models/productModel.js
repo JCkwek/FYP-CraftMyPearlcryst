@@ -66,6 +66,10 @@ const Product = sequelize.define('Product', {
 Product.associate = (models) => {
     Product.hasMany(models.OrderItem, { foreignKey: 'product_id', as: 'OrderItems' });
     Product.hasMany(models.CartItem, { foreignKey: 'product_id', as: 'CartItems' });
+    Product.hasMany(models.CustomizationOption, {
+      foreignKey: 'product_id',
+      as: 'options'
+    })
 };
 
 module.exports =  Product ;

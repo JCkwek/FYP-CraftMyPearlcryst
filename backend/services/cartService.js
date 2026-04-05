@@ -1,12 +1,5 @@
-// const {CartItem}  = require('../models/cartItemModel');
 const {Op, where} = require('sequelize');
-// const { Product } = require('../models/productModel');
-// const { Product, CartItem } = require('../models')
 const { CartItem, Product } = require('../models/index');
-// console.log("--- DEBUGGING IMPORTS ---");
-// console.log("CartItem Model exists:", !!CartItem);
-// console.log("Product Model exists:", !!Product);
-// console.log("-------------------------");
 
 const addToCart = async (userId, productId, quantity, size) => {
     const qtyToAdd = parseInt(quantity) || 1; //make sure quantity is number
@@ -41,7 +34,6 @@ const addToCart = async (userId, productId, quantity, size) => {
     // ensure price never drops below a reasonable safety floor (e.g., RM 5)
     finalPrice = Math.max(5.00, finalPrice);
 
-
     const existingItem = await CartItem.findOne({
         where: {
             user_id: userId,
@@ -61,13 +53,6 @@ const addToCart = async (userId, productId, quantity, size) => {
             price_at_addition: finalPrice
         });
     }
-
-    // return await CartItem.create({
-    //     user_id: userId,
-    //     product_id: productId,
-    //     quantity: qtyToAdd,
-    //     size: size
-    // });
 
 };
 
