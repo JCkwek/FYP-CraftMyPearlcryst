@@ -1,159 +1,192 @@
-import styles from './ProductDetails.module.css'
-import { useParams } from 'react-router-dom';
-import { useEffect, useState, useMemo} from 'react';
-// import axios from 'axios';
+import styles from './ProductDetails.module.css';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useState, useMemo } from 'react';
 import api from '../api';
 import BackButton from '../components/buttons/BackButton';
 import ProductInfo from '../components/productDetail/ProductInfo';
 import ProductImage from '../components/productDetail/ProductImage';
-import { useNavigate } from 'react-router-dom'; 
 import Loading from '../components/Loading';
+import ColorSelect from '../components/ColorSelect';
 
-function ProductDetails(){
+function ProductDetails() {
     const navigate = useNavigate();
-    const { id } = useParams(); 
+    const { id } = useParams();
     const [product, setProduct] = useState(null);
     const [selectedSize, setSelectedSize] = useState('');
+    const [selectedColor, setSelectedColor] = useState('');
     const [isCustomising, setIsCustomising] = useState(false);
-    // const [parsedSize, setParsedSize] = useState(null);
 
-    //fetch product
+    // Fetch Product Data
     useEffect(() => {
         const fetchProduct = async () => {
-        try {
-            const res = await api.get(`/products/${id}`);
-            const fetchedProduct = res.data;
-            setProduct(fetchedProduct);
+            try {
+                const res = await api.get(`/products/${id}`);
+                const fetchedProduct = res.data;
+                setProduct(fetchedProduct);
 
-            //initialize default size from new options array
-            const sizeOption = fetchedProduct.options?.find(opt => 
-                opt.option_name.toLowerCase().includes('size') ||
-                opt.option_name.toLowerCase().includes('length')
-            );
+                // Initialize default size
+                const sizeOption = fetchedProduct.options?.find(opt =>
+                    opt.option_name.toLowerCase().includes('size') ||
+                    opt.option_name.toLowerCase().includes('length')
+                );
 
-            if(sizeOption){
-                if(sizeOption.option_type === 'list'){
-                    setSelectedSize(sizeOption.values[0]?.visual_value);
-                }else if(sizeOption.option_type === 'range'){
-                    const base = sizeOption.values[0]?.visual_value.split(',')[2];
-                    setSelectedSize(base);
+                if (sizeOption) {
+                    if (sizeOption.option_type === 'list') {
+                        setSelectedSize(sizeOption.values[0]?.visual_value);
+                    } else if (sizeOption.option_type === 'range') {
+                        const base = sizeOption.values[0]?.visual_value.split(',')[2];
+                        setSelectedSize(base);
+                    }
                 }
+
+                // Initialize default color
+                const colorOption = fetchedProduct.options?.find(opt =>
+                    opt.option_name.toLowerCase().includes('color')
+                );
+                if (colorOption) {
+                    setSelectedColor(colorOption.values[0]?.visual_value);
+                }
+            } catch (err) {
+                console.error("Error fetching product:", err);
             }
-        } catch (err) {
-            console.error("Error fetching product:", err);
-        }
-    };
-        fetchProduct();    
+        };
+        fetchProduct();
     }, [id]);
 
-    const handleAddToCart = async () => {
-        const token = localStorage.getItem('token');
-        if(!token){
-            alert("Please login to add items to your cart. ");
-            navigate('/login');
-            return;
-        }
-
-        try{
-            await api.post('/cart', {
-                productId: product.product_id,
-                quantity:1,
-                size: selectedSize.toString()
-            }, {
-                headers:{ Authorization:`Bearer ${token}`}
-            });
-
-            const sizeLabel = selectedSize.toString() ? ` (Size: ${selectedSize})` : "";
-            alert(`Added ${product.product_name}${sizeLabel} to cart!`);
-        }catch(err){
-            console.error("Error adding to cart:", err);
-            alert("Failed to add to cart.");
-        }
-    }
-
-    //calculate dynamic price using price_modifier
+    //  Dynamic Price Calculation
     const calculatedPrice = useMemo(() => {
-        if(!product ) return 0;
+        if (!product) return 0;
         let total = parseFloat(product.product_price);
 
         product.options?.forEach(option => {
-            if(option.option_type === 'range' && isCustomising){
+            // Range (Custom Length) logic
+            if (option.option_type === 'range' && isCustomising) {
                 const config = option.values[0];
                 const [, , base] = config.visual_value.split(',').map(Number);
                 const current = parseFloat(selectedSize) || base;
                 const rate = parseFloat(config.price_modifier || 0);
                 total += (current - base) * rate;
             }
-        })
-        return Math.max (5.00, total); //safety ensure never return RM0 or negative
-    },[product, selectedSize, isCustomising]);
+            
+            // List (Color/Fixed Size) logic - add price modifier if selected
+            if (option.option_type === 'list') {
+                const activeVal = option.values.find(val => 
+                    val.visual_value === selectedSize || val.visual_value === selectedColor
+                );
+                if (activeVal) {
+                    total += parseFloat(activeVal.price_modifier || 0);
+                }
+            }
+        });
+        return Math.max(5.00, total);
+    }, [product, selectedSize, selectedColor, isCustomising]);
 
+    //  Add to Cart Handler
+    const handleAddToCart = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert("Please login to add items to your cart.");
+            navigate('/login');
+            return;
+        }
+
+        try {
+            await api.post('/cart', {
+                productId: product.product_id,
+                quantity: 1,
+                size: selectedSize.toString(),
+                color: selectedColor
+            }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            alert(`Added ${product.product_name} to cart!`);
+        } catch (err) {
+            console.error("Error adding to cart:", err);
+            alert("Failed to add to cart.");
+        }
+    };
 
     if (!product) return <Loading />;
-    return(
+
+    return (
         <div className={styles.productDetails}>
             <BackButton />
             <div className={styles.productDetailsContentContainer}>
-                <ProductImage product={product}/>
+                <ProductImage product={product} />
+                
                 <div className={styles.productDetailsInfo}>
-                    <ProductInfo product={product} displayPrice={calculatedPrice}/>
+                    <ProductInfo product={product} displayPrice={calculatedPrice} />
+                    
                     <div className={styles.sizeSelectionContainer}>
                         {product.options?.map(option => (
-                            <div key={option.option_id}>
-                                {/* fixed size selection */}
+                            <div key={option.option_id} className={styles.optionSection}>
+                                
+                                {/* LIST TYPE (COLORS OR DROP-DOWN SIZES) */}
                                 {option.option_type === 'list' && (
-                                    <div className={styles.fixedSizeContainer}>
-                                        <label>{option.option_name} </label>
-                                        <select value={selectedSize} onChange={(e) => setSelectedSize(e.target.value)}>
-                                            {option.values.map(val => (
-                                                <option key={val.value_id} value={val.visual_value}>
-                                                    {val.visual_value}
-                                                </option>
-                                            ))}
-                                        </select>
+                                    <div className={styles.listOptionContainer}>
+                                        {option.option_name.toLowerCase().includes('color') ? (
+                                            isCustomising && (
+                                                <ColorSelect 
+                                                    option={option} 
+                                                    selectedColor={selectedColor} 
+                                                    onSelectColor={setSelectedColor} 
+                                                />
+                                            )
+                                        ) : (
+                                            <>
+                                                <label>{option.option_name}: </label>
+                                                <select value={selectedSize} onChange={(e) => setSelectedSize(e.target.value)}>
+                                                {option.values.map(val => (
+                                                    <option key={val.value_id} value={val.visual_value}>
+                                                        {val.visual_value}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            </>
+ 
+                                        )}
                                     </div>
-                                )}
-                                {/* range size */}
-                                {option.option_type === 'range' && (
-                                                                <div className={styles.rangeSizeContainer}>
-                                {!isCustomising ? (
-                                    <div>{option.option_name}: {selectedSize} inch</div>
-                                ) : (
-                                    <div className={styles.rangeSizeInputContainer} >
-                                        <b>Customise</b>   
-                                        <div className={styles.rangeSizeInputContainerTop}>
-                                            {selectedSize}
-                                        </div>
-                                        <div className={styles.rangeSizeInputContainerBottom}>
-                                            <div className={styles.rangeSizeInputText}>{option.values[0].visual_value.split(',')[0]}</div>
-                                            <input 
-                                                className={styles.rangeSizeInput}
-                                                type="range"
-                                                min={option.values[0].visual_value.split(',')[0]}
-                                                max={option.values[0].visual_value.split(',')[1]}
-                                                value={selectedSize}
-                                                onChange={(e) => setSelectedSize(e.target.value)}
-                                            />
-                                            <div className={styles.rangeSizeInputText}>{option.values[0].visual_value.split(',')[1]}</div>
-                                        </div>
-                                    </div>
-                                )
-                            }
-                            </div>
                                 )}
 
+                                {/* RANGE TYPE (CUSTOM SLIDER) */}
+                                {option.option_type === 'range' && (
+                                    <div className={styles.rangeSizeContainer}>
+                                        {!isCustomising ? (
+                                            <div>{option.option_name}: {selectedSize} inch</div>
+                                        ) : (
+                                            <div className={styles.rangeSizeInputContainer}>
+                                                <b>Customise</b>
+                                                <div className={styles.rangeSizeInputContainerTop}>
+                                                    {selectedSize} inch
+                                                </div>
+                                                <div className={styles.rangeSizeInputContainerBottom}>
+                                                    <div className={styles.rangeSizeInputText}>{option.values[0].visual_value.split(',')[0]}</div>
+                                                    <input
+                                                        className={styles.rangeSizeInput}
+                                                        type="range"
+                                                        min={option.values[0].visual_value.split(',')[0]}
+                                                        max={option.values[0].visual_value.split(',')[1]}
+                                                        value={selectedSize}
+                                                        onChange={(e) => setSelectedSize(e.target.value)}
+                                                    />
+                                                    <div className={styles.rangeSizeInputText}>{option.values[0].visual_value.split(',')[1]}</div>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         ))}
-
                     </div>
+
                     <div className={styles.productDetailsButtons}>
                         {product.is_customisable && !isCustomising && (
                             <button 
-                                className={styles.customiseButton}
-                                onClick={() => setIsCustomising(true)
-                                
-                                }
-                            >Customise
+                                className={styles.customiseButton} 
+                                onClick={() => setIsCustomising(true)}
+                            >
+                                Customise
                             </button>
                         )}
                         
@@ -163,20 +196,21 @@ function ProductDetails(){
                                 onClick={() => {
                                     setIsCustomising(false);
                                     const base = product.options.find(o => o.option_type === 'range')?.values[0].visual_value.split(',')[2];
-                                    setSelectedSize(base); // Reset to default
+                                    setSelectedSize(base);
                                 }}
                             >
                                 Cancel
                             </button>
                         )}
-                        <button className={styles.addToCartButton} onClick={handleAddToCart}>Add To Cart</button>
+                        
+                        <button className={styles.addToCartButton} onClick={handleAddToCart}>
+                            Add To Cart
+                        </button>
                     </div>
                 </div>
             </div>
-
-
         </div>
-    )
+    );
 }
 
 export default ProductDetails;
