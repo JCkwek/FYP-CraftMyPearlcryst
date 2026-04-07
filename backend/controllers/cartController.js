@@ -16,13 +16,13 @@ const addToCart = async (req, res) => {
         const userId = decoded.id;
 
         //set data from request body
-        const { productId, quantity, size } = req.body;
+        const { productId, quantity, customization, displayPrice} = req.body;
 
         if (!productId) {
             return res.status(400).json({ error: "Product ID is required" });
         }
 
-        const result = await cartService.addToCart(userId, productId, quantity, size);
+        const result = await cartService.addToCart(userId, productId, quantity, customization, displayPrice);
 
         res.json({
             message: "Added to cart",

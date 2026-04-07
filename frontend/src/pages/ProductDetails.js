@@ -43,7 +43,8 @@ function ProductDetails() {
                 const colorOption = fetchedProduct.options?.find(opt =>
                     opt.option_name.toLowerCase().includes('color')
                 );
-                if (colorOption) {
+                if (colorOption && colorOption.values.length > 0) {
+                    // set first color as default
                     setSelectedColor(colorOption.values[0]?.visual_value);
                 }
             } catch (err) {
@@ -58,8 +59,8 @@ function ProductDetails() {
         if (!product) return 0;
         let total = parseFloat(product.product_price);
 
+        // for custom length (range size)
         product.options?.forEach(option => {
-            // Range (Custom Length) logic
             if (option.option_type === 'range' && isCustomising) {
                 const config = option.values[0];
                 const [, , base] = config.visual_value.split(',').map(Number);
@@ -68,18 +69,18 @@ function ProductDetails() {
                 total += (current - base) * rate;
             }
             
-            // List (Color/Fixed Size) logic - add price modifier if selected
-            if (option.option_type === 'list') {
-                const activeVal = option.values.find(val => 
-                    val.visual_value === selectedSize || val.visual_value === selectedColor
-                );
-                if (activeVal) {
-                    total += parseFloat(activeVal.price_modifier || 0);
-                }
-            }
+            // for color/fix size (list) - add price modifier if selected
+            // if (option.option_type === 'list') {
+            //     const activeVal = option.values.find(val => 
+            //         val.visual_value === selectedSize || val.visual_value === selectedColor
+            //     );
+            //     if (activeVal) {
+            //         total += parseFloat(activeVal.price_modifier || 0);
+            //     }
+            // }
         });
         return Math.max(5.00, total);
-    }, [product, selectedSize, selectedColor, isCustomising]);
+    }, [product, selectedSize, isCustomising]);
 
     //  Add to Cart Handler
     const handleAddToCart = async () => {
@@ -94,8 +95,12 @@ function ProductDetails() {
             await api.post('/cart', {
                 productId: product.product_id,
                 quantity: 1,
-                size: selectedSize.toString(),
-                color: selectedColor
+                displayPrice: calculatedPrice,
+                customization: {
+                    size: selectedSize.toString(),
+                    color: selectedColor,
+                }
+
             }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -106,6 +111,28 @@ function ProductDetails() {
             alert("Failed to add to cart.");
         }
     };
+
+    const resetCustomization = () => {
+        setIsCustomising(false);
+
+        // Find and reset Size to base (index 2 in CSV-style string)
+        const sizeOption = product?.options?.find(opt => 
+            opt.option_name.toLowerCase().includes('size') || 
+            opt.option_name.toLowerCase().includes('length')
+        );
+        if (sizeOption && sizeOption.option_type === 'range') {
+            const base = sizeOption.values[0]?.visual_value.split(',')[2];
+            setSelectedSize(base);
+        }
+
+        // Find and reset Color to the 1st option (default)
+        const colorOption = product?.options?.find(opt => 
+            opt.option_name.toLowerCase().includes('color')
+        );
+        if (colorOption && colorOption.values.length > 0) {
+            setSelectedColor(colorOption.values[0].value_label);
+        }
+    }
 
     if (!product) return <Loading />;
 
@@ -134,16 +161,16 @@ function ProductDetails() {
                                                 />
                                             )
                                         ) : (
-                                            <>
+                                            <div className={styles.fixedSizeContainer}>
                                                 <label>{option.option_name}: </label>
                                                 <select value={selectedSize} onChange={(e) => setSelectedSize(e.target.value)}>
-                                                {option.values.map(val => (
-                                                    <option key={val.value_id} value={val.visual_value}>
-                                                        {val.visual_value}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                            </>
+                                                    {option.values.map(val => (
+                                                        <option key={val.value_id} value={val.visual_value}>
+                                                            {val.visual_value}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
  
                                         )}
                                     </div>
@@ -182,23 +209,13 @@ function ProductDetails() {
 
                     <div className={styles.productDetailsButtons}>
                         {product.is_customisable && !isCustomising && (
-                            <button 
-                                className={styles.customiseButton} 
-                                onClick={() => setIsCustomising(true)}
-                            >
+                            <button className={styles.customiseButton} onClick={() => setIsCustomising(true)}>
                                 Customise
                             </button>
                         )}
                         
                         {isCustomising && (
-                            <button 
-                                className={styles.cancelButton}
-                                onClick={() => {
-                                    setIsCustomising(false);
-                                    const base = product.options.find(o => o.option_type === 'range')?.values[0].visual_value.split(',')[2];
-                                    setSelectedSize(base);
-                                }}
-                            >
+                            <button className={styles.cancelButton} onClick={resetCustomization}>
                                 Cancel
                             </button>
                         )}

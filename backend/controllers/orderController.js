@@ -27,19 +27,26 @@ const checkout = async (req, res) => {
             success_url: `${process.env.CLIENT_URL}/checkout-success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${process.env.CLIENT_URL}/cart`,
             customer_email: req.user.email,
-            line_items: cartItems.map(item => ({
-                price_data: {
+            line_items: cartItems.map(item => {
+                const customDetails = typeof item.customization === 'string' 
+                    ? JSON.parse(item.customization) 
+                    : item.customization;
+
+                return{
+                    price_data: {
                     currency: 'myr',
                     product_data: {
-                        // name: item.Product.product_name,
-                        name: `${item.Product.product_name} (size: ${item.size || 'Standard'})`,
+                        name: item.Product.product_name,
+                        // name: `${item.Product.product_name} (size: ${item.size || 'Standard'})`,
+                        description: `Size: ${customDetails?.size || 'Standard'}, Color: ${customDetails?.color || 'N/A'}`,
                         images: [ `${process.env.CLIENT_URL}/${item.Product.product_image}`],
                     },
                     // unit_amount: Math.round(item.Product.product_price*100),
                     unit_amount: Math.round(parseFloat(item.price_at_addition)*100),
                 },
                 quantity: item.quantity,
-            })),
+            }
+            }),
         });
         await orderService.createOrder(userId, cartItems, totalAmount, session.id);
         res.status(200).json({ url: session.url });

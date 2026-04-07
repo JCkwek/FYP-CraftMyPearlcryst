@@ -7,6 +7,10 @@ function CartItemCard({ item, onUpdateQty, onDelete }) {
     const itemPrice = Number(item.price_at_addition) || 0;
     const itemTotal = (itemPrice * item.quantity).toFixed(2);
 
+    const customDetails = typeof item.customization === 'string'
+        ? JSON.parse(item.customization)
+        : item.customization
+
     return (
         <div className={styles.cartItemCardContainer}>
             <div className={styles.cartItemCardContentContainer}>
@@ -21,8 +25,21 @@ function CartItemCard({ item, onUpdateQty, onDelete }) {
                     </div>
                     <div className={styles.cartItemInfoContainer}>
                         <h4>{product?.product_name || `Product ID: ${item.product_id}`}</h4>
-                        {item.size && (
+                        {/* {item.size && (
                             <div className={styles.itemSizeLabel}>Size: {item.size}</div>
+                        )} */}
+                        {customDetails?.size && (
+                            <div className={styles.itemSizeLabel}>Size: {customDetails.size} inch</div>
+                        )}
+                        {customDetails?.color && (
+                            <div className={styles.itemColorLabel}>
+                                Color: 
+                                <span 
+                                    className={styles.colorCircle} 
+                                    style={{ backgroundColor: customDetails.color }}
+                                    title={customDetails.color}
+                                />
+                            </div>
                         )}
                         <p>RM {itemPrice.toFixed(2)}</p>
                     </div>

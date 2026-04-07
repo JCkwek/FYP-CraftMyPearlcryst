@@ -72,3 +72,25 @@
 .deleteButton:hover {
     transform: scale(1.2);
 }
+
+.itemColorLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 4px;
+}
+
+.colorCircle {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid #ddd; /* helps white pearls show up on white backgrounds */
+    display: inline-block;
+}
+
+.unitPrice {
+    font-weight: bold;
+    margin-top: 8px;
+}

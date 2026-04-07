@@ -9,9 +9,9 @@
 .productImageContainer img{
     height: 20rem;
     width: 18rem;
-    cursor: zoom-in;
+    /* cursor: zoom-in; */
 }
 
-.productImageContainer:hover img{
+/* .productImageContainer:hover img{
     transform: scale(1.5);
-}
+} */

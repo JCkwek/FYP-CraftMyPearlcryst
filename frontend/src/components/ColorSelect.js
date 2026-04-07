@@ -1,5 +1,4 @@
 import styles from './ColorSelect.module.css'
-import React from 'react';
 
 function ColorSelect({ option, selectedColor, onSelectColor }){
 if (!option) return null;
@@ -15,7 +14,7 @@ if (!option) return null;
                             selectedColor === val.visual_value ? styles.activeSwatch : ''
                         }`}
                         style={{ backgroundColor: val.visual_value }}
-                        onClick={() => onSelectColor(val.visual_value)}
+                        onClick={() => onSelectColor(val.value_label)}
                         title={val.value_label}
                     />
                 ))}
