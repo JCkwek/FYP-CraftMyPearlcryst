@@ -3,12 +3,13 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     user-select: none;
     overflow: hidden;
-    height: 22rem;
+    height: 58vh;
+    width: 23vw;
 }
 
 .productImageContainer img{
-    height: 20rem;
-    width: 18rem;
+    height: 54vh;
+    width: 21vw;
     /* cursor: zoom-in; */
 }
 

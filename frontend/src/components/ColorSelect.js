@@ -3,7 +3,7 @@ import styles from './ColorSelect.module.css'
 function ColorSelect({ option, selectedColor, onSelectColor }){
 if (!option) return null;
     return (
-        <div className={styles.listOptionContainer}>
+        <div className={styles.colorSelectContainer}>
             <label>{option.option_name}: </label>
             <div className={styles.swatchGroup}>
                 {option.values.map(val => (

@@ -1,3 +1,7 @@
+.colorSelectContainer{
+    padding: 1rem;
+}
+
 .swatchGroup {
     display: flex;
     gap: 1rem;

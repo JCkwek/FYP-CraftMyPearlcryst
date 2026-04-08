@@ -6,6 +6,7 @@
     display: flex;
     justify-content:space-evenly;
     flex-wrap: wrap;
+    overflow: hidden;
 }
 
 .productDetailsInfo{
@@ -96,9 +97,3 @@
     border: 1px solid red;
     color: red ;
 }
-
-
-.optionWrapper {
-    margin-bottom: 20px;
-}
-

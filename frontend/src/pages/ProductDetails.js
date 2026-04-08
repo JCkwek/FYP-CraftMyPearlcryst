@@ -169,7 +169,7 @@ function ProductDetails() {
                                             <div>{option.option_name}: {selectedSize} inch</div>
                                         ) : (
                                             <div className={styles.rangeSizeInputContainer}>
-                                                <b>Customise</b>
+                                                <div>{option.option_name}:</div> 
                                                 <div className={styles.rangeSizeInputContainerTop}>
                                                     {selectedSize} inch
                                                 </div>
