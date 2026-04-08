@@ -35,7 +35,8 @@
     align-items: center;
     gap: 1rem;
 }
-.accountProfileSection{
+
+.accountOrdersSection, .accountProfileSection{
     padding: 1rem;
     border-radius: 0.5rem;
     width: 40rem;
@@ -44,16 +45,7 @@
     cursor: pointer;
 }
 
-.accountOrdersSection{
-    padding: 1rem;
-    border-radius: 0.5rem;
-    width: 40rem;
-    color: white;
-    background-color: green;
-    cursor: pointer;
-}
-
-.accountOrdersSection:hover{
+.accountOrdersSection:hover, .accountProfileSection:hover{
     background-color: rgb(1, 103, 1);
 }
 

@@ -1,0 +1,72 @@
+.profile{
+    padding: 1rem;
+}
+
+.profileContentContainer{
+    padding: 1rem;
+}
+
+.profileInfoContainer {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    background: #f9f9f9;
+    padding: 2rem;
+    border-radius: 12px;
+}
+
+.profileInfo {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.5rem;
+}
+
+.profileInfo label {
+    font-weight: bold;
+    color: #888;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.profileInfo span {
+    font-size: 1.1rem;
+    color: #333;
+}
+
+
+.passwordWrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #eee;
+    padding: 5px 10px;
+    border-radius: 8px;
+    width: fit-content;
+}
+
+.passwordInput {
+    border: none;
+    background: transparent;
+    font-size: 1.1rem;
+    font-family: monospace;
+    outline: none;
+    color: #333;
+    width: 150px; /* Adjust as needed */
+}
+
+.viewButton {
+    background: #333;
+    color: white;
+    border: none;
+    padding: 4px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: background 0.2s;
+}
+
+.viewButton:hover {
+    background: #555;
+}

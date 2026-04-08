@@ -79,7 +79,7 @@ function Account() {
                     <div className={styles.loggedIn}>
                         <h4>Welcome, {user?.name}</h4>
                         <div className={styles.accountSectionsContainer}>
-                            <div className={styles.accountProfileSection}>
+                            <div className={styles.accountProfileSection} onClick={() => navigate('/profile')}>
                                 <h5>Profile</h5>
                             </div>
                             <div className={styles.accountOrdersSection} onClick={() => navigate('/orders')}>

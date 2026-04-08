@@ -37,5 +37,6 @@
 }
 
 .topNavButtonIcon:hover{
-    color: #eee;
+    /* color: #eee; */
+    font-size: 1.3rem;
 }
