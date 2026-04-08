@@ -5,7 +5,8 @@ function OrderItemCard({ item , status, customization}) {
     const itemPrice = parseFloat(item.price_at_purchase) || 0;
 
     console.log("Customization Prop:", customization);
-let customDetails = {};
+
+    let customDetails = {};
     try {
         if (customization) {
             customDetails = typeof customization === 'string' 
@@ -40,7 +41,7 @@ let customDetails = {};
                     </div>
                     {/*custom details*/}
                     <div className={styles.customSpecs}>
-                        {customDetails?.size && <span>Size: {customDetails.size} inch</span>}
+                        {customDetails?.size && <span>Size: {customDetails.size}</span>}
                         {customDetails?.color && (
                             <div className={styles.colorRow}>
                                     Color: <span 

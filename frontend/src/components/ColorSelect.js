@@ -14,7 +14,7 @@ if (!option) return null;
                             selectedColor === val.visual_value ? styles.activeSwatch : ''
                         }`}
                         style={{ backgroundColor: val.visual_value }}
-                        onClick={() => onSelectColor(val.value_label)}
+                        onClick={() => onSelectColor(val.visual_value)}
                         title={val.value_label}
                     />
                 ))}

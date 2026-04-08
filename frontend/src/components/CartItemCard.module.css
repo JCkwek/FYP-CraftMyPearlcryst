@@ -20,6 +20,7 @@
     border-radius: 1rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    /* background-color: blue; */
 }
 .cardItemDetailsContainer:hover{
     transform: scale(1.05); 
@@ -33,6 +34,15 @@
     border-radius: 8px;
     background-color: white;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.cartItemInfoContainer{
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .quantityContainer {
@@ -72,25 +82,28 @@
 .deleteButton:hover {
     transform: scale(1.2);
 }
+.productNameContainer{
+    padding: 1rem;
+}
+.itemPriceContainer{
+    padding: 1rem;
+}
+.customDetailsContainer{
+    padding: 1rem;
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
 
-.itemColorLabel {
+.customColorLabel {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 0.9rem;
-    color: #666;
-    margin-top: 4px;
+    gap: 0.5rem;
 }
-
 .colorCircle {
-    width: 16px;
-    height: 16px;
+    width: 1rem;
+    height: 1rem;
     border-radius: 50%;
-    border: 1px solid #ddd; /* helps white pearls show up on white backgrounds */
+    border: 1px solid #ddd; 
     display: inline-block;
-}
-
-.unitPrice {
-    font-weight: bold;
-    margin-top: 8px;
 }

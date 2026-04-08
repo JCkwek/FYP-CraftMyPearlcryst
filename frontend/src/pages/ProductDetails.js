@@ -39,14 +39,6 @@ function ProductDetails() {
                     }
                 }
 
-                // Initialize default color
-                const colorOption = fetchedProduct.options?.find(opt =>
-                    opt.option_name.toLowerCase().includes('color')
-                );
-                if (colorOption && colorOption.values.length > 0) {
-                    // set first color as default
-                    setSelectedColor(colorOption.values[0]?.visual_value);
-                }
             } catch (err) {
                 console.error("Error fetching product:", err);
             }
@@ -67,17 +59,7 @@ function ProductDetails() {
                 const current = parseFloat(selectedSize) || base;
                 const rate = parseFloat(config.price_modifier || 0);
                 total += (current - base) * rate;
-            }
-            
-            // for color/fix size (list) - add price modifier if selected
-            // if (option.option_type === 'list') {
-            //     const activeVal = option.values.find(val => 
-            //         val.visual_value === selectedSize || val.visual_value === selectedColor
-            //     );
-            //     if (activeVal) {
-            //         total += parseFloat(activeVal.price_modifier || 0);
-            //     }
-            // }
+            }    
         });
         return Math.max(5.00, total);
     }, [product, selectedSize, isCustomising]);
@@ -90,17 +72,21 @@ function ProductDetails() {
             navigate('/login');
             return;
         }
+        
+        const customization = {};
+        if (selectedSize) {
+            customization.size = selectedSize.toString();
+        }
+        if (selectedColor) {
+            customization.color = selectedColor;
+        }
 
         try {
             await api.post('/cart', {
                 productId: product.product_id,
                 quantity: 1,
                 displayPrice: calculatedPrice,
-                customization: {
-                    size: selectedSize.toString(),
-                    color: selectedColor,
-                }
-
+                customization: customization
             }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -126,12 +112,12 @@ function ProductDetails() {
         }
 
         // Find and reset Color to the 1st option (default)
-        const colorOption = product?.options?.find(opt => 
-            opt.option_name.toLowerCase().includes('color')
-        );
-        if (colorOption && colorOption.values.length > 0) {
-            setSelectedColor(colorOption.values[0].value_label);
-        }
+        // const colorOption = product?.options?.find(opt => 
+        //     opt.option_name.toLowerCase().includes('color')
+        // );
+        // if (colorOption && colorOption.values.length > 0) {
+        //     setSelectedColor(colorOption.values[0].value_label);
+        // }
     }
 
     if (!product) return <Loading />;

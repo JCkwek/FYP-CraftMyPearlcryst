@@ -24,24 +24,29 @@ function CartItemCard({ item, onUpdateQty, onDelete }) {
                         />
                     </div>
                     <div className={styles.cartItemInfoContainer}>
-                        <h4>{product?.product_name || `Product ID: ${item.product_id}`}</h4>
-                        {/* {item.size && (
-                            <div className={styles.itemSizeLabel}>Size: {item.size}</div>
-                        )} */}
-                        {customDetails?.size && (
-                            <div className={styles.itemSizeLabel}>Size: {customDetails.size} inch</div>
-                        )}
-                        {customDetails?.color && (
-                            <div className={styles.itemColorLabel}>
-                                Color: 
-                                <span 
-                                    className={styles.colorCircle} 
-                                    style={{ backgroundColor: customDetails.color }}
-                                    title={customDetails.color}
-                                />
-                            </div>
-                        )}
-                        <p>RM {itemPrice.toFixed(2)}</p>
+                        <div className={styles.productNameContainer} >
+                            <h4>{product?.product_name}</h4>
+                            Product ID: #{item.product_id}
+                        </div>
+                        
+                        {/*custom details */}
+                        <div className={styles.customDetailsContainer}>
+                            {customDetails?.size && (
+                                <div className={styles.customSizeLabel}>Size: {customDetails.size}</div>
+                            )}
+                            {customDetails?.color && (
+                                <div className={styles.customColorLabel}>
+                                    Color: 
+                                    <span 
+                                        className={styles.colorCircle} 
+                                        style={{ backgroundColor: customDetails.color }}
+                                        title={customDetails.color}
+                                    />
+                                </div>
+                            )}
+                        </div>
+                        
+                        {/* <div className={styles.itemPriceContainer} >RM {itemPrice.toFixed(2)}</div> */}
                     </div>
                 </div>
 
