@@ -1,5 +1,6 @@
 .profile{
     padding: 1rem;
+    user-select: none;
 }
 
 .profileContentContainer{
@@ -45,8 +46,6 @@
 
 .readOnlyEmail {
     color: #999;
-    font-style: italic;
-    user-select: none;
 }
 
 .profileButtons {
