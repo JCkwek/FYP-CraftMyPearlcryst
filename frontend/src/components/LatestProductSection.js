@@ -3,6 +3,7 @@ import ProductCard from './ProductCard'
 import {useState, useEffect} from 'react';
 import { getProducts } from '../api/productApi';
 import { useNavigate } from 'react-router-dom';
+import Loading from './Loading';
 
 function LatestProductSection(){
     const [products, setProducts] = useState([]);
@@ -41,7 +42,7 @@ function LatestProductSection(){
         <div className={styles.latestProductColumnContainer}>
         <div className={styles.productCardContainer}>
          {loading ? (
-            <p>Loading...</p>
+            <Loading />
          ) :  products.map((product) => (
                 <ProductCard 
                     key={product.product_id}

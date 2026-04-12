@@ -19,6 +19,8 @@ const bannerRoutes = require('./routes/bannerRoutes');
 const authRoutes = require("./routes/auth");
 const cartRoutes = require('./routes/cartRoutes');
 const orderRoutes = require('./routes/orderRoutes');
+const aiCustomJewelryRoutes = require('./routes/aiCustomizationRoutes');
+const rotateImageRoutes = require('./routes/rotateImageRoutes');
 
 // Mount routes
 app.use('/users', userRoutes);
@@ -27,6 +29,8 @@ app.use('/banners',bannerRoutes);
 app.use('/auth', authRoutes);
 app.use('/cart', cartRoutes);
 app.use('/orders', orderRoutes);
+app.use('/aicustomjewelry', aiCustomJewelryRoutes);
+app.use('/rotateimages',rotateImageRoutes);
 
 const sequelize = require('./db');
 const { or } = require('sequelize');

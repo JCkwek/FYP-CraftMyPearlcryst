@@ -6,23 +6,33 @@ function SideNav(){
             {/* <h2>SideNav</h2> */}
             <div className={styles.sideNavTabContainer}>
                 <NavLink 
-                to="/"
-                className={({isActive}) =>
-                    isActive
-                        ? `${styles.sideNavTab} ${styles.active}`
-                        : styles.sideNavTab
-                }
-                >Home
+                    to="/"
+                    className={({isActive}) =>
+                        isActive
+                            ? `${styles.sideNavTab} ${styles.active}`
+                            : styles.sideNavTab
+                    }
+                    >Home
                 </NavLink>
 
                 <NavLink 
-                to="/products" 
-                className={({isActive}) =>
-                    isActive
-                        ? `${styles.sideNavTab} ${styles.active}`
-                        : styles.sideNavTab
-                }
-                >Product
+                    to="/products" 
+                    className={({isActive}) =>
+                        isActive
+                            ? `${styles.sideNavTab} ${styles.active}`
+                            : styles.sideNavTab
+                    }
+                    >Product
+                </NavLink>
+
+                <NavLink 
+                    to="/aiCustom" 
+                    className={({isActive}) =>
+                        isActive
+                            ? `${styles.sideNavTab} ${styles.active}`
+                            : styles.sideNavTab
+                    }
+                    >AI Custom Jewelry
                 </NavLink>
             </div> 
                 

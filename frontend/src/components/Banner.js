@@ -1,8 +1,25 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Carousel from 'react-bootstrap/Carousel';
 import styles from './Banner.module.css';
+import { getBanners } from '../api/bannerApi';
+import {useState, useEffect} from 'react';
 
-function Banner({banners}){
+function Banner(){
+    const [banners, setBanners] = useState([]);
+    useEffect(()=>{
+        fetchBanners();
+  },[]);
+
+  const fetchBanners = async () => {
+    try{
+      const res = await getBanners();
+      console.log(res);
+      setBanners(res);
+    }catch(err){
+      console.error("Failed to load banner",err);
+    }
+  };
+
     return(
         <Carousel className={styles.carousel}>
             {banners.map((banner) => ( 

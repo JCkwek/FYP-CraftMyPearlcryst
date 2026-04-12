@@ -5,6 +5,7 @@ const OrderItem = require('./orderItemModel');
 const  CartItem  = require('./cartItemModel');
 const CustomizationOption = require('./customizationOptionsModel');
 const OptionValue = require('./optionValueModel');
+const AIJewelryComponent = require('./aiJewelryComponentModel')
 const sequelize = require('../db');
 
 const models = { 
@@ -14,7 +15,8 @@ const models = {
   OrderItem, 
   CartItem, 
   CustomizationOption, 
-  OptionValue 
+  OptionValue,
+  AIJewelryComponent
 };
 
 // CRITICAL:

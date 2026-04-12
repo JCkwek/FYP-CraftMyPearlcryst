@@ -12,6 +12,7 @@ import Orders from './pages/Orders';
 import OrderSuccess from './pages/OrderSuccess';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
+import AiCustom from './pages/AiCustom';
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
           <Route path="/checkout-success" element={<OrderSuccess />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />}/>
+          <Route path="/aiCustom" element={<AiCustom />}/>
         </Route>
       </Routes>
     </BrowserRouter>
