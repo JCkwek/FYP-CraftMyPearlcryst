@@ -52,10 +52,10 @@ function Products(){
                     <p>No products found</p>
                 ) : (
             products.map((product) => (
-            <ProductCard 
-                key={product.product_id}
-                product={product}
-            />
+                    <ProductCard 
+                        key={product.product_id}
+                        product={product}
+                    />
                 ))
             )}
             </div>

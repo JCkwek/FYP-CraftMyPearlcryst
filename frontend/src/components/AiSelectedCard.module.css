@@ -1,0 +1,27 @@
+.aiSelectedCard{
+    padding: 0.5rem;
+    height: 10rem;
+    width: 8rem ;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+.aiSelectedCardImgContainer{
+    padding: 0.5rem;
+    height: 83%;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: red; */
+}
+.aiSelectedCardImgContainer img{
+    object-fit: contain;
+    overflow: hidden;
+}
+.aiSelectedCardTitleContainer{
+    padding: 0.2rem;
+    text-align: center;
+    /* background-color: blue; */
+}

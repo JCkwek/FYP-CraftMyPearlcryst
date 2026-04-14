@@ -1,9 +1,12 @@
 import styles from './AiCustom.module.css'
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Loading from '../components/Loading';
 import api from '../api';
 import LengthSlider from '../components/LengthSlider';
 import RotatingCarousel from '../components/RotatingCarousel';
+import AiOptionCard from '../components/AiOptionCard';
+import AiSelectedCard from '../components/AiSelectedCard';
+import ErrorBanner from '../components/ErrorBanner';
 
 
 function AiCustom(){
@@ -12,6 +15,7 @@ function AiCustom(){
     const [options, setOptions] = useState([]);
     const [loading, setLoading] = useState(false);
     const [selections, setSelections] = useState({}); //Track selections: { 1: {id: 1, name: 'Necklace'}, 2: {id: 3, name: 'Pearl'} }
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         if (!started) return;
@@ -41,6 +45,15 @@ function AiCustom(){
     };
 
     const handleNext = async () => {
+        if (!selections[step]) {
+            setError("Please select an option before moving to the next step.");
+            setTimeout(() => setError(null), 3000);// Optional: Auto-hide error after 3 seconds
+            return; 
+        }
+
+        // Clear error if an option is selected
+        setError(null);
+
         let nextStep = step + 1;
 
         // Logic to skip empty steps (e.g., Pendants for Bracelets)
@@ -64,7 +77,13 @@ function AiCustom(){
     };
 
     const handleBack = () => {
-        if (step > 1) setStep(step - 1);
+        if (step === 1) {
+            setStep(1);
+            setSelections({});
+            setStarted(false);
+        } else {
+            setStep(step - 1);
+        }
     };
 
     const getDynamicStepName = (step, selections) => {
@@ -101,10 +120,26 @@ function AiCustom(){
         <div className={styles.aiCustom}>
             <div>
                 <div className={styles.progressBar}>
-                    Step {step} of 8: {getDynamicStepName(step, selections)}
+                    <h4>Step {step} of 8: Select {getDynamicStepName(step, selections)}</h4>
             </div>
 
-            <div className={styles.optionsGrid}>
+            <div className={styles.currentSelectionContainer}>
+                {Object.keys(selections).map((key, index) => (
+                    <React.Fragment key={key}>  {/* Show plus icon only BEFORE the 2nd, 3rd, etc. items */}
+                        {index > 0 && (
+                            <div className={styles.plusIcon}>+</div>
+                        )}
+            
+                    <div className={styles.selectedContainer}>
+                        <AiSelectedCard 
+                            item={selections[key]}
+                        />
+                    </div>
+                    </React.Fragment>
+                ))}
+            </div>
+
+            <div className={styles.aiOptionCardContainer}>
                 {loading ? (
                     <Loading />
                 )
@@ -117,22 +152,21 @@ function AiCustom(){
                     />
                 </div>
                 ) : (
-                    options.map((item) => (
-                        <div 
-                            key={item.component_id}
-                            className={`${styles.optionCard} ${selections[step]?.component_id === item.component_id ? styles.selected : ''}`}
-                            onClick={() => handleSelect(item)}
-                        >
-                            <img src={`http://localhost:3000${item.image_preview}`} alt={item.name} />
-                            <p>{item.name}</p>
-                        </div>
-                    ))
+                        options.map((item) => (
+                            <AiOptionCard 
+                                key={item.component_id}
+                                item={item}
+                                className={`${styles.optionCard} ${selections[step]?.component_id === item.component_id ? styles.selected : ''}`}
+                                onClick={() => handleSelect(item)}
+                            />                       
+                        ))
                 )}
             </div>
 
-            <div className={styles.controls}>
-                <button onClick={handleBack} disabled={step === 1}>Back</button>
-                <button onClick={handleNext} disabled={!selections[step]}>Next</button>
+            <div className={styles.aiBackNextBtnContainer}>
+                <button className={styles.aiBackBtn} onClick={handleBack} >Back</button>
+                {error && <ErrorBanner message={error} />}
+                <button className={styles.aiNextBtn} onClick={handleNext}>Next</button>
             </div>
             </div>
            

@@ -1,0 +1,33 @@
+.aiOptionCard{
+    padding: 0.5rem;
+    height: 12rem;
+    width: 10rem ;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.aiOptionCard:hover{
+    transform: scale(1.05); 
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+}
+.aiOptionImgContainer{
+    padding: 0.5rem;
+    height: 83%;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: red; */
+}
+.aiOptionImgContainer img{
+    object-fit: contain;
+    overflow: hidden;
+}
+.aiOptionTitleContainer{
+    padding: 0.2rem;
+    text-align: center;
+    /* background-color: blue; */
+}
