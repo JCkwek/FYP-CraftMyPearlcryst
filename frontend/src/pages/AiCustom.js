@@ -152,20 +152,25 @@ function AiCustom(){
                     />
                 </div>
                 ) : (
-                        options.map((item) => (
+                        options.map((item, index) => (
+                            <div 
+                                key={item.component_id} 
+                                className={styles.optionCardEntry}        
+                                style={{ animationDelay: `${index * 0.1}s` }} /*  inline style creates the 'one-after-another' effect */
+                            >
                             <AiOptionCard 
-                                key={item.component_id}
                                 item={item}
                                 className={`${styles.optionCard} ${selections[step]?.component_id === item.component_id ? styles.selected : ''}`}
                                 onClick={() => handleSelect(item)}
-                            />                       
+                            />     
+                            </div>                  
                         ))
                 )}
             </div>
 
             <div className={styles.aiBackNextBtnContainer}>
                 <button className={styles.aiBackBtn} onClick={handleBack} >Back</button>
-                {error && <ErrorBanner message={error} />}
+                {error && <ErrorBanner message={error} type="warning"/>}
                 <button className={styles.aiNextBtn} onClick={handleNext}>Next</button>
             </div>
             </div>

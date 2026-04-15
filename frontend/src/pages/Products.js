@@ -51,11 +51,17 @@ function Products(){
                 ) : products.length === 0 ? (
                     <p>No products found</p>
                 ) : (
-            products.map((product) => (
+            products.map((product, index) => (
+                <div 
+                    key={product.product_id} 
+                    className={styles.productCardEntry}        
+                    style={{ animationDelay: `${index * 0.1}s` }} /*  inline style creates the 'one-after-another' effect */
+                >
                     <ProductCard 
                         key={product.product_id}
                         product={product}
                     />
+                </div>
                 ))
             )}
             </div>

@@ -52,6 +52,22 @@
     gap: 1.5rem;
     overflow: hidden;
 }
+.optionCardEntry {
+    opacity: 0; /* Start invisible */
+    animation: cardEntrance 0.5s ease-out forwards;
+}
+
+@keyframes cardEntrance {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .selected {
     outline: 3px solid #D8A7B1;
     outline-offset: 2px;
@@ -94,7 +110,6 @@
     display: flex;
     justify-content: space-between;
     gap: 1rem;
-    align-items: center;
 }
 .aiNextBtn{
     padding: 0.5rem 1.5rem;

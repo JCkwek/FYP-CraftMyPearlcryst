@@ -13,3 +13,19 @@
     gap: 0.5rem;
     flex-wrap: wrap;
 }
+
+.productCardEntry {
+    opacity: 0; /* Start invisible */
+    animation: cardEntrance 0.5s ease-out forwards;
+}
+
+@keyframes cardEntrance {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
