@@ -136,3 +136,27 @@
 .aiBackBtn:hover{
     background-color: lightgray;
 }
+
+
+
+.finalResultContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.finalAiImage {
+    max-width: 100%;
+    max-height: 450px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    border: 3px solid #d4af37; /* Gold border */
+}
+
+.readyToGenerate {
+    text-align: center;
+    padding: 40px;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+}

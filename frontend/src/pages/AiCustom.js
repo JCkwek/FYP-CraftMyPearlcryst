@@ -16,6 +16,8 @@ function AiCustom(){
     const [loading, setLoading] = useState(false);
     const [selections, setSelections] = useState({}); //Track selections: { 1: {id: 1, name: 'Necklace'}, 2: {id: 3, name: 'Pearl'} }
     const [error, setError] = useState(null);
+    const [generating, setGenerating] = useState(false);
+    const [finalImage, setFinalImage] = useState(null);
 
     useEffect(() => {
         if (!started) return;
@@ -41,7 +43,6 @@ function AiCustom(){
     }, [step, started]);
 
     const handleSelect = (item) => {
-
         setSelections((prev) => {
             //check if new selection is changed or not, if yes then dont reset everything after that
             const newSelections = { ...prev};
@@ -57,6 +58,17 @@ function AiCustom(){
             newSelections[step] = item;
             return newSelections;
         })
+    };
+    const handleLengthSelect = (value) => {
+        setSelections((prev) => ({
+            ...prev,
+            7: {
+                component_id: 'length', // unique id for React keys
+                name: `${value} inch`,
+                display_name: 'Length',
+                image_preview: '/assets/icons/length_icon.jpg'
+            }
+        }));
     };
 
     const handleNext = async () => {
@@ -87,6 +99,9 @@ function AiCustom(){
             } catch (err) {
                 console.error("Error pre-fetching next step:", err);
             }
+        }   
+        if (step < 8) {
+            setStep(step + 1);
         }
         setStep(nextStep);
     };
@@ -107,6 +122,36 @@ function AiCustom(){
         const steps = ["Type", "Material", "Variant", "Pendant", "Pattern", "Style", "Length", "Generate"];
         return steps[step - 1];
     };
+
+    const handleFinalGenerate = async ()=> {
+        setGenerating(true);
+        setError(null);
+        try{
+            const selectionIds = Object.keys(selections)
+                .filter(key=> key!=='7')
+                .map(key=> selections[key].component_id);
+
+            //extract length from step 7
+            const lengthValue = selections[7]
+                ? parseInt(selections[7].name)
+                : null;
+            
+            const res = await api.post('/aicustomjewelry/generate', {
+                selectionIds,
+                length: lengthValue
+            });
+
+            if (res.data.success) {
+                // Point to your backend for newly saved image
+                setFinalImage(`http://localhost:3000${res.data.imageUrl}`);
+            }
+        }catch(err){
+            console.error("Generation failed:", err);
+            setError("AI Generation failed. Please check your backend connection.");
+        }finally{
+            setGenerating(false);
+        }
+    }
 
     if(!started){
         return (
@@ -161,8 +206,20 @@ function AiCustom(){
                 <div className={styles.lengthContainer}>
                     <LengthSlider 
                         selections={selections} 
-                        onSelect={(val) => setSelections({...selections, 7: val})} 
+                        onSelect={handleLengthSelect}
                     />
+                </div>
+                ) 
+                : step === 8 ?(
+                <div className={styles.finalResultContainer}>
+                    {finalImage ? (
+                        <img src={finalImage} alt="AI Generated Jewelry" className={styles.finalAiImage} />
+                    ) : (
+                        <div className={styles.readyToGenerate}>
+                            <h3>Design Complete!</h3>
+                            <p>Click "Generate" to see your custom creation.</p>
+                        </div>
+                    )}
                 </div>
                 ) : (
                         options.map((item, index) => (
@@ -184,8 +241,18 @@ function AiCustom(){
             <div className={styles.aiBackNextBtnContainer}>
                 <button className={styles.aiBackBtn} onClick={handleBack} >Back</button>
                 {error && <ErrorBanner message={error} type="warning"/>}
-                <button className={styles.aiNextBtn} onClick={handleNext}>Next</button>
-            </div>
+                {step === 8 ? (
+                    <button 
+                        className={styles.aiNextBtn} 
+                        onClick={handleFinalGenerate} 
+                        disabled={generating}
+                    >
+                        {finalImage ? "Regenerate" : "Generate Design"}
+                    </button>
+                ) : (
+                    <button className={styles.aiNextBtn} onClick={handleNext}>Next</button>
+                )}
+                    </div>
             </div>
            
         </div>

@@ -22,14 +22,24 @@ const getComponentsByStep = async (step, requirementName) => {
     });
 };
 
-const buildPromptFromSelections = async (selectionIds) => {
+const buildPromptFromSelections = async (selectionIds, length =null) => {
     const components = await AIJewelryComponent.findAll({
         where: { component_id: selectionIds },
         order: [['step', 'ASC']]
     });
+
+    // Get the base descriptions from your DB
+    const fragments = components.map(c => c.prompt_fragment).join(', ');
+    // Add the length context if it exists
+    const lengthContext = length ? `${length} inch length` : '';
+    const masterPrompt = `Professional jewelry photography, a high-quality ${fragments}, ${lengthContext}, 
+    macro shot, white marble background, soft studio lighting, elegant 8k resolution, highly detailed, 
+    photorealistic, luxury aesthetic.`;
+
+    return masterPrompt;
     
     // Join all the prompt fragments into a single string for Hugging Face
-    return components.map(c => c.prompt_fragment).join(', ');
+    // return components.map(c => c.prompt_fragment).join(', ');
 };
 
 const getLengthConstraints = (baseType, necklaceStyleName = null) => {
