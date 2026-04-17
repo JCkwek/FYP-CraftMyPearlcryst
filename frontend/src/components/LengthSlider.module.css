@@ -1,0 +1,42 @@
+.sliderContainer {
+    padding: 0.5rem;
+    width: 100%;
+    text-align: center;
+}
+
+.sliderValueDisplay {
+    font-size: 1.5rem;
+    color: #D8A7B1;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.5rem;
+}
+.valueDisplay small {
+    font-size: 1rem;
+    color: #888;
+}
+
+.sliderInputContainer{
+    padding: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.rangeInput {
+    width: 80%;
+    cursor: pointer;
+    accent-color: #D8A7B1;
+}
+
+.sliderRangeValue{
+    color: #888;
+    font-size: 1rem;
+}
+
+.hintText {
+    font-size: 0.85rem;
+    color: #666;
+    font-style: italic;
+}

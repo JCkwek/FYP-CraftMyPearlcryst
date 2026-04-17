@@ -24,7 +24,7 @@ function AiCustom(){
             setLoading(true);
             try {
                 // const parentId = step > 1 ? selections[step - 1]?.component_id : null;
-                const requirement = (step === 4) 
+                const requirement = (step === 4 || step === 6) 
                     ? selections[1]?.name 
                     : selections[step - 1]?.name;
                 console.log(`DEBUG: Step ${step} | Req: ${requirement}`);
@@ -41,7 +41,22 @@ function AiCustom(){
     }, [step, started]);
 
     const handleSelect = (item) => {
-        setSelections({ ...selections, [step]: item });
+
+        setSelections((prev) => {
+            //check if new selection is changed or not, if yes then dont reset everything after that
+            const newSelections = { ...prev};
+            if(prev[step]?.component_id === item.component_id){
+                return prev;
+            }
+
+            Object.keys(newSelections).forEach((key) => {
+                if(parseInt(key) > step){
+                    delete newSelections[key];
+                }
+            })
+            newSelections[step] = item;
+            return newSelections;
+        })
     };
 
     const handleNext = async () => {
@@ -57,8 +72,8 @@ function AiCustom(){
         let nextStep = step + 1;
 
         // Logic to skip empty steps (e.g., Pendants for Bracelets)
-        if (nextStep < 8) {
-            const requirement = (nextStep === 4) 
+        if (nextStep >= 2 && nextStep <= 6) {
+            const requirement = (nextStep === 4 || nextStep === 6) 
                 ? selections[1]?.name 
                 : selections[step]?.name;
 
@@ -99,7 +114,6 @@ function AiCustom(){
                 <div className={styles.aiCustomContentContainer}>
                     <RotatingCarousel />
                     <div className={styles.aiCustomStart}>
-                        
                         <h2>AI Custom Jewelry</h2>
                         <p>Design your own jewelry using our AI-powered engine.</p>
                         <button 
@@ -120,12 +134,12 @@ function AiCustom(){
         <div className={styles.aiCustom}>
             <div>
                 <div className={styles.progressBar}>
-                    <h4>Step {step} of 8: Select {getDynamicStepName(step, selections)}</h4>
+                    <h4>Step {step}/8: {getDynamicStepName(step, selections)}</h4>
             </div>
 
             <div className={styles.currentSelectionContainer}>
                 {Object.keys(selections).map((key, index) => (
-                    <React.Fragment key={key}>  {/* Show plus icon only BEFORE the 2nd, 3rd, etc. items */}
+                    <React.Fragment key={key}>  {/* Show plus icon only before the 2nd, 3rd, etc. items */}
                         {index > 0 && (
                             <div className={styles.plusIcon}>+</div>
                         )}
@@ -145,7 +159,6 @@ function AiCustom(){
                 )
                 : step === 7 ? (
                 <div className={styles.lengthContainer}>
-                    <h3>Choose your length</h3>
                     <LengthSlider 
                         selections={selections} 
                         onSelect={(val) => setSelections({...selections, 7: val})} 

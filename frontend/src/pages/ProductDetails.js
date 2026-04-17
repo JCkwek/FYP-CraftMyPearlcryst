@@ -7,6 +7,7 @@ import ProductInfo from '../components/productDetail/ProductInfo';
 import ProductImage from '../components/productDetail/ProductImage';
 import Loading from '../components/Loading';
 import ColorSelect from '../components/ColorSelect';
+import LengthSlider from '../components/LengthSlider';
 
 function ProductDetails() {
     const navigate = useNavigate();
@@ -15,6 +16,21 @@ function ProductDetails() {
     const [selectedSize, setSelectedSize] = useState('');
     const [selectedColor, setSelectedColor] = useState('');
     const [isCustomising, setIsCustomising] = useState(false);
+
+    const rangeOption = useMemo(() => {
+        return product?.options?.find(opt => opt.option_type === 'range');
+    }, [product]);
+
+    const sliderConstraints = useMemo(() => {
+        if (!rangeOption) return null;
+        const values = rangeOption.values[0].visual_value.split(',');
+        return {
+            min: parseInt(values[0]),
+            max: parseInt(values[1]),
+            default: parseInt(values[2]),
+            unit: 'inch'
+        };
+    }, [rangeOption]);
 
     // Fetch Product Data
     useEffect(() => {
@@ -110,14 +126,6 @@ function ProductDetails() {
             const base = sizeOption.values[0]?.visual_value.split(',')[2];
             setSelectedSize(base);
         }
-
-        // Find and reset Color to the 1st option (default)
-        // const colorOption = product?.options?.find(opt => 
-        //     opt.option_name.toLowerCase().includes('color')
-        // );
-        // if (colorOption && colorOption.values.length > 0) {
-        //     setSelectedColor(colorOption.values[0].value_label);
-        // }
     }
 
     if (!product) return <Loading />;
@@ -135,7 +143,7 @@ function ProductDetails() {
                         {product.options?.map(option => (
                             <div key={option.option_id} className={styles.optionSection}>
                                 
-                                {/* LIST TYPE (COLORS OR DROP-DOWN SIZES) */}
+                                {/* list type: color/fixed size */}
                                 {option.option_type === 'list' && (
                                     <div className={styles.listOptionContainer}>
                                         {option.option_name.toLowerCase().includes('color') ? (
@@ -162,29 +170,17 @@ function ProductDetails() {
                                     </div>
                                 )}
 
-                                {/* RANGE TYPE (CUSTOM SLIDER) */}
+                                {/* range type */}
                                 {option.option_type === 'range' && (
                                     <div className={styles.rangeSizeContainer}>
                                         {!isCustomising ? (
                                             <div>{option.option_name}: {selectedSize} inch</div>
                                         ) : (
                                             <div className={styles.rangeSizeInputContainer}>
-                                                <div>{option.option_name}:</div> 
-                                                <div className={styles.rangeSizeInputContainerTop}>
-                                                    {selectedSize} inch
-                                                </div>
-                                                <div className={styles.rangeSizeInputContainerBottom}>
-                                                    <div className={styles.rangeSizeInputText}>{option.values[0].visual_value.split(',')[0]}</div>
-                                                    <input
-                                                        className={styles.rangeSizeInput}
-                                                        type="range"
-                                                        min={option.values[0].visual_value.split(',')[0]}
-                                                        max={option.values[0].visual_value.split(',')[1]}
-                                                        value={selectedSize}
-                                                        onChange={(e) => setSelectedSize(e.target.value)}
-                                                    />
-                                                    <div className={styles.rangeSizeInputText}>{option.values[0].visual_value.split(',')[1]}</div>
-                                                </div>
+                                                <LengthSlider 
+                                                    onSelect={(val) => setSelectedSize(val)}
+                                                    manualConstraints={sliderConstraints}
+                                                />
                                             </div>
                                         )}
                                     </div>
@@ -195,21 +191,14 @@ function ProductDetails() {
 
                     <div className={styles.productDetailsButtons}>
                         {product.is_customisable && !isCustomising && (
-                            <button className={styles.customiseButton} onClick={() => setIsCustomising(true)}>
-                                Customise
-                            </button>
+                            <button className={styles.customiseButton} onClick={() => setIsCustomising(true)}>Customise</button>
                         )}
-                        
                         {isCustomising && (
-                            <button className={styles.cancelButton} onClick={resetCustomization}>
-                                Cancel
-                            </button>
+                            <button className={styles.cancelButton} onClick={resetCustomization}>Cancel</button>
                         )}
-                        
-                        <button className={styles.addToCartButton} onClick={handleAddToCart}>
-                            Add To Cart
-                        </button>
+                        <button className={styles.addToCartButton} onClick={handleAddToCart}> Add To Cart</button>
                     </div>
+                    
                 </div>
             </div>
         </div>

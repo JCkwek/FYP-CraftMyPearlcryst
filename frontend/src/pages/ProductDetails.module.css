@@ -28,25 +28,8 @@
 }
 
 .rangeSizeContainer{
-    padding: 1rem;
-}
-.rangeSizeInputContainerTop{
-    text-align: center;
-}
-.rangeSizeInputContainerBottom{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    /* background-color: red; */
-    align-items: center;
-}
-.rangeSizeInput{
-    /* accent-color: #d8a7b1; */
-    cursor: pointer;
-    width: 100%;
-}
-.rangeSizeInputText{
-    padding: 0rem 1rem;
+    padding: 0.5rem;
+
 }
 
 .productDetailsButtons{

@@ -7,9 +7,9 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 .aiSelectedCardImgContainer{
-    padding: 0.5rem;
     height: 83%;
     width: 100%;
+    border-radius: 0.5rem;
     overflow: hidden;
     display: flex;
     justify-content: center;

@@ -13,14 +13,13 @@
     cursor: pointer;
 }
 .aiOptionImgContainer{
-    padding: 0.5rem;
     height: 83%;
     width: 100%;
+    border-radius: 0.5rem;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    /* background-color: red; */
 }
 .aiOptionImgContainer img{
     object-fit: contain;
