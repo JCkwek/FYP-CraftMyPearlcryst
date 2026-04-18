@@ -1,4 +1,5 @@
-import styles from './Register.module.css'
+import styles from './Register.module.css';
+import buttonStyles from '../components/buttons/ButtonTheme.module.css';
 import BackButton from '../components/buttons/BackButton';
 import { useState, useEffect} from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -123,7 +124,7 @@ function Register(){
                         />
                     </div>
 
-                    <button type="submit" className={styles.registerButton}>
+                    <button type="submit" className={`${buttonStyles.button} ${buttonStyles.main}`}>
                         Register
                     </button>
                 </form>

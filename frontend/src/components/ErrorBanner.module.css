@@ -5,6 +5,9 @@
     overflow: hidden;
     max-width: 80%;
     width: fit-content;
+    display: flex;
+    align-items: center;
+    text-align: center;
 }
 
 .error{

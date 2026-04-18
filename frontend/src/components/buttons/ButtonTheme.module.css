@@ -1,14 +1,49 @@
-.mediumButton{
+.button{
     margin-top: 1rem;
     padding: 0.5rem 1.5rem;
     border: none;
-    background-color: #D8A7B1;
     color: white;
     border-radius: 0.5rem;
     cursor: pointer;
     user-select: none;
 }
 
-.mediumButton:hover{
+.main{
+    background-color: #D8A7B1;
+}
+.main:hover{
     background-color: #ca99a3;
 }
+.secondary{
+    background-color: transparent;
+    border: 1px solid  #444;
+    color:  #444 ;
+}
+.secondary:hover{
+    border: 1px solid #d8a7b1;
+    color: #d8a7b1 ;
+}
+.plain{
+    color: black;
+}
+.plain:hover{
+    background-color: lightgray;
+}
+
+.green{
+    background-color: #65a363;
+}
+.green:hover{
+    background-color: #5b9159;
+}
+
+.cancel{
+    background-color: transparent;
+    border: 1px solid rgb(190, 2, 2);
+    color:  rgb(190, 2, 2) ;
+}
+.cancel:hover{
+    border: 1px solid red;
+    color: red ;
+}
+

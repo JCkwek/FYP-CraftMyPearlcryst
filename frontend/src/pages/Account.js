@@ -1,4 +1,5 @@
 import styles from './Account.module.css';
+import buttonStyles from '../components/buttons/ButtonTheme.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
@@ -53,8 +54,6 @@ function Account() {
     return () => clearInterval(interval); // Cleanup on unmount
 }, []);
 
-
-
     return (
         <div className={styles.account}>
             <div className={styles.accountContentContainer}>
@@ -68,7 +67,7 @@ function Account() {
                         </p>
 
                         <button
-                            className={styles.loginButton}
+                            className={`${buttonStyles.button} ${buttonStyles.main}`}
                             onClick={() => navigate('/login')}
                         >
                             Login / Register
@@ -86,7 +85,7 @@ function Account() {
                                 <h5>Orders</h5>
                             </div>
                         </div>
-                        <button className={styles.logoutButton} onClick={handleLogout}>
+                        <button className={`${buttonStyles.button} ${buttonStyles.main}`} onClick={handleLogout}>
                             Logout
                         </button>
                     </div>

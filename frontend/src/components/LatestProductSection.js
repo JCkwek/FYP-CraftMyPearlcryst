@@ -1,5 +1,6 @@
-import styles from './LatestProductSection.module.css'
-import ProductCard from './ProductCard'
+import styles from './LatestProductSection.module.css';
+import buttonStyles from '../components/buttons/ButtonTheme.module.css';
+import ProductCard from './ProductCard';
 import {useState, useEffect} from 'react';
 import { getProducts } from '../api/productApi';
 import { useNavigate } from 'react-router-dom';
@@ -54,7 +55,7 @@ function LatestProductSection(){
         {!loading && (
             <div className={styles.viewMoreContainer}>
                 <button 
-                    className={styles.viewMoreBtn}
+                    className={`${buttonStyles.button} ${buttonStyles.main}`}
                     onClick={handleViewMore}
                 >
                     View More

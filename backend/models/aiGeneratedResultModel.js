@@ -9,7 +9,7 @@ const AIGeneratedResult = sequelize.define('AIGeneratedResult', {
     },
     user_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,   // nullable so generation works without a logged-in user
         references: { model: 'users', key: 'user_id' }
     },
     image_url: {

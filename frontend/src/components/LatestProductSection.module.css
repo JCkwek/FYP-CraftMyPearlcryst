@@ -25,17 +25,3 @@
     margin: 1rem;
 }
 
-.viewMoreBtn {
-    padding: 0.6rem 1.5rem;
-    border: none;
-    border-radius: 0.5rem;
-    background-color: #D8A7B1; /* your pink */
-    color: white;
-    cursor: pointer;
-    transition: 0.2s ease;
-}
-
-.viewMoreBtn:hover {
-    background-color: #c48f9a;
-}
-

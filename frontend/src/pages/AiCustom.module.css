@@ -1,38 +1,44 @@
-.aiCustom{
+.aiCustomStartPage{
     padding: 1rem;
     user-select: none;
     height: 87.75vh;
-    overflow: hidden;
+    overflow: hidden; 
+}
+
+.aiCustomizingPage{
+    padding: 1rem;
+    user-select: none;
+    height: 87.75vh;
+    overflow-y: hidden;
+    position: relative;
 }
 
 .aiCustomContentContainer{
+    display: grid;
+    place-items: center;
     padding: 1rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
     text-align: center;
+    align-items: center;
     height: 100%;
+    width: 100%;
     position: relative;
 }
-/* .aiCustomStart{
-    position: absolute;
-} */
- .emptySpace{
-    padding: 5rem;
- }
-.startButton{
-    margin-top: 1rem;
-    padding: 0.5rem 1.5rem;
-    border: none;
-    background-color: #D8A7B1;
-    color: white;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    user-select: none;
+/* Stack both elements in the same grid area so they overlap */
+.rotatingCarousel, 
+.aiCustomStart {
+    grid-area: 1 / 1; 
 }
-
-.startButton:hover{
-    background-color: #ca99a3;
+.aiCustomStart{
+    position: relative;
+    z-index: 10; /* Sits on top of the carousel */
+    text-align: center;
+    pointer-events: none; /* Allows clicking through the div to images if needed */
+}
+.aiCustomStart button {
+    pointer-events: auto; /* Re-enable clicks for the button specifically */
 }
 
 .currentSelectionContainer{
@@ -46,7 +52,7 @@
 }
 
 .aiOptionCardContainer{
-    padding: 1.5rem 1rem;
+    padding: 1rem;
     display: flex;
     justify-content: center;
     gap: 1.5rem;
@@ -111,52 +117,104 @@
     justify-content: space-between;
     gap: 1rem;
 }
-.aiNextBtn{
-    padding: 0.5rem 1.5rem;
-    border: none;
-    background-color: #D8A7B1;
-    color: white;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    user-select: none;
-}
 
-.aiNextBtn:hover{
-    background-color: #ca99a3;
-}
-
-.aiBackBtn{
-    padding: 0.5rem 1.5rem;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    user-select: none;
-}
-
-.aiBackBtn:hover{
-    background-color: lightgray;
-}
-
-
-
-.finalResultContainer {
-    width: 100%;
+.finalAiResultContainer{
+    padding: 1rem;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    gap: 1rem;
+}
+.finalAiResultButtons{
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.finalAiImageContainer {
+    padding: 0.8rem;
+    position: relative;
+    display: inline-block;
 }
 
 .finalAiImage {
     max-width: 100%;
-    max-height: 450px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    border: 3px solid #d4af37; /* Gold border */
+    max-height: 18rem;
+    border-radius: 0.5rem;
+    display: block;
+    position: relative;
+    z-index: 2;
+    background: #fff;
 }
-
+.readyToGenerateContainer {
+    position: relative;     
+    display: inline-block;  
+    margin: 2rem auto;      
+    padding: 0.8rem;          /* Space for the glow around the edges */
+}
 .readyToGenerate {
     text-align: center;
-    padding: 40px;
-    border: 2px dashed #ccc;
-    border-radius: 10px;
+    padding: 1rem;
+    z-index: 2;
+    max-width: 100%;
+    border-radius: 0.5rem;
+    position: relative;
+    background: #fff;
+}
+.finalAiImageContainer::before, .readyToGenerateContainer::before, .generatingLoaderMiddleContainer::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(45deg, #d4af37, #9b59b6, #3498db, #d4af37);
+    background-size: 400% 400%;
+    border-radius: 1rem;
+    z-index: 1; /* Sits behind the image */
+    filter: blur(8px); /* Softens the glow */
+    animation: glowMovement 3s ease infinite;
+}
+@keyframes glowMovement {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.generatingLoader {
+    display: inline-block;
+    width: 100%;
+    height: 78vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    animation: fadeIn 0.3s ease-in;
+}
+
+.generatingLoaderMiddleContainer{
+    position: relative;     
+    display: inline-block;  
+    margin: 2rem auto;      
+    padding: 0.8rem;  
+    align-items: center;
+}
+
+.generatingLoaderMiddle {
+    display: flex;  
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    z-index: 10;
+    max-width: 100%;
+    border-radius: 50%;
+    position: relative;
+    width: clamp(5rem, 30vw, 16rem); /* Min 200px, grows with screen, Max 300px */
+    aspect-ratio: 1 / 1;
+    color: white;
+}
+
+.generatingLoaderMiddle h5 {
+    font-size: clamp(1rem, 2.5vw, 1.5rem); /* Text scales with the circle */
+    margin: 0;
+}
+.generatingLoaderMiddleContainer::before {
+    border-radius: 50%;
 }

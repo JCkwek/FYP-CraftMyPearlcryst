@@ -1,4 +1,5 @@
-import styles from './AiCustom.module.css'
+import styles from './AiCustom.module.css';
+import buttonStyles from '../components/buttons/ButtonTheme.module.css';
 import React, { useState, useEffect } from 'react';
 import Loading from '../components/Loading';
 import api from '../api';
@@ -74,7 +75,7 @@ function AiCustom(){
     const handleNext = async () => {
         if (!selections[step]) {
             setError("Please select an option before moving to the next step.");
-            setTimeout(() => setError(null), 3000);// Optional: Auto-hide error after 3 seconds
+            setTimeout(() => setError(null), 3000);
             return; 
         }
 
@@ -143,60 +144,75 @@ function AiCustom(){
 
             if (res.data.success) {
                 // Point to your backend for newly saved image
-                setFinalImage(`http://localhost:3000${res.data.imageUrl}`);
+                setTimeout(() => {
+                    setFinalImage(`http://localhost:3000${res.data.imageUrl}`);
+                    setGenerating(false);
+                }, 2000);
+            }else {
+                setGenerating(false);
             }
         }catch(err){
             console.error("Generation failed:", err);
             setError("AI Generation failed. Please check your backend connection.");
-        }finally{
             setGenerating(false);
         }
     }
 
+    const handleReset = () => {
+        setStarted(false);
+        setStep(1);
+        setSelections({});
+        setFinalImage(null);
+        setGenerating(false);
+        setError(null);
+    };
+
+    const handleRegenerate = () => {
+        setFinalImage(null);
+        handleFinalGenerate(); // Re-runs the generation with current selections
+    };
+
     if(!started){
         return (
-            <div className={styles.aiCustom}>
+            <div className={styles.aiCustomStartPage}>
                 <div className={styles.aiCustomContentContainer}>
                     <RotatingCarousel />
                     <div className={styles.aiCustomStart}>
                         <h2>AI Custom Jewelry</h2>
                         <p>Design your own jewelry using our AI-powered engine.</p>
                         <button 
-                            className={styles.startButton} 
+                            className={`${buttonStyles.button} ${buttonStyles.main}`} 
                             onClick={() => setStarted(true)}
                         >
                             Get Started
                         </button>
                     </div>
-                    <div className={styles.emptySpace}></div>
-
                 </div>
             </div>
         )
     }
 
     return (
-        <div className={styles.aiCustom}>
-            <div>
+        <div className={styles.aiCustomizingPage}>
+            {!finalImage && !generating && (
+                <div>
                 <div className={styles.progressBar}>
                     <h4>Step {step}/8: {getDynamicStepName(step, selections)}</h4>
-            </div>
+                </div>
 
-            <div className={styles.currentSelectionContainer}>
-                {Object.keys(selections).map((key, index) => (
-                    <React.Fragment key={key}>  {/* Show plus icon only before the 2nd, 3rd, etc. items */}
-                        {index > 0 && (
-                            <div className={styles.plusIcon}>+</div>
-                        )}
-            
-                    <div className={styles.selectedContainer}>
-                        <AiSelectedCard 
-                            item={selections[key]}
-                        />
-                    </div>
-                    </React.Fragment>
-                ))}
+                <div className={styles.currentSelectionContainer}>
+                    {Object.keys(selections).map((key, index) => (
+                        <React.Fragment key={key}>
+                            {index > 0 && <div className={styles.plusIcon}>+</div>}
+                            <div className={styles.selectedContainer}>
+                                <AiSelectedCard item={selections[key]} />
+                            </div>
+                        </React.Fragment>
+                    ))}
+                </div>
             </div>
+            )}
+            
 
             <div className={styles.aiOptionCardContainer}>
                 {loading ? (
@@ -211,51 +227,69 @@ function AiCustom(){
                 </div>
                 ) 
                 : step === 8 ?(
-                <div className={styles.finalResultContainer}>
-                    {finalImage ? (
-                        <img src={finalImage} alt="AI Generated Jewelry" className={styles.finalAiImage} />
-                    ) : (
-                        <div className={styles.readyToGenerate}>
-                            <h3>Design Complete!</h3>
-                            <p>Click "Generate" to see your custom creation.</p>
+                    generating ?  (
+                        <div className={styles.generatingLoader}>
+                            <RotatingCarousel 
+                                customItems={Object.values(selections)} 
+                                speed={1.8} 
+                            />
+                            <div className={styles.generatingLoaderMiddleContainer}>
+                                <div className={styles.generatingLoaderMiddle}>
+                                    <h5>Creating your design</h5>
+                                </div>
+                            </div>
                         </div>
-                    )}
-                </div>
+                    ) : finalImage ? (
+                            <div className={styles.finalAiResultContainer}>
+                                <div className={styles.finalAiImageContainer}>
+                                    <img src={finalImage} alt="AI Generated Jewelry" className={styles.finalAiImage} />
+                                </div>
+                                <div className={styles.finalAiResultButtons}>
+                                    <button className={`${buttonStyles.button} ${buttonStyles.cancel}`} onClick={handleReset}> Discard & Reset </button>
+                                    <button className={`${buttonStyles.button} ${buttonStyles.main}`} onClick={handleRegenerate}>Regenerate</button>
+                                    <button className={`${buttonStyles.button} ${buttonStyles.green}`} onClick={() => alert("Order functionality coming soon!")}>Add To Cart</button>
+                                </div>
+                            </div>
+                    ) : (
+                        <div className={styles.readyToGenerateContainer}>
+                            <div className={styles.readyToGenerate}>
+                                <h4>Design Complete!</h4>
+                                Click "Generate" to see your custom creation.
+                            </div>
+                        </div>
+                    )
                 ) : (
-                        options.map((item, index) => (
-                            <div 
-                                key={item.component_id} 
-                                className={styles.optionCardEntry}        
-                                style={{ animationDelay: `${index * 0.1}s` }} /*  inline style creates the 'one-after-another' effect */
-                            >
+                    options.map((item, index) => (
+                        <div 
+                            key={item.component_id} 
+                            className={styles.optionCardEntry}        
+                            style={{ animationDelay: `${index * 0.1}s` }} /*  inline style creates the 'one-after-another' effect */
+                        >
                             <AiOptionCard 
                                 item={item}
                                 className={`${styles.optionCard} ${selections[step]?.component_id === item.component_id ? styles.selected : ''}`}
                                 onClick={() => handleSelect(item)}
                             />     
-                            </div>                  
+                        </div>                  
                         ))
                 )}
             </div>
 
-            <div className={styles.aiBackNextBtnContainer}>
-                <button className={styles.aiBackBtn} onClick={handleBack} >Back</button>
-                {error && <ErrorBanner message={error} type="warning"/>}
-                {step === 8 ? (
-                    <button 
-                        className={styles.aiNextBtn} 
-                        onClick={handleFinalGenerate} 
-                        disabled={generating}
-                    >
-                        {finalImage ? "Regenerate" : "Generate Design"}
-                    </button>
-                ) : (
-                    <button className={styles.aiNextBtn} onClick={handleNext}>Next</button>
-                )}
-                    </div>
-            </div>
+            {!finalImage && !generating &&(
+                <div className={styles.aiBackNextBtnContainer}>
+                    <button className={`${buttonStyles.button} ${buttonStyles.plain}`} onClick={handleBack}>Back</button>
+                    {error && <ErrorBanner message={error} type="warning"/>}
+                    {step === 8 ? (
+                        <button className={`${buttonStyles.button} ${buttonStyles.main}`} onClick={handleFinalGenerate}disabled={generating || !!finalImage}>
+                            Generate Design
+                        </button>
+                    ) : (
+                        <button className={`${buttonStyles.button} ${buttonStyles.main}`} onClick={handleNext} >Next</button>
+                    )}
+                </div>
+            )}
            
-        </div>
+        </div>  
     );
 }
 

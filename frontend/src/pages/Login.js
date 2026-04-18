@@ -1,4 +1,5 @@
 import styles from './Login.module.css'
+import buttonStyles from '../components/buttons/ButtonTheme.module.css'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import BackButton from '../components/buttons/BackButton';
@@ -75,7 +76,7 @@ function Login() {
 
                     <button 
                         type="submit" 
-                        className={styles.loginButton}
+                        className={`${buttonStyles.button} ${buttonStyles.main}`}
                         disabled={loading} //prevent double click
                     >
                         { loading? "Logging in...": "Login"}

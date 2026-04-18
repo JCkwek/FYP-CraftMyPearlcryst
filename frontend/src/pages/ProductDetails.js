@@ -1,4 +1,5 @@
 import styles from './ProductDetails.module.css';
+import buttonStyles from '../components/buttons/ButtonTheme.module.css';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState, useMemo } from 'react';
 import api from '../api';
@@ -191,12 +192,12 @@ function ProductDetails() {
 
                     <div className={styles.productDetailsButtons}>
                         {product.is_customisable && !isCustomising && (
-                            <button className={styles.customiseButton} onClick={() => setIsCustomising(true)}>Customise</button>
+                            <button className={`${buttonStyles.button} ${buttonStyles.secondary}`} onClick={() => setIsCustomising(true)}>Customise</button>
                         )}
                         {isCustomising && (
-                            <button className={styles.cancelButton} onClick={resetCustomization}>Cancel</button>
+                            <button className={`${buttonStyles.button} ${buttonStyles.cancel}`} onClick={resetCustomization}>Cancel</button>
                         )}
-                        <button className={styles.addToCartButton} onClick={handleAddToCart}> Add To Cart</button>
+                        <button className={`${buttonStyles.button} ${buttonStyles.green}`} onClick={handleAddToCart}> Add To Cart</button>
                     </div>
                     
                 </div>

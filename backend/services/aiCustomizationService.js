@@ -28,18 +28,33 @@ const buildPromptFromSelections = async (selectionIds, length =null) => {
         order: [['step', 'ASC']]
     });
 
-    // Get the base descriptions from your DB
-    const fragments = components.map(c => c.prompt_fragment).join(', ');
-    // Add the length context if it exists
+    const jewelryType = components.find(c => c.step === 1)?.name || 'jewelry';
+    const mainMaterial = components.find(c => c.step === 2 || c.step === 3)?.name || '';
+    const otherDetails = components
+        .filter(c => c.step !== 1 && c.step !== 2)
+        .map(c => c.prompt_fragment)
+        .join(', ');
     const lengthContext = length ? `${length} inch length` : '';
-    const masterPrompt = `Professional jewelry photography, a high-quality ${fragments}, ${lengthContext}, 
-    macro shot, white marble background, soft studio lighting, elegant 8k resolution, highly detailed, 
-    photorealistic, luxury aesthetic.`;
+    const materialMapping = ['Pearl', 'Crystal', 'Stone', 'Beaded'];
+    let mainSubject = "";
+    if (materialMapping.includes(mainMaterial)) {
+        // This forces the "Single Strand" look and avoids chains
+        mainSubject = `A single-strand ${jewelryType} made entirely of matching ${mainMaterial}s, no metal chain, consistent ${mainMaterial} texture throughout`;
+    } else {
+        // Standard metal-based jewelry
+        mainSubject = `A high-end ${mainMaterial} ${jewelryType}`;
+    }
+
+
+    // Get the base descriptions from your DB
+    // const fragments = components.map(c => c.prompt_fragment).join(', ');
+    // Add the length context if it exists
+
+    const masterPrompt = `Professional luxury jewelry photography, ${mainSubject}, ${otherDetails}, ${lengthContext}. 
+    Single item, centered composition, macro shot, white marble background, soft studio lighting, 
+    8k resolution, photorealistic, no extra layers, simple elegant design.`;
 
     return masterPrompt;
-    
-    // Join all the prompt fragments into a single string for Hugging Face
-    // return components.map(c => c.prompt_fragment).join(', ');
 };
 
 const getLengthConstraints = (baseType, necklaceStyleName = null) => {
