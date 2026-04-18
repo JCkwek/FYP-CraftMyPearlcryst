@@ -34,6 +34,16 @@ function SideNav(){
                     }
                     >AI Custom Jewelry
                 </NavLink>
+
+                <NavLink 
+                    to="/aiChat" 
+                    className={({isActive}) =>
+                        isActive
+                            ? `${styles.sideNavTab} ${styles.active}`
+                            : styles.sideNavTab
+                    }
+                    >AI Chat
+                </NavLink>
             </div> 
                 
 

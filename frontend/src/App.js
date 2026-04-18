@@ -13,6 +13,7 @@ import OrderSuccess from './pages/OrderSuccess';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
 import AiCustom from './pages/AiCustom';
+import AiChat from './pages/AiChat';
 
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />}/>
           <Route path="/aiCustom" element={<AiCustom />}/>
+          <Route path="/aiChat" element={<AiChat />}/>
         </Route>
       </Routes>
     </BrowserRouter>

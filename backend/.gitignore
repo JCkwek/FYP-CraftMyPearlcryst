@@ -1,2 +1,8 @@
 node_modules/
 .env
+
+# Ignore all files in the AI generated folder
+backend/uploads/ai_generated/*
+
+# Except for the .gitkeep file (so the folder remains in the repo)
+!backend/uploads/ai_generated/.gitkee
