@@ -6,10 +6,10 @@
     grid-area: topnav;
     align-items: center;
     letter-spacing: 0.5px;
-    font-style: italic;
-    font-family: 'Playfair Display', serif;
-    background-color: #D8A7B1;
+    font-family: 'Playfair Display', serif; 
+    /* color: #333; */
     color: white;
+    background-color: #D8A7B1;
     user-select: none;
     display: flex;
     justify-content: space-between;

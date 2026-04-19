@@ -13,8 +13,12 @@ const getJewelryRecommendation = async (req, res) => {
 
         res.json({ reply });
     } catch (error) {
-        console.error("Chatbot Controller Error:", error);
-        res.status(500).json({ error: "Failed to get recommendation" });
+        console.error("Chatbot Error:", error);
+        res.status(503).json({ 
+            success: false, 
+            message: "AI service is currently unavailable",
+            errorType: error.message.includes("429") ? "RATE_LIMIT" : "GENERAL_ERROR"
+        });
     }
 };
 
