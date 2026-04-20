@@ -8,8 +8,18 @@
     display: flex;
     align-items: center;
     text-align: center;
+    animation: slideDownFadeIn 0.3s ease-out forwards;
 }
-
+@keyframes slideDownFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px); /* Start 20px higher */
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 .error{
     border: solid red 2px;
     color: red;

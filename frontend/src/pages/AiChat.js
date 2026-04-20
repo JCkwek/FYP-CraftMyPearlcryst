@@ -32,17 +32,22 @@ function AiChat(){
 
     // Check for session timeout on mount
     useEffect(() => {
+        const savedChat = localStorage.getItem('pearlcryst_chat');
         const lastActive = localStorage.getItem('pearlcryst_chat_timestamp');
         const now = Date.now();
         const timeoutLimit = 5 * 60 * 1000; // 5 minutes
-        if (lastActive && (now - parseInt(lastActive) > timeoutLimit)) {
-            // clear storage
-            localStorage.removeItem('pearlcryst_chat');
-            localStorage.removeItem('pearlcryst_chat_timestamp');
-            // reset the chat state
-            setMessages(standardWelcome);
-            // show the banner
-            triggerTimeoutBanner(); 
+
+        if(savedChat && lastActive){
+            const parsedChat = JSON.parse(savedChat);
+            if (parsedChat.length > standardWelcome.length && (now - parseInt(lastActive) > timeoutLimit)) {
+                // clear storage
+                localStorage.removeItem('pearlcryst_chat');
+                localStorage.removeItem('pearlcryst_chat_timestamp');
+                // reset the chat state
+                setMessages(standardWelcome);
+                // show the banner
+                triggerTimeoutBanner(); 
+            }
         }
     }, []);
 
@@ -68,7 +73,7 @@ function AiChat(){
 
     const triggerTimeoutBanner = () => {
         setTimeoutMessage("Your previous session has timed out.");
-        setTimeout(() => setTimeoutMessage(null), 10000); //hide banner after 5 seconds
+        setTimeout(() => setTimeoutMessage(null), 5000); //hide banner after 5 seconds
     };
 
     const scrollToBottom = () => {

@@ -9,6 +9,7 @@ import ProductImage from '../components/productDetail/ProductImage';
 import Loading from '../components/Loading';
 import ColorSelect from '../components/ColorSelect';
 import LengthSlider from '../components/LengthSlider';
+import ErrorBanner from '../components/ErrorBanner';
 
 function ProductDetails() {
     const navigate = useNavigate();
@@ -17,6 +18,7 @@ function ProductDetails() {
     const [selectedSize, setSelectedSize] = useState('');
     const [selectedColor, setSelectedColor] = useState('');
     const [isCustomising, setIsCustomising] = useState(false);
+    const [error, setError] = useState(null);
 
     const rangeOption = useMemo(() => {
         return product?.options?.find(opt => opt.option_type === 'range');
@@ -62,6 +64,14 @@ function ProductDetails() {
         };
         fetchProduct();
     }, [id]);
+    useEffect(() => {
+        if (error) {
+            const timer = setTimeout(() => {
+                setError(null);
+            }, 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [error]);
 
     //  Dynamic Price Calculation
     const calculatedPrice = useMemo(() => {
@@ -85,8 +95,9 @@ function ProductDetails() {
     const handleAddToCart = async () => {
         const token = localStorage.getItem('token');
         if (!token) {
-            alert("Please login to add items to your cart.");
-            navigate('/login');
+            // alert("Please login to add items to your cart.");
+            setError("Please login to add items to your cart.");
+            // navigate('/login');
             return;
         }
         
@@ -133,7 +144,11 @@ function ProductDetails() {
 
     return (
         <div className={styles.productDetails}>
-            <BackButton />
+            <div className={styles.productDetailsTopSection}>
+                <BackButton />
+                {error && <ErrorBanner message={error} type="warning"/>}
+                <span></span><span></span>
+            </div>
             <div className={styles.productDetailsContentContainer}>
                 <ProductImage product={product} />
                 

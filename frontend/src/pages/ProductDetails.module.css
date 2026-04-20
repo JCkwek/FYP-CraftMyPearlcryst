@@ -8,7 +8,12 @@
     flex-wrap: wrap;
     overflow: hidden;
 }
-
+.productDetailsTopSection{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
 .productDetailsInfo{
     display: flex;
     justify-content: space-between;
