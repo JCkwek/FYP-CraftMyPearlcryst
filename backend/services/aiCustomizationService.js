@@ -46,11 +46,6 @@ const buildPromptFromSelections = async (selectionIds, length =null) => {
         mainSubject = `A high-end ${mainMaterial} ${jewelryType}`;
     }
 
-
-    // Get the base descriptions from your DB
-    // const fragments = components.map(c => c.prompt_fragment).join(', ');
-    // Add the length context if it exists
-
     const masterPrompt = `Professional luxury jewelry photography, ${mainSubject}, ${otherDetails}, ${lengthContext}. 
     Single item, centered composition, macro shot, white marble background, soft studio lighting, 
     8k resolution, photorealistic, no extra layers, simple elegant design.`;
