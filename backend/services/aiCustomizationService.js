@@ -46,6 +46,7 @@ const buildPromptFromSelections = async (selectionIds, length =null) => {
         mainSubject = `A high-end ${mainMaterial} ${jewelryType}`;
     }
 
+    
     const masterPrompt = `Professional luxury jewelry photography, ${mainSubject}, ${otherDetails}, ${lengthContext}. 
     Single item, centered composition, macro shot, white marble background, soft studio lighting, 
     8k resolution, photorealistic, no extra layers, simple elegant design.`;
