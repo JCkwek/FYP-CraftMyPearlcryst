@@ -1,6 +1,6 @@
 import styles from './ProductDetails.module.css';
 import buttonStyles from '../components/buttons/ButtonTheme.module.css';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useEffect, useState, useMemo } from 'react';
 import api from '../api';
 import BackButton from '../components/buttons/BackButton';
@@ -9,16 +9,17 @@ import ProductImage from '../components/productDetail/ProductImage';
 import Loading from '../components/Loading';
 import ColorSelect from '../components/ColorSelect';
 import LengthSlider from '../components/LengthSlider';
-import ErrorBanner from '../components/ErrorBanner';
+import AlertBanner from '../components/AlertBanner';
 
 function ProductDetails() {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const { id } = useParams();
     const [product, setProduct] = useState(null);
     const [selectedSize, setSelectedSize] = useState('');
     const [selectedColor, setSelectedColor] = useState('');
     const [isCustomising, setIsCustomising] = useState(false);
     const [error, setError] = useState(null);
+    const [successMessage, setSuccessMessage] = useState(null);
 
     const rangeOption = useMemo(() => {
         return product?.options?.find(opt => opt.option_type === 'range');
@@ -64,6 +65,7 @@ function ProductDetails() {
         };
         fetchProduct();
     }, [id]);
+    
     useEffect(() => {
         if (error) {
             const timer = setTimeout(() => {
@@ -73,6 +75,14 @@ function ProductDetails() {
         }
     }, [error]);
 
+    useEffect(() => {
+        if (successMessage) {
+            const timer = setTimeout(() => {
+                setSuccessMessage(null);
+            }, 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [successMessage]);
     //  Dynamic Price Calculation
     const calculatedPrice = useMemo(() => {
         if (!product) return 0;
@@ -95,9 +105,7 @@ function ProductDetails() {
     const handleAddToCart = async () => {
         const token = localStorage.getItem('token');
         if (!token) {
-            // alert("Please login to add items to your cart.");
             setError("Please login to add items to your cart.");
-            // navigate('/login');
             return;
         }
         
@@ -118,11 +126,13 @@ function ProductDetails() {
             }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-
-            alert(`Added ${product.product_name} to cart!`);
+            setSuccessMessage(`Added ${product.product_name} to cart!`);
+            // alert(`Added ${product.product_name} to cart!`);
+            resetCustomization(); 
+            setSelectedColor('');
         } catch (err) {
             console.error("Error adding to cart:", err);
-            alert("Failed to add to cart.");
+            setError("Failed to add to cart.");
         }
     };
 
@@ -146,7 +156,8 @@ function ProductDetails() {
         <div className={styles.productDetails}>
             <div className={styles.productDetailsTopSection}>
                 <BackButton />
-                {error && <ErrorBanner message={error} type="warning"/>}
+                {successMessage && <AlertBanner message={successMessage} type="success"/>}
+                {error && <AlertBanner message={error} type="warning"/>}
                 <span></span><span></span>
             </div>
             <div className={styles.productDetailsContentContainer}>

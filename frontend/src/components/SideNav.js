@@ -32,7 +32,7 @@ function SideNav(){
                             ? `${styles.sideNavTab} ${styles.active}`
                             : styles.sideNavTab
                     }
-                    >AI Custom Jewelry
+                    >Custom Lab
                 </NavLink>
 
                 <NavLink 
@@ -42,7 +42,7 @@ function SideNav(){
                             ? `${styles.sideNavTab} ${styles.active}`
                             : styles.sideNavTab
                     }
-                    >AI Chat
+                    >Concierge
                 </NavLink>
             </div> 
                 

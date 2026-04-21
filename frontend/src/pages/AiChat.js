@@ -5,7 +5,7 @@ import api from '../api';
 import ReactMarkdown from 'react-markdown';
 import ProductCard from '../components/ProductCard';
 import { getProducts } from '../api/productApi';
-import ErrorBanner from '../components/ErrorBanner';
+import ErrorBanner from '../components/AlertBanner';
 
 
 function AiChat(){

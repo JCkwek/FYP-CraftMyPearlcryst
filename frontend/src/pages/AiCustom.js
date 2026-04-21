@@ -7,7 +7,7 @@ import LengthSlider from '../components/LengthSlider';
 import RotatingCarousel from '../components/RotatingCarousel';
 import AiOptionCard from '../components/AiOptionCard';
 import AiSelectedCard from '../components/AiSelectedCard';
-import ErrorBanner from '../components/ErrorBanner';
+import AlertBanner from '../components/AlertBanner';
 
 
 function AiCustom(){
@@ -278,7 +278,7 @@ function AiCustom(){
             {!finalImage && !generating &&(
                 <div className={styles.aiBackNextBtnContainer}>
                     <button className={`${buttonStyles.button} ${buttonStyles.plain}`} onClick={handleBack}>Back</button>
-                    {error && <ErrorBanner message={error} type="warning"/>}
+                    {error && <AlertBanner message={error} type="warning"/>}
                     {step === 8 ? (
                         <button className={`${buttonStyles.button} ${buttonStyles.main}`} onClick={handleFinalGenerate}disabled={generating || !!finalImage}>
                             Generate Design

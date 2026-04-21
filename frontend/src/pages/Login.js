@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import BackButton from '../components/buttons/BackButton';
 // import axios from 'axios';
 import api from '../api';
-import ErrorBanner from '../components/ErrorBanner';
+import AlertBanner from '../components/AlertBanner';
 
 function Login() {
     const [email, setEmail] = useState('')
@@ -50,7 +50,7 @@ function Login() {
             <BackButton />
             <div className={styles.loginCard}>
                 <h2>Welcome Back</h2>
-                {error && <ErrorBanner message={error}/>}
+                {error && <AlertBanner message={error}/>}
                 <form onSubmit={handleSubmit} className={styles.loginForm}>
                     <div className={styles.loginFormInput}>
                         <label>Email</label>

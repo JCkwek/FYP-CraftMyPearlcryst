@@ -1,11 +1,11 @@
-import styles from './ErrorBanner.module.css'
+import styles from './AlertBanner.module.css'
 
 function ErrorBanner({message, type = 'error'}){
 
     const typeClass = styles[type] || styles.error;
 
     return(
-        <div className={`${styles.errorBanner} ${typeClass}`}>
+        <div className={`${styles.alertBanner} ${typeClass}`}>
             {message}
         </div>
     )

@@ -5,7 +5,7 @@ import { useState, useEffect} from 'react'
 import { useNavigate } from 'react-router-dom'
 // import axios from 'axios';
 import api from '../api';
-import ErrorBanner from '../components/ErrorBanner';
+import AlertBanner from '../components/AlertBanner';
 
 function Register(){
     const [formData, setFormData] = useState({
@@ -61,7 +61,7 @@ function Register(){
             <BackButton />
             <div className={styles.registerCard}>
                 <h2>Create Account</h2>
-                {error && <ErrorBanner message={error}/>}
+                {error && <AlertBanner message={error}/>}
                 
                 <form onSubmit={handleSubmit} className={styles.registerForm}>
                     <div className={styles.registerFormInput}>
