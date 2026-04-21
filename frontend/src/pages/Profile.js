@@ -2,11 +2,14 @@ import styles from './Profile.module.css';
 import BackButton from '../components/buttons/BackButton.js';
 import { useState, useEffect } from 'react';
 import api from '../api';
-import Loading from '../components/Loading.js'
+import Loading from '../components/Loading.js';
+import AlertBanner from '../components/AlertBanner.js';
 
 function Profile(){
     const [user, setUser] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
+    const [error, setError] = useState(null);
+    const [successMessage, setSuccessMessage] = useState(null);
     const [formData, setFormData] = useState({
         name: '',
         phone_no: '',
@@ -34,7 +37,7 @@ function Profile(){
 
     const handleSave = async () => {
         if (formData.password && formData.password !== formData.confirmPassword) {
-            alert("Passwords do not match!");
+            setError("Passwords do not match!");
             return;
         }
 
@@ -48,12 +51,11 @@ function Profile(){
             const updatedUser = res.data; 
             setUser(updatedUser);
             localStorage.setItem('user', JSON.stringify(updatedUser));
-            
             setIsEditing(false);
-            alert("Profile updated successfully!");
+            setSuccessMessage("Profile updated successfully!");
         } catch (err) {
             console.error(err);
-            alert("Failed to update profile.");
+            setError("Failed to update profile.");
         }
     };
 
@@ -63,7 +65,12 @@ function Profile(){
 
     return (
         <div className={styles.profile}>
-            <BackButton />
+            <div className={styles.profileTopSection}>
+                <BackButton />
+                {successMessage && <AlertBanner message={successMessage} type="success" onClose={() => setSuccessMessage(null)}/>}
+                {error && <AlertBanner message={error} type="error" onClose={() => setError(null)}/>}
+                <span></span><span></span>
+            </div>
             <div className={styles.profileContentContainer}>
                 <h2>Profile</h2>
                 

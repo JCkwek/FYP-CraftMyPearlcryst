@@ -66,23 +66,6 @@ function ProductDetails() {
         fetchProduct();
     }, [id]);
     
-    useEffect(() => {
-        if (error) {
-            const timer = setTimeout(() => {
-                setError(null);
-            }, 5000);
-            return () => clearTimeout(timer);
-        }
-    }, [error]);
-
-    useEffect(() => {
-        if (successMessage) {
-            const timer = setTimeout(() => {
-                setSuccessMessage(null);
-            }, 5000);
-            return () => clearTimeout(timer);
-        }
-    }, [successMessage]);
     //  Dynamic Price Calculation
     const calculatedPrice = useMemo(() => {
         if (!product) return 0;
@@ -156,8 +139,8 @@ function ProductDetails() {
         <div className={styles.productDetails}>
             <div className={styles.productDetailsTopSection}>
                 <BackButton />
-                {successMessage && <AlertBanner message={successMessage} type="success"/>}
-                {error && <AlertBanner message={error} type="warning"/>}
+                {successMessage && <AlertBanner message={successMessage} type="success" onClose={() => setSuccessMessage(null)}/>}
+                {error && <AlertBanner message={error} type="warning" onClose={() => setError(null)}/>}
                 <span></span><span></span>
             </div>
             <div className={styles.productDetailsContentContainer}>

@@ -22,7 +22,7 @@ function SideNav(){
                             ? `${styles.sideNavTab} ${styles.active}`
                             : styles.sideNavTab
                     }
-                    >Product
+                    >Products
                 </NavLink>
 
                 <NavLink 

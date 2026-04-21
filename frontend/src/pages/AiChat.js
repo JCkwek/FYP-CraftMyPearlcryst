@@ -46,7 +46,8 @@ function AiChat(){
                 // reset the chat state
                 setMessages(standardWelcome);
                 // show the banner
-                triggerTimeoutBanner(); 
+                // triggerTimeoutBanner(); 
+                setTimeoutMessage("Your previous session has timed out.");
             }
         }
     }, []);
@@ -71,10 +72,6 @@ function AiChat(){
         loadCatalog();
     }, []);
 
-    const triggerTimeoutBanner = () => {
-        setTimeoutMessage("Your previous session has timed out.");
-        setTimeout(() => setTimeoutMessage(null), 5000); //hide banner after 5 seconds
-    };
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); 
@@ -140,10 +137,10 @@ function AiChat(){
         <div className={styles.aichat}>
             <div className={styles.aichatContentCotainer}>
                 <div className={styles.aichatHeader}>
-                    <h2>Pearlcryst Assistant</h2>
+                    <h2>Pearlcryst Concierge</h2>
                     <p>Elegance at your service</p>
                     {timeoutMessage && (
-                        <ErrorBanner message={timeoutMessage} type="warning" /> 
+                        <ErrorBanner message={timeoutMessage} type="warning" onClose={() => setTimeoutMessage(null)} /> 
                     )}
                 </div>
 

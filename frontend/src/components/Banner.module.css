@@ -3,6 +3,16 @@
   height: 32rem; /* fixed height */
   overflow: hidden;
   border-radius: 0.5rem 0.5rem 0 0;
+opacity: 0;
+  transform: translateY(-10px);
+  animation: bannerReveal 0.5s ease-out forwards;
+}
+
+@keyframes bannerReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Make sure images fill the container */
@@ -13,6 +23,3 @@
   object-position: center;
 }
 
-/* .carousel h3{
-    color: black;
-} */

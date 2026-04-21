@@ -75,7 +75,7 @@ function AiCustom(){
     const handleNext = async () => {
         if (!selections[step]) {
             setError("Please select an option before moving to the next step.");
-            setTimeout(() => setError(null), 3000);
+            // setTimeout(() => setError(null), 3000);
             return; 
         }
 
@@ -178,8 +178,8 @@ function AiCustom(){
                 <div className={styles.aiCustomContentContainer}>
                     <RotatingCarousel />
                     <div className={styles.aiCustomStart}>
-                        <h2>AI Custom Jewelry</h2>
-                        <p>Design your own jewelry using our AI-powered engine.</p>
+                        <h2>Custom Lab</h2>
+                        <p>Craft your custom jewelry with our AI designer.</p>
                         <button 
                             className={`${buttonStyles.button} ${buttonStyles.main}`} 
                             onClick={() => setStarted(true)}
@@ -278,7 +278,7 @@ function AiCustom(){
             {!finalImage && !generating &&(
                 <div className={styles.aiBackNextBtnContainer}>
                     <button className={`${buttonStyles.button} ${buttonStyles.plain}`} onClick={handleBack}>Back</button>
-                    {error && <AlertBanner message={error} type="warning"/>}
+                    {error && <AlertBanner message={error} type="warning" onClose={() => setError(null)}/>}
                     {step === 8 ? (
                         <button className={`${buttonStyles.button} ${buttonStyles.main}`} onClick={handleFinalGenerate}disabled={generating || !!finalImage}>
                             Generate Design

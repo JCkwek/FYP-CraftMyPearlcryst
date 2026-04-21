@@ -26,6 +26,18 @@
     border-radius: 50%;
     overflow: hidden;
     transition: transform 0.3s ease;
+    opacity: 0;
+    animation: fadeInScale 0.8s ease forwards;
+}
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
 }
 
 .imageCard:hover {
