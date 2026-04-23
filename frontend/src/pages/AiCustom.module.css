@@ -1,14 +1,14 @@
 .aiCustomStartPage{
     padding: 1rem;
     user-select: none;
-    height: 87.75vh;
+    height: 86vh;
     overflow: hidden; 
 }
 
 .aiCustomizingPage{
     padding: 1rem;
     user-select: none;
-    height: 87.75vh;
+    height: 86vh;
     overflow-y: hidden;
     position: relative;
 }
@@ -102,7 +102,7 @@
 @keyframes slideUpFade {
     0% {
         opacity: 0;
-        transform: translateY(20px) scale(0.8);
+        transform: translateY(1rem) scale(0.8);
     }
     100% {
         opacity: 1;
@@ -150,7 +150,7 @@
     position: relative;     
     display: inline-block;  
     margin: 2rem auto;      
-    padding: 0.8rem;          /* Space for the glow around the edges */
+    padding: 0.8rem; /* Space for the glow around the edges */
 }
 .readyToGenerate {
     text-align: center;
@@ -168,7 +168,7 @@
     background: linear-gradient(45deg, #d4af37, #9b59b6, #3498db, #d4af37);
     background-size: 400% 400%;
     border-radius: 1rem;
-    z-index: 1; /* Sits behind the image */
+    z-index: 1;
     filter: blur(8px); /* Softens the glow */
     animation: glowMovement 3s ease infinite;
 }

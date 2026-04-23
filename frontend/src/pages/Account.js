@@ -58,7 +58,6 @@ function Account() {
         <div className={styles.account}>
             <div className={styles.accountContentContainer}>
                 <h2>Account</h2>
-
                 {/* NOT logged in */}
                 {!token ? (
                     <div className={styles.notLoggedIn}>

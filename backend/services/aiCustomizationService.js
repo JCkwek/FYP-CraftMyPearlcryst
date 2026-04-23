@@ -47,9 +47,16 @@ const buildPromptFromSelections = async (selectionIds, length =null) => {
     }
 
     
-    const masterPrompt = `Professional luxury jewelry photography, ${mainSubject}, ${otherDetails}, ${lengthContext}. 
-    Single item, centered composition, macro shot, white marble background, soft studio lighting, 
-    8k resolution, photorealistic, no extra layers, simple elegant design.`;
+const masterPrompt = `A professional high-end jewelry photograph of a single, continuous ${mainSubject}. 
+The jewelry is a complete, unbroken piece with all components physically connected in a realistic, 
+flowing arrangement. ${otherDetails}. ${lengthContext}. 
+The item is perfectly centered on a clean, empty white marble surface with no markings or text. 
+Captured with a macro lens, the shot features sharp focus on the textures, 
+shimmering highlights, and ray-traced reflections on the metal. 
+The lighting is soft studio quality, creating elegant caustics and a gentle 
+depth of field. The composition is minimalist and sophisticated, 
+styled as a pristine gallery-quality product shot. 
+The background is completely clear and unmarked.`;
 
     return masterPrompt;
 };
@@ -86,6 +93,7 @@ const generateJewelryImage = async ({
 
     const imageBlob = await client.textToImage({
         model: 'black-forest-labs/FLUX.1-schnell',
+        // model: 'stabilityai/stable-diffusion-3.5-large-turbo',
         inputs: prompt,
         parameters: {
             num_inference_steps: 4
