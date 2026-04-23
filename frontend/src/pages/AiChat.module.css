@@ -60,6 +60,14 @@
      border-radius: 1rem 1rem 0.2rem 1rem;
     max-width: 80%;
     font-size: 0.95rem;
+    transform: translateX(15px);
+    animation: leftSlideIn 0.3s ease-out forwards;
+}
+@keyframes leftSlideIn {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .aiBubble {
@@ -72,10 +80,10 @@
     line-height: 1.5;
     white-space: pre-wrap;
     opacity: 0;
-    transform: translateX(-10px);
-    animation: slideIn 0.3s ease-out forwards;
+    transform: translateX(-15px);
+    animation: rightSlideIn 0.3s ease-out forwards;
 }
-@keyframes slideIn {
+@keyframes rightSlideIn {
     to {
         opacity: 1;
         transform: translateX(0);
