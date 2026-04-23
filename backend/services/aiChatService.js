@@ -8,7 +8,8 @@ const generateRecommendation = async (userPrompt) => {
         attributes: ['product_name', 'product_desc', 'product_price', 'product_material']
     });
 
-    const model = genAI.getGenerativeModel({ model: "gemini-3.1-flash-lite-preview"});
+    // const model = genAI.getGenerativeModel({ model: "gemini-3.1-flash-lite-preview"});
+    const models = ["gemini-3.1-flash-lite-preview", "gemini-2.5-flash-lite"];
 
     const productContext = `
       You are an expert luxury jewelry concierge for CraftMyPearlCryst.
@@ -33,9 +34,25 @@ const generateRecommendation = async (userPrompt) => {
     const fullPrompt = `${productContext}\n\nUser Question: ${userPrompt}`;
 
     // call API
-    const result = await model.generateContent(fullPrompt);
-    const response = await result.response;
-    return response.text();
+    // const result = await model.generateContent(fullPrompt);
+    // const response = await result.response;
+    // return response.text();
+
+    for(const modelName of models){
+      try{
+          console.log(`Attempting with model: ${modelName}`);
+          const model = genAI.getGenerativeModel({ model: modelName });
+          const result = await model.generateContent(fullPrompt);
+          const response = await result.response;
+          return response.text();
+      }catch(err){
+          console.error(`Error with ${modelName}:`, error.message);
+          if (modelName === models[models.length - 1]) {
+                throw new Error("All AI models are currently unavailable.");
+          }
+          console.log("Switching to backup model...");
+      }
+    }
 };
 
 module.exports = { generateRecommendation };
