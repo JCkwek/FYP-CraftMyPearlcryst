@@ -1,7 +1,6 @@
 import styles from './Cart.module.css';
 import CartItemCard from '../components/CartItemCard';
 import { useEffect, useState } from 'react';
-import api from '../api/api';
 import { getCart, updateCartQuantity, deleteCartItem, createCheckoutSession } from '../api/cartApi';
 import Loading from "../components/Loading";
 

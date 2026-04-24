@@ -1,26 +1,31 @@
 .searchBarContainer {
   display: flex;
+  justify-content: space-between;
   align-items: center;
+  gap: 1rem;
   background: white;
   border-radius: 2rem;
-  padding: 0.3rem 0.5rem;
+  padding: 0.5rem;
   margin: 1rem 0;
-  width: 50%;
-  box-shadow: 8px 0 15px -5px rgba(0, 0, 0, 0.1);
+  width: 40vw;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border: 1px solid #eee;
 }
 
 .searchBarContainer:hover,
 .searchBarContainer:focus-within{
-  border: 1px solid #cfcece ;
-  box-shadow: 0 0 6px rgba(207, 206, 206, 0.6);
+    outline: 1.5px solid #cfcece ;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .searchInput {
   border: none;
   outline: none;
-  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  padding: 0.5rem;
   flex-grow: 1;
+  flex-shrink: 1; /* important to overwrite input default size*/
+  min-width: 0;
   font-size: 1rem;
 }
 
@@ -36,5 +41,5 @@
 }
 
 .searchButton:hover {
-  color: #007bff;
+  color: #D8A7B1;
 }
