@@ -1,23 +1,19 @@
 import styles from './Cart.module.css';
 import CartItemCard from '../components/CartItemCard';
 import { useEffect, useState } from 'react';
-// import axios from 'axios';
-import api from '../api';
+import api from '../api/api';
+import { getCart, updateCartQuantity, deleteCartItem, createCheckoutSession } from '../api/cartApi';
 import Loading from "../components/Loading";
 
 function Cart() {
     const [cartItems, setCartItems] = useState([]);
-    const [loading, setLoading] = useState(true); // Changed from [] to true
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchCart = async () => {
             try {
-                // const token = localStorage.getItem('token');
-                // const res = await axios.get('http://localhost:3000/cart', {
-                //     headers: { Authorization: `Bearer ${token}` }
-                // });
-                const res = await api.get('/cart')
-                setCartItems(res.data);
+                const data = await getCart();
+                setCartItems(data);
             } catch (err) {
                 console.error("Error fetching cart:", err);
             } finally {
@@ -29,12 +25,7 @@ function Cart() {
 
     const handleUpdateQuantity = async (cartItemId, action) => {
         try{
-            // const token = localStorage.getItem('token');
-            await api.put(`/cart/update`, 
-                {cartItemId, action},
-                // {headers: {Authorization: `Bearer ${token}`}}
-            );
-
+            await updateCartQuantity(cartItemId, action);
             setCartItems(prevItems => prevItems.map(item => {
                 if(item.cart_item_id === cartItemId){
                     const newQty = action === 'increment'? item.quantity + 1 : Math.max(1, item.quantity - 1);
@@ -49,11 +40,8 @@ function Cart() {
 
     const handleDeleteItem = async (cartItemId) => {
         try {
-            // const token = localStorage.getItem('token');
-            await api.delete(`/cart/${cartItemId}`, {
-                // headers: { Authorization: `Bearer ${token}` }
-            });
-
+            await deleteCartItem(cartItemId);
+            console.log(`Removed item with cart id: ${cartItemId} from cart!`);
             // Remove from local state immediately
             setCartItems(prev => prev.filter(item => item.cart_item_id !== cartItemId));
         } catch (err) {
@@ -62,21 +50,16 @@ function Cart() {
     };
 
     const grandTotal = cartItems.reduce((acc,item) => {
-        // const price = parseFloat(item.Product?.product_price) || 0;
         const price = parseFloat(item.price_at_addition) || 0;
         return acc + (price * item.quantity);
     }, 0);
 
     const handleCheckout = async () => {
         try{
-            // const token = localStorage.getItem('token');
-            const res = await api.post('/orders/checkout', 
-                {cartItems},
-                // {headers: {Authorization: `Bearer ${token}`}}
-            );
+            const data = await createCheckoutSession(cartItems);
             //redirect to stripe
-            if(res.data.url){
-                window.location.href = res.data.url;
+            if(data.url){
+                window.location.href = data.url;
             }
         }catch(err){
             console.error("Checkout Error:", err);

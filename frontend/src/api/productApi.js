@@ -1,6 +1,4 @@
-import axios from 'axios';
-
-const BASE_URL = 'http://localhost:3000'; // backend URL
+import api from './api';
 
 export const getProducts = async ({query, type, onlyAvailable, limit, latest}) => {
   const params = new URLSearchParams();
@@ -10,7 +8,12 @@ export const getProducts = async ({query, type, onlyAvailable, limit, latest}) =
   if (limit) params.append('limit', limit);
   if (latest) params.append('latest', 'true');
 
-  const res = await axios.get(`${BASE_URL}/products?${params.toString()}`);
-  return res.data; //returns array of products
+  const res = await api.get(`/products?${params.toString()}`);
+  return res.data; //array of products
+};
+
+export const getProductById = async (id) => {
+  const res = await api.get(`/products/${id}`);
+  return res.data;
 };
 

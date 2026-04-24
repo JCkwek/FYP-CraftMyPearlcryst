@@ -2,7 +2,7 @@ import styles from './Orders.module.css';
 import BackButton from '../components/buttons/BackButton';
 import { useEffect, useState } from 'react';
 // import axios from 'axios';
-import api from '../api';
+import api from '../api/api';
 import OrderItemCard from '../components/OrderItemCard';
 import { useNavigate } from 'react-router-dom';
 import Loading from "../components/Loading";

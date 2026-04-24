@@ -1,6 +1,6 @@
 import styles from './LengthSlider.module.css';
 import { useState, useEffect } from 'react';
-import api from '../api';
+import api from '../api/api';
 
 function LengthSlider({ selections, onSelect, manualConstraints = null }){
     const [constraints, setConstraints] = useState(manualConstraints || { min: 14, max: 24, default: 18, unit: 'inch' });

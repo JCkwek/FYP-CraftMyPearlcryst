@@ -2,7 +2,8 @@ import styles from './ProductDetails.module.css';
 import buttonStyles from '../components/buttons/ButtonTheme.module.css';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState, useMemo } from 'react';
-import api from '../api';
+import { getProductById } from '../api/productApi';
+import { addToCart } from '../api/cartApi';
 import BackButton from '../components/buttons/BackButton';
 import ProductInfo from '../components/productDetail/ProductInfo';
 import ProductImage from '../components/productDetail/ProductImage';
@@ -12,7 +13,6 @@ import LengthSlider from '../components/LengthSlider';
 import AlertBanner from '../components/AlertBanner';
 
 function ProductDetails() {
-    // const navigate = useNavigate();
     const { id } = useParams();
     const [product, setProduct] = useState(null);
     const [selectedSize, setSelectedSize] = useState('');
@@ -36,12 +36,11 @@ function ProductDetails() {
         };
     }, [rangeOption]);
 
-    // Fetch Product Data
+    // Fetch Product
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const res = await api.get(`/products/${id}`);
-                const fetchedProduct = res.data;
+                const fetchedProduct = await getProductById(id);
                 setProduct(fetchedProduct);
 
                 // Initialize default size
@@ -58,7 +57,6 @@ function ProductDetails() {
                         setSelectedSize(base);
                     }
                 }
-
             } catch (err) {
                 console.error("Error fetching product:", err);
             }
@@ -70,7 +68,6 @@ function ProductDetails() {
     const calculatedPrice = useMemo(() => {
         if (!product) return 0;
         let total = parseFloat(product.product_price);
-
         // for custom length (range size)
         product.options?.forEach(option => {
             if (option.option_type === 'range' && isCustomising) {
@@ -100,19 +97,19 @@ function ProductDetails() {
             customization.color = selectedColor;
         }
 
+        const cartData = {
+            productId: product.product_id,
+            quantity: 1,
+            displayPrice: calculatedPrice,
+            customization: customization
+        };
+
         try {
-            await api.post('/cart', {
-                productId: product.product_id,
-                quantity: 1,
-                displayPrice: calculatedPrice,
-                customization: customization
-            }, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            await addToCart(cartData);
             setSuccessMessage(`Added ${product.product_name} to cart!`);
-            // alert(`Added ${product.product_name} to cart!`);
             resetCustomization(); 
             setSelectedColor('');
+            setError(null);
         } catch (err) {
             console.error("Error adding to cart:", err);
             setError("Failed to add to cart.");
@@ -121,7 +118,6 @@ function ProductDetails() {
 
     const resetCustomization = () => {
         setIsCustomising(false);
-
         // Find and reset Size to base (index 2 in CSV-style string)
         const sizeOption = product?.options?.find(opt => 
             opt.option_name.toLowerCase().includes('size') || 

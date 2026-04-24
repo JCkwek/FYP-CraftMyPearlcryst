@@ -1,7 +1,7 @@
 import styles from './Profile.module.css';
 import BackButton from '../components/buttons/BackButton.js';
 import { useState, useEffect } from 'react';
-import api from '../api';
+import api from '../api/api.js';
 import Loading from '../components/Loading.js';
 import AlertBanner from '../components/AlertBanner.js';
 

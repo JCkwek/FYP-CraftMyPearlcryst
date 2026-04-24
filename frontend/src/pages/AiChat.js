@@ -1,7 +1,7 @@
 import styles from './AiChat.module.css';
 import buttonStyles from '../components/buttons/ButtonTheme.module.css';
 import { useState, useEffect, useRef } from 'react';
-import api from '../api';
+import api from '../api/api';
 import ReactMarkdown from 'react-markdown';
 import ProductCard from '../components/ProductCard';
 import { getProducts } from '../api/productApi';

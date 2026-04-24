@@ -1,8 +1,6 @@
-import axios from "axios";
-
-const BASE_URL = 'http://localhost:3000'; // backend URL
+import api from './api'
 
 export const getBanners = async () =>{
-    const res  = await axios.get(`${BASE_URL}/banners`);
+    const res  = await api.get(`/banners`);
     return res.data;
 }

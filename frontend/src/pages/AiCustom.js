@@ -2,7 +2,7 @@ import styles from './AiCustom.module.css';
 import buttonStyles from '../components/buttons/ButtonTheme.module.css';
 import React, { useState, useEffect } from 'react';
 import Loading from '../components/Loading';
-import api from '../api';
+import api from '../api/api';
 import LengthSlider from '../components/LengthSlider';
 import RotatingCarousel from '../components/RotatingCarousel';
 import AiOptionCard from '../components/AiOptionCard';
