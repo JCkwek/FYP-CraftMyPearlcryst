@@ -1,10 +1,10 @@
 import styles from './AiChat.module.css';
 import buttonStyles from '../components/buttons/ButtonTheme.module.css';
 import { useState, useEffect, useRef } from 'react';
-import api from '../api/api';
 import ReactMarkdown from 'react-markdown';
 import ProductCard from '../components/ProductCard';
 import { getProducts } from '../api/productApi';
+import {getAiRecommendation} from '../api/aiChatApi';
 import ErrorBanner from '../components/AlertBanner';
 
 
@@ -45,8 +45,6 @@ function AiChat(){
                 localStorage.removeItem('pearlcryst_chat_timestamp');
                 // reset the chat state
                 setMessages(standardWelcome);
-                // show the banner
-                // triggerTimeoutBanner(); 
                 setTimeoutMessage("Your previous session has timed out.");
             }
         }
@@ -85,7 +83,8 @@ function AiChat(){
         setInput("");
         
         try{
-            const { data } = await api.post('/aichat/chat/recommend', { userPrompt: input });
+            // const { data } = await api.post('/aichat/chat/recommend', { userPrompt: input });
+            const data = await getAiRecommendation(input);
             setMessages(prev => [...prev, { role: 'ai', text: data.reply }]);
         }catch(error){
             console.error("Chat Error:", error);

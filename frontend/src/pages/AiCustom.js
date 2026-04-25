@@ -78,12 +78,8 @@ function AiCustom(){
             // setTimeout(() => setError(null), 3000);
             return; 
         }
-
-        // Clear error if an option is selected
         setError(null);
-
         let nextStep = step + 1;
-
         // Logic to skip empty steps (e.g., Pendants for Bracelets)
         if (nextStep >= 2 && nextStep <= 6) {
             const requirement = (nextStep === 4 || nextStep === 6) 
@@ -169,7 +165,7 @@ function AiCustom(){
 
     const handleRegenerate = () => {
         setFinalImage(null);
-        handleFinalGenerate(); // Re-runs the generation with current selections
+        handleFinalGenerate();
     };
 
     if(!started){
