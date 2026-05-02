@@ -12,7 +12,7 @@ function AiChat(){
     const [catalog, setCatalog] = useState([]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
-    const [timeoutMessage, setTimeoutMessage] = useState("your previous session has timed out");
+    const [timeoutMessage, setTimeoutMessage] = useState(null);
     const messagesEndRef = useRef(null);
     const standardWelcome = [
         {

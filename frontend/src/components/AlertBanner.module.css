@@ -22,6 +22,19 @@
         transform: translateY(0);
     }
 }
+.fadeOut {
+    animation: slideUpFadeOut 0.3s ease-in forwards;
+}
+@keyframes slideUpFadeOut {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
 .error{
     border: solid red 2px;
     color: red;
