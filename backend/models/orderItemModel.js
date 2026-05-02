@@ -41,9 +41,6 @@ const OrderItem = sequelize.define('OrderItem', {
 });
 
 OrderItem.associate = (models) => {
-
-  console.log("DEBUG - Is Order a valid Model?", !!models.Order?.prototype);
-    console.log("DEBUG - Is Product a valid Model?", !!models.Product?.prototype);
     OrderItem.belongsTo(models.Order, { foreignKey: 'order_id', as: 'Order' });
     OrderItem.belongsTo(models.Product, { foreignKey: 'product_id', as: 'Product' });
 };

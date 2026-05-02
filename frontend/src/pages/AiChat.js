@@ -5,14 +5,14 @@ import ReactMarkdown from 'react-markdown';
 import ProductCard from '../components/ProductCard';
 import { getProducts } from '../api/productApi';
 import {getAiRecommendation} from '../api/aiChatApi';
-import ErrorBanner from '../components/AlertBanner';
+import AlertBanner from '../components/AlertBanner';
 
 
 function AiChat(){
     const [catalog, setCatalog] = useState([]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
-    const [timeoutMessage, setTimeoutMessage] = useState(null);
+    const [timeoutMessage, setTimeoutMessage] = useState("your previous session has timed out");
     const messagesEndRef = useRef(null);
     const standardWelcome = [
         {
@@ -139,7 +139,7 @@ function AiChat(){
                     <h2>Pearlcryst Concierge</h2>
                     <p>Elegance at your service</p>
                     {timeoutMessage && (
-                        <ErrorBanner message={timeoutMessage} type="warning" onClose={() => setTimeoutMessage(null)} /> 
+                        <AlertBanner message={timeoutMessage} type="warning" onClose={() => setTimeoutMessage(null)} />
                     )}
                 </div>
 

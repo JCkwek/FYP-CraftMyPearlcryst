@@ -60,9 +60,10 @@ function Register(){
         <div className={styles.register}>
             <BackButton />
             <div className={styles.registerCard}>
-                <h2>Create Account</h2>
-                {error && <AlertBanner message={error}/>}
-                
+                <div className={styles.registerCardHeader}>
+                    <h2>Create Account</h2>
+                </div>
+                {error && <AlertBanner message={error} onClose={() => setError(null)}/>}
                 <form onSubmit={handleSubmit} className={styles.registerForm}>
                     <div className={styles.registerFormInput}>
                         <label>Name</label>

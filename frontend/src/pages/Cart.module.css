@@ -58,7 +58,7 @@
 
 .cartSummary {
     margin-top: 2rem;
-    padding: 2rem;
+    padding: 1rem;
     border-top: 2px solid #eee;
     display: flex;
     flex-direction: column;

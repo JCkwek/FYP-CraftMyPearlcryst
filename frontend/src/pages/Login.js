@@ -49,8 +49,10 @@ function Login() {
         <div className={styles.login}>
             <BackButton />
             <div className={styles.loginCard}>
-                <h2>Welcome Back</h2>
-                {error && <AlertBanner message={error}/>}
+                <div className={styles.loginCardHeader}>
+                    <h2>Welcome Back</h2>
+                </div>
+                {error && <AlertBanner message={error} onClose={() => setError(null)}/>}
                 <form onSubmit={handleSubmit} className={styles.loginForm}>
                     <div className={styles.loginFormInput}>
                         <label>Email</label>

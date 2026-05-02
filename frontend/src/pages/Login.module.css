@@ -11,6 +11,10 @@
     align-items: center;
 }
 
+.loginCardHeader{
+    padding: 0.5rem;
+}
+
 .loginForm{
     padding: 1rem;
     width: 100%;

@@ -1,7 +1,7 @@
 import styles from './Profile.module.css';
 import BackButton from '../components/buttons/BackButton.js';
 import { useState, useEffect } from 'react';
-import api from '../api/api.js';
+import { updateProfile } from '../api/userApi';
 import Loading from '../components/Loading.js';
 import AlertBanner from '../components/AlertBanner.js';
 
@@ -22,7 +22,7 @@ function Profile(){
         if (storedUser) {
             const parsedUser = JSON.parse(storedUser);
             setUser(parsedUser);
-            // Pre-fill form with existing data
+            // fill form with existing data
             setFormData(prev => ({
                 ...prev,
                 name: parsedUser.name || '',
@@ -42,13 +42,7 @@ function Profile(){
         }
 
         try {
-            const token = localStorage.getItem('token');
-            const res = await api.put(`/users/profile`, formData, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-
-            // Update local state and storage
-            const updatedUser = res.data; 
+            const updatedUser = await updateProfile(formData);
             setUser(updatedUser);
             localStorage.setItem('user', JSON.stringify(updatedUser));
             setIsEditing(false);

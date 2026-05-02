@@ -12,6 +12,10 @@
     align-items: center;
 }
 
+.registerCardHeader{
+    padding: 0.5rem;
+}
+
 .registerForm{
     padding: 1rem;
     width: 100%;

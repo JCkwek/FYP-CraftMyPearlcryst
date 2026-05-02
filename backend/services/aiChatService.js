@@ -40,10 +40,6 @@ const generateRecommendation = async (userPrompt) => {
     const fullPrompt = `${productContext}\n\nUser Question: ${userPrompt}`;
 
     // call API
-    // const result = await model.generateContent(fullPrompt);
-    // const response = await result.response;
-    // return response.text();
-
     for(const modelName of models){
       try{
           console.log(`Attempting with model: ${modelName}`);

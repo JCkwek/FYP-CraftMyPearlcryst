@@ -19,13 +19,11 @@ api.interceptors.response.use(
     (error) => {
         if (error.response && error.response.status === 401) {
             console.warn("Token expired. Logging out...");
-            
             // Clear storage
             localStorage.removeItem('token');
             localStorage.setItem('user', null); 
-            
             // Force user to Login
-            window.location.href = '/login'; 
+            // window.location.href = '/login'; 
         }
         return Promise.reject(error);
     }
