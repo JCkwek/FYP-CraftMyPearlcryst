@@ -9,3 +9,8 @@ export const fetchAiCustomOrder = async () => {
     const res = await api.get('/aicustomorder/my-aicustom-orders')
     return res.data;
 }
+
+export const removeAiCustomOrder = async (orderId) => {
+    const res = await api.delete(`/aicustomorder/${orderId}`);
+    return res.data;
+};

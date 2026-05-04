@@ -33,6 +33,7 @@ const buildPromptFromSelections = async (selectionIds, length =null) => {
 
     const jewelryType = components.find(c => c.step === 1)?.name || 'jewelry';
     const mainMaterial = components.find(c => c.step === 2 || c.step === 3)?.name || '';
+    const colorDetail = components.find(c => c.requirement === 'Color' || c.name.includes('Color'))?.name || '';
     const otherDetails = components
         .filter(c => c.step !== 1 && c.step !== 2 && c.step !== 3)
         .map(c => c.prompt_fragment)
@@ -40,10 +41,11 @@ const buildPromptFromSelections = async (selectionIds, length =null) => {
     const lengthContext = length ? `${length} inch length` : '';
     const materialMapping = ['Pearl', 'Crystal', 'Stone', 'Beaded'];
     let mainSubject = "";
+    const colorPrefix = colorDetail ? `${colorDetail} colored` : "";
     if (materialMapping.includes(mainMaterial)) {
-        mainSubject = `A realistic luxury single-strand ${jewelryType} made entirely of matching ${mainMaterial}s, continuous connected structure, every bead physically linked, pendant securely attached and centered, no floating parts, no broken gaps, natural drape, consistent ${mainMaterial} texture throughout`;
+        mainSubject = `A realistic luxury ${colorPrefix} single-strand ${jewelryType} made entirely of matching ${mainMaterial}s, continuous connected structure, every bead physically linked, pendant securely attached and centered, no floating parts, no broken gaps, natural drape, consistent ${mainMaterial} texture throughout`;
     } else {
-        mainSubject = `A high-end ${mainMaterial} ${jewelryType}`;
+        mainSubject = `A high-end ${colorPrefix} ${mainMaterial} ${jewelryType}`;
     }
 
     

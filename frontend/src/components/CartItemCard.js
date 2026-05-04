@@ -1,6 +1,4 @@
 import styles from './CartItemCard.module.css';
-// react-icons FaTrash . 
-
 
 function CartItemCard({ item, onUpdateQty, onDelete }) {
     const product = item.Product;
@@ -77,7 +75,6 @@ function CartItemCard({ item, onUpdateQty, onDelete }) {
                         &times;
                     </button>
                 </div>
-                
             </div>
         </div>
     )

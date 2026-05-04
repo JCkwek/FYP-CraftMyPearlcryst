@@ -35,11 +35,22 @@ const getAiCustomOrders = async (userId) => {
             as: 'aiResult',
             attributes: ['image_url', 'full_prompt', 'selections']
         }],
-        order: [['created_at', 'DESC']]
+        order: [['updated_at', 'DESC']]
     });
+};
+
+const removeAiCustomOrder = async (userId, orderId) => {
+    const order = await AiCustomOrder.findOne({ where: { id: orderId, user_id: userId } });
+    if (!order) throw new Error("Order not found or unauthorized.");
+
+    if (order.status === 'ordered') {
+        throw new Error("Cannot remove an order that has already been paid for.");
+    }
+    return await order.destroy();
 };
 
 module.exports = {
     submitForQuote,
-    getAiCustomOrders
+    getAiCustomOrders,
+    removeAiCustomOrder
 };

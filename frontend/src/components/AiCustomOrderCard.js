@@ -1,14 +1,15 @@
 import styles from './AiCustomOrderCard.module.css';
+import buttonStyles from '../components/buttons/ButtonTheme.module.css';
+// import { removeAiCustomOrder } from '../api/aiCustomApi';
 
-function AiCustomOrderCard({order, aiResult}){
+function AiCustomOrderCard({order, aiResult, onDelete}){
     const priceDisplay = order.admin_price > 0 
         ? `RM ${order.admin_price}` 
-        : "Pending Review";
+        : `${order.status}`;
 
     return(
         <div className={styles.aiOrderCard}>
-            <div className={styles.aiOrderCardContentContainer}>
-                <div className={styles.aiOrderItemDetailsContainer}>
+                <div className={styles.aiOrderCardContentContainer}>
                     <div className={styles.aiOrderItemImageContainer}>
                         <img 
                             src={`http://localhost:3000${aiResult?.image_url}`} 
@@ -16,21 +17,27 @@ function AiCustomOrderCard({order, aiResult}){
                         />
                     </div>
                     <div className={styles.aiOrderItemInfoContainer}>
-                        <div className={styles.productNameContainer} >
-                            <h4>Custom Jewelry Design</h4>
-                            <p className={styles.promptSnippet}>
-                                <strong>Prompt:</strong> {aiResult?.full_prompt?.substring(0, 100)}...
+                        <h4>Custom Jewelry Design</h4>
+                        <p>
+                            <strong>Prompt:</strong> {aiResult?.full_prompt?.substring(0, 100)}...
+                        </p>
+                        <p><strong>Quoted Price:</strong> {priceDisplay}</p>
+                        {order.admin_note && (
+                            <p>
+                                <strong>Note from Artisan:</strong> {order.admin_note}
                             </p>
-                            <p><strong>Quoted Price:</strong> {priceDisplay}</p>
-                            {order.admin_note && (
-                                <p className={styles.adminNote}>
-                                    <strong>Note from Artisan:</strong> {order.admin_note}
-                                </p>
-                            )}
-                        </div>
+                        )}
                     </div>
                 </div>
-            </div>
+                <div className={styles.aiOrderBtnContainer}>
+                    <button 
+                        className={`${buttonStyles.button} ${buttonStyles.cancel}`}
+                        onClick={() => onDelete(order.id)}
+                        title="Remove item"
+                    >
+                       Cancel Request
+                    </button>
+                </div>
         </div>
     )
 }

@@ -1,20 +1,14 @@
 import styles from './AiCustomOrder.module.css'
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {fetchAiCustomOrder} from '../api/aiCustomApi';
+import {fetchAiCustomOrder, removeAiCustomOrder} from '../api/aiCustomApi';
 import AiCustomOrderCard from '../components/AiCustomOrderCard';
 import Loading from '../components/Loading';
 
 function AiCustomOrder(){
-    const navigate = useNavigate();
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
-    const token = localStorage.getItem('token');
 
     useEffect(() => {
-        if (!token) {
-            navigate('/login', { replace: true });
-        }
         const fetchOrders = async () => {
             try{
                 const res  =  await fetchAiCustomOrder();
@@ -26,8 +20,18 @@ function AiCustomOrder(){
             }
         };
         fetchOrders();
-    }, [token, navigate])
-    if (!token) return null;
+    }, [])
+
+    const handleDelete = async(orderId) => {
+        if (window.confirm("Are you sure you want to cancel this request?")) {
+            try {
+                await removeAiCustomOrder(orderId);
+                setOrders(orders.filter(o => o.id !== orderId)); // Local update
+            } catch (err) {
+                alert("Failed to delete: " + err.message);
+            }
+        }
+    }
 
     return(
         <div className={styles.aiOrder}>
@@ -40,17 +44,22 @@ function AiCustomOrder(){
                         orders.map((order) => (
                             <div key={order.id} className={styles.orderGroup}>
                                 <u><h3>Request ID #{order.id}</h3></u>
-                                <h5>Date:  {new Date(order.createdAt).toLocaleString()}</h5>
+                                <h5>Date:  {new Date(order.created_at).toLocaleString()}</h5>
+                                {order.status !== 'pending' && (
+                                    <small className={styles.updateTime}>
+                                        Updated on: {new Date(order.updated_at || order.updatedAt).toLocaleDateString()}
+                                    </small>
+                                )}
                                 <h5>Status: <strong>{order.status.toUpperCase()}</strong></h5>
                                     <AiCustomOrderCard 
                                         order={order} 
                                         aiResult={order.aiResult}
+                                        onDelete={handleDelete}
                                     />
-
                             </div>
                         ))
                     ) : (
-                        <p>You do not have custom quote request.</p>
+                        <p>You do not have any custom quote request.</p>
                     )}
                 </div>
             </div>

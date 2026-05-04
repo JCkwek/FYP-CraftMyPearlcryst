@@ -71,7 +71,7 @@ function Cart() {
                 <h2>Your Cart</h2>
                 <div className={styles.cartItemContainer}>
                     { loading ? (
-                        <Loading message={"Loading cart..."}/>
+                        <Loading/>
                         ) :cartItems.length > 0 ? (
                         <>
                             <div className={styles.cartHeader}>

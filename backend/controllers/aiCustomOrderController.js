@@ -40,7 +40,20 @@ const getAiCustomOrders = async (req, res) => {
     }
 };
 
+const removeAiCustomOrder = async (req, res) => {
+    try {
+        const userId = req.user?.id;
+        const { orderId } = req.params;
+        await AiCustomOrderService.removeAiCustomOrder(userId, orderId);
+        res.status(200).json({ message: "Custom order request removed successfully." });
+    } catch (error) {
+        console.error("Delete Order Error:", error);
+        res.status(500).json({ error: 'Fail to remove ai custom order.' });
+    }
+};
+
 module.exports = {
     submitForQuote,
-    getAiCustomOrders
+    getAiCustomOrders,
+    removeAiCustomOrder
 };

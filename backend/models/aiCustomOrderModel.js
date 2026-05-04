@@ -40,10 +40,16 @@ const AiCustomOrder = sequelize.define('AiCustomOrder', {
     created_at: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW
+    },
+    updated_at: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
     }
 }, {
     tableName: 'ai_custom_orders',
-    timestamps: false 
+    timestamps: true,
+    createdAt: 'created_at', 
+    updatedAt: 'updated_at'
 });
 
 AiCustomOrder.associate = (models) => {
