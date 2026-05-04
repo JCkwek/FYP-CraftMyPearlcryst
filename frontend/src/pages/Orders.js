@@ -42,7 +42,7 @@ function Orders(){
                 <h2>Orders</h2>
                 <div className={styles.orderItemContainer}>
                     { loading?(
-                        <Loading message={"Loading orders..."}/>
+                        <Loading/>
                     ) : orders.length > 0 ? (
                         orders.map((order) => (
                             <div key={order.order_id} className={styles.orderGroup}>

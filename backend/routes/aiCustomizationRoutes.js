@@ -6,4 +6,5 @@ router.get('/step/:step', aiController.getStepOptions);
 router.post('/generate', aiController.generateImage);
 router.get('/lengths', aiController.getLengths);
 
+
 module.exports = router;

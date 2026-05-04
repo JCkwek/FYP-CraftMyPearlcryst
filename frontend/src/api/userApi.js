@@ -20,3 +20,8 @@ export const updateProfile = async (formData) => {
     });
     return res.data;
 };
+
+export const registerUser = async (userData) => {
+    const res = await api.post('/auth/register', userData);
+    return res.data;
+};

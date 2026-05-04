@@ -3,8 +3,7 @@ import buttonStyles from '../components/buttons/ButtonTheme.module.css';
 import BackButton from '../components/buttons/BackButton';
 import { useState, useEffect} from 'react'
 import { useNavigate } from 'react-router-dom'
-// import axios from 'axios';
-import api from '../api/api';
+import { registerUser } from '../api/userApi';
 import AlertBanner from '../components/AlertBanner';
 
 function Register(){
@@ -38,17 +37,11 @@ function Register(){
         }
 
         try{
-            const response = await api.post('/auth/register', {
-                name: formData.name,
-                email: formData.email,
-                phone_no: formData.phone_no,
-                password: formData.password
-            });
-
-            if(response.status === 201){
-                alert("Registration successful! Please login.");
-                navigate('/login');
-            }
+            //submitData- kinda like a javascript variable collects all the data from formData, but in this case separate confirmData
+            const { confirmPassword, ...submitData } = formData; 
+            await registerUser(submitData);
+            alert("Registration successful! Please login.");
+            navigate('/login');
         }catch(err){
             const msg = err.response?.data?.error || err.response?.data?.message || "Registration failed.";
             setError(msg);

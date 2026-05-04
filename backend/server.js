@@ -22,6 +22,7 @@ const orderRoutes = require('./routes/orderRoutes');
 const aiCustomJewelryRoutes = require('./routes/aiCustomizationRoutes');
 const rotateImageRoutes = require('./routes/rotateImageRoutes');
 const aiChatRoutes = require('./routes/aiChatRoutes');
+const aiCustomOrderRoutes = require('./routes/aiCustomOrderRoutes');
 const path = require('path');
 
 // Mount routes
@@ -35,6 +36,7 @@ app.use('/aicustomjewelry', aiCustomJewelryRoutes);
 app.use('/rotateimages',rotateImageRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/aichat', aiChatRoutes);
+app.use('/aicustomorder',aiCustomOrderRoutes);
 
 const sequelize = require('./db');
 const { or } = require('sequelize');

@@ -1,6 +1,5 @@
 import styles from './TopNav.module.css';
-import { FaShoppingBag } from "react-icons/fa";
-import { FaUser } from "react-icons/fa";
+import { FaShoppingBag, FaUser, FaMagic} from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 
@@ -11,6 +10,9 @@ function TopNav(){
         <div className={styles.topNav}>
             <div><h2>CraftMyPearlcryst</h2></div>
             <div className={styles.topNavButtonsContainer}>
+                <button className={styles.topNavButton} onClick={() => navigate("/aiCustomOrder")}>
+                    <FaMagic className={styles.topNavButtonIcon} />
+                </button>
                 <button className={styles.topNavButton} onClick={() => navigate("/cart")}>
                     <FaShoppingBag className={styles.topNavButtonIcon} />
                 </button>

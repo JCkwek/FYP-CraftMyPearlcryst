@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
 
-const AIJewelryComponent = sequelize.define('AIJewelryComponent', {
+const AiJewelryComponent = sequelize.define('AiJewelryComponent', {
     component_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -47,16 +47,16 @@ const AIJewelryComponent = sequelize.define('AIJewelryComponent', {
     timestamps: false
 });
 
-AIJewelryComponent.associate = (models) => {
+AiJewelryComponent.associate = (models) => {
     // Self-reference for hierarchical logic
-    AIJewelryComponent.hasMany(models.AIJewelryComponent, { 
+    AiJewelryComponent.hasMany(models.AiJewelryComponent, { 
         foreignKey: 'parent_id', 
         as: 'SubOptions' 
     });
-    AIJewelryComponent.belongsTo(models.AIJewelryComponent, { 
+    AiJewelryComponent.belongsTo(models.AiJewelryComponent, { 
         foreignKey: 'parent_id', 
         as: 'ParentOption' 
     });
 };
 
-module.exports = AIJewelryComponent;
+module.exports = AiJewelryComponent;

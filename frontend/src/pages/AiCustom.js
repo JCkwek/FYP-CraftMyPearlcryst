@@ -3,6 +3,7 @@ import buttonStyles from '../components/buttons/ButtonTheme.module.css';
 import React, { useState, useEffect } from 'react';
 import Loading from '../components/Loading';
 import api from '../api/api';
+import {submitForQuote} from '../api/aiCustomApi';
 import LengthSlider from '../components/LengthSlider';
 import RotatingCarousel from '../components/RotatingCarousel';
 import AiOptionCard from '../components/AiOptionCard';
@@ -17,8 +18,11 @@ function AiCustom(){
     const [loading, setLoading] = useState(false);
     const [selections, setSelections] = useState({}); //Track selections: { 1: {id: 1, name: 'Necklace'}, 2: {id: 3, name: 'Pearl'} }
     const [error, setError] = useState(null);
+    const [successMessage, setSuccessMessage] = useState(null);
     const [generating, setGenerating] = useState(false);
     const [finalImage, setFinalImage] = useState(null);
+    const [currentResultId, setCurrentResultId] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         if (!started) return;
@@ -75,7 +79,6 @@ function AiCustom(){
     const handleNext = async () => {
         if (!selections[step]) {
             setError("Please select an option before moving to the next step.");
-            // setTimeout(() => setError(null), 3000);
             return; 
         }
         setError(null);
@@ -140,6 +143,8 @@ function AiCustom(){
 
             if (res.data.success) {
                 // Point to your backend for newly saved image
+                const newId = res.data.resultId; 
+                setCurrentResultId(newId);
                 setTimeout(() => {
                     setFinalImage(`http://localhost:3000${res.data.imageUrl}`);
                     setGenerating(false);
@@ -166,6 +171,22 @@ function AiCustom(){
     const handleRegenerate = () => {
         setFinalImage(null);
         handleFinalGenerate();
+    };
+
+    const handleRequestQuote = async () => {
+        if (!currentResultId) {
+            setError("No design ID found. Please try regenerating.");
+            return;
+        }
+        setIsSubmitting(true);
+        try{
+            await submitForQuote(currentResultId);
+            setSuccessMessage("Your custom design has been submitted for a quote!");
+        }catch(err){
+            console.error("AI custom quote submission failed", err);
+        }finally {
+            setIsSubmitting(false);
+        }
     };
 
     if(!started){
@@ -243,7 +264,7 @@ function AiCustom(){
                                 <div className={styles.finalAiResultButtons}>
                                     <button className={`${buttonStyles.button} ${buttonStyles.cancel}`} onClick={handleReset}> Discard & Reset </button>
                                     <button className={`${buttonStyles.button} ${buttonStyles.main}`} onClick={handleRegenerate}>Regenerate</button>
-                                    <button className={`${buttonStyles.button} ${buttonStyles.green}`} onClick={() => alert("Order functionality coming soon!")}>Add To Cart</button>
+                                    <button className={`${buttonStyles.button} ${buttonStyles.green}`} onClick={handleRequestQuote}>Submit for Quote</button>
                                 </div>
                             </div>
                     ) : (
@@ -275,6 +296,7 @@ function AiCustom(){
                 <div className={styles.aiBackNextBtnContainer}>
                     <button className={`${buttonStyles.button} ${buttonStyles.plain}`} onClick={handleBack}>Back</button>
                     {error && <AlertBanner message={error} type="warning" onClose={() => setError(null)}/>}
+                    {successMessage && <AlertBanner message={successMessage} type="success" onClose={() => setSuccessMessage(null)}/>}
                     {step === 8 ? (
                         <button className={`${buttonStyles.button} ${buttonStyles.main}`} onClick={handleFinalGenerate}disabled={generating || !!finalImage}>
                             Generate Design

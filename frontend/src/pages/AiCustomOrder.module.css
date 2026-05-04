@@ -1,0 +1,29 @@
+.aiOrder{
+    padding: 1rem;
+    user-select: none;
+}
+
+.aiOrderContentContainer{
+    padding: 1rem;
+}
+
+.loadingContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+}
+
+.aiOrderItemContainer{
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    flex-direction: column;
+}
+
+.orderGroup{
+    padding: 0.5rem 1rem 1.5rem 1rem;
+    border-bottom: 2px solid #e0e0e0;
+    width: 100%;
+}

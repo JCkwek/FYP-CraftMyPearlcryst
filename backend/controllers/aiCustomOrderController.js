@@ -1,0 +1,46 @@
+const AiCustomOrderService = require('../services/AiCustomOrderService');
+
+const submitForQuote = async (req, res) => {
+    try {
+        const userId = req.user?.id;
+        if (!userId) {
+            return res.status(401).json({ 
+                error: 'Authentication failed: User ID not found in token.' 
+            });
+        } 
+        const { resultId } = req.body;
+        if (!resultId) {
+            return res.status(400).json({ error: 'Missing design ID (resultId).' });
+        }
+
+        if (!resultId) {
+            return res.status(400).json({ error: 'Missing design ID.' });
+        }
+
+        const newOrder = await AiCustomOrderService.submitForQuote(userId, resultId);
+        
+        res.status(201).json({
+            message: 'Your design has been submitted to our artisans!',
+            order: newOrder
+        });
+    } catch (error) {
+        console.error('Submit Quote Error:', error);
+        res.status(500).json({ error: error.message || 'Failed to submit request.' });
+    }
+};
+
+const getAiCustomOrders = async (req, res) => {
+    try {
+        const userId = req.user?.id;
+        const orders = await AiCustomOrderService.getAiCustomOrders(userId);
+        res.status(200).json(orders);
+    } catch (error) {
+        console.error('Fetch Custom Orders Error:', error);
+        res.status(500).json({ error: 'Could not retrieve your custom designs.' });
+    }
+};
+
+module.exports = {
+    submitForQuote,
+    getAiCustomOrders
+};

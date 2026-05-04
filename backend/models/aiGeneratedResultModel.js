@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
 
-const AIGeneratedResult = sequelize.define('AIGeneratedResult', {
+const AiGeneratedResult = sequelize.define('AiGeneratedResult', {
     result_id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
@@ -34,11 +34,11 @@ const AIGeneratedResult = sequelize.define('AIGeneratedResult', {
     timestamps: true // Useful for tracking when the generation happened
 });
 
-AIGeneratedResult.associate = (models) => {
-    AIGeneratedResult.belongsTo(models.User, { 
+AiGeneratedResult.associate = (models) => {
+    AiGeneratedResult.belongsTo(models.User, { 
         foreignKey: 'user_id', 
         as: 'User' 
     });
 };
 
-module.exports = AIGeneratedResult;
+module.exports = AiGeneratedResult;

@@ -1,4 +1,4 @@
-const { AIJewelryComponent, AIGeneratedResult } = require('../models');
+const { AiJewelryComponent, AiGeneratedResult } = require('../models');
 const { Op } = require('sequelize');
 const { InferenceClient } = require('@huggingface/inference');
 const fs = require('fs');
@@ -19,14 +19,14 @@ const getComponentsByStep = async (step, requirementName) => {
         whereClause.requirement = null;
     }
     
-    return await AIJewelryComponent.findAll({
+    return await AiJewelryComponent.findAll({
         where: whereClause,
         order: [['name', 'ASC']]
     });
 };
 
 const buildPromptFromSelections = async (selectionIds, length =null) => {
-    const components = await AIJewelryComponent.findAll({
+    const components = await AiJewelryComponent.findAll({
         where: { component_id: selectionIds },
         order: [['step', 'ASC']]
     });
@@ -102,9 +102,7 @@ const generateJewelryImage = async ({
 
     const arrayBuffer = await imageBlob.arrayBuffer();
     const imageBuffer = Buffer.from(arrayBuffer);
-
     const filename = `ai_${Date.now()}.png`;
-
     const uploadDir = path.join(
         __dirname,
         '../uploads/ai_generated'
@@ -123,7 +121,7 @@ const generateJewelryImage = async ({
 
     const publicUrl = `/uploads/ai_generated/${filename}`;
 
-    await AIGeneratedResult.create({
+    const newResult = await AiGeneratedResult.create({
         full_prompt: prompt,
         image_url: publicUrl,
         selections: selectionIds,
@@ -133,7 +131,8 @@ const generateJewelryImage = async ({
 
     return {
         success: true,
-        imageUrl: publicUrl
+        imageUrl: publicUrl,
+        resultId: newResult.result_id
     };
 };
 module.exports = {

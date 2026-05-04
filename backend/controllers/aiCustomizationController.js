@@ -1,7 +1,5 @@
 const aiService = require('../services/aiCustomizationService');
 
-
-
 const getStepOptions = async (req, res) => {
     try {
         const { step } = req.params;
