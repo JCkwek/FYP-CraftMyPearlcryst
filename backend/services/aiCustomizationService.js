@@ -32,33 +32,40 @@ const buildPromptFromSelections = async (selectionIds, length =null) => {
     });
 
     const jewelryType = components.find(c => c.step === 1)?.name || 'jewelry';
-    const mainMaterial = components.find(c => c.step === 2 || c.step === 3)?.name || '';
-    const colorDetail = components.find(c => c.requirement === 'Color' || c.name.includes('Color'))?.name || '';
+    const mainMaterial = components.find(c => c.step === 2)?.name || '';
+    const variantComponent = components.find(c => c.step === 3);
+    const colorValue = (variantComponent?.prompt_fragment || variantComponent?.name || '').toLowerCase();
+    const materialDisplay = colorValue.includes(mainMaterial.toLowerCase()) ? '' : mainMaterial;
+
     const otherDetails = components
-        .filter(c => c.step !== 1 && c.step !== 2 && c.step !== 3)
-        .map(c => c.prompt_fragment)
+        .filter(c => [4,6,7].includes(c.step))
+        .map(c => {
+            if (c.name === 'No Pendant') return null;   
+            return c.prompt_fragment || c.name;
+        })
+        .filter(Boolean)
         .join(', ');
+
     const lengthContext = length ? `${length} inch length` : '';
     const materialMapping = ['Pearl', 'Crystal', 'Stone', 'Beaded'];
-    let mainSubject = "";
-    const colorPrefix = colorDetail ? `${colorDetail} colored` : "";
+    // const colorEmphasis = colorFragment ? `featuring vibrant ${colorFragment} tones` : "";
+    let pieceDescription = "";
     if (materialMapping.includes(mainMaterial)) {
-        mainSubject = `A realistic luxury ${colorPrefix} single-strand ${jewelryType} made entirely of matching ${mainMaterial}s, continuous connected structure, every bead physically linked, pendant securely attached and centered, no floating parts, no broken gaps, natural drape, consistent ${mainMaterial} texture throughout`;
+        pieceDescription = `made of matching ${colorValue} ${mainMaterial}s, where every single bead is a consistent ${colorValue} hue`;
     } else {
-        mainSubject = `A high-end ${colorPrefix} ${mainMaterial} ${jewelryType}`;
+        pieceDescription = `crafted from high-end ${colorValue} ${mainMaterial}`;
     }
-
     
-const masterPrompt = `A professional high-end jewelry photograph of a single, continuous ${mainSubject}. 
-The jewelry is a complete, unbroken piece with all components physically connected in a realistic, 
-flowing arrangement. ${otherDetails}. ${lengthContext}. 
-The item is perfectly centered on a clean, empty white marble surface with no markings or text. 
-Captured with a macro lens, the shot features sharp focus on the textures, 
-shimmering highlights, and ray-traced reflections on the metal. 
-The lighting is soft studio quality, creating elegant caustics and a gentle 
-depth of field. The composition is minimalist and sophisticated, 
-styled as a pristine gallery-quality product shot. 
-The background is completely clear and unmarked.`;
+    const masterPrompt = `A professional macro gallery photograph of a ${colorValue} ${mainMaterial} ${jewelryType}. 
+        The piece is ${pieceDescription}. 
+        ${otherDetails}. ${lengthContext}. 
+        The ${colorValue} color is vibrant and saturated. 
+        Perfectly centered on a clean white marble surface. 
+        Soft studio lighting, sharp focus, 8k resolution. 
+        Pristine minimalist product photography. 
+        Clean background, no text, no watermarks, no logos, no branding, no letters, no signatures.`
+        .replace(/\s+/g, ' ')
+        .trim();
 
     return masterPrompt;
 };

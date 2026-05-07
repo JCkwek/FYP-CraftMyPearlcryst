@@ -18,9 +18,6 @@ import AiCustomOrder from './pages/AiCustomOrder';
 
 function App() {
   return (
-    // <div className="App">
-    //   <MainLayout />
-    // </div>
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<MainLayout/>}>
