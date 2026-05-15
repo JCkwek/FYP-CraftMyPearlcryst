@@ -1,19 +1,31 @@
 import styles from './SideNav.module.css'
 import { NavLink } from 'react-router-dom';
-function SideNav(){
+
+function SideNav({ user }){
+    const isAdmin = user && user.role === 'admin';
+
     return(
         <div className={styles.sideNav}>
-            {/* <h2>SideNav</h2> */}
             <div className={styles.sideNavTabContainer}>
-                <NavLink 
-                    to="/"
-                    className={({isActive}) =>
-                        isActive
-                            ? `${styles.sideNavTab} ${styles.active}`
-                            : styles.sideNavTab
-                    }
-                    >Home
-                </NavLink>
+                {isAdmin ? (
+                    <NavLink 
+                        to="/admin/dashboard"
+                        className={({isActive}) =>
+                            isActive ? `${styles.sideNavTab} ${styles.active}` : styles.sideNavTab
+                        }
+                    >
+                        Dashboard
+                    </NavLink>
+                ) : (
+                    <NavLink 
+                        to="/"
+                        className={({isActive}) =>
+                            isActive ? `${styles.sideNavTab} ${styles.active}` : styles.sideNavTab
+                        }
+                    >
+                        Home
+                    </NavLink>
+                )}
 
                 <NavLink 
                     to="/products" 
@@ -44,6 +56,18 @@ function SideNav(){
                     }
                     >Concierge
                 </NavLink>
+
+                {/*Admin only tabs*/}
+                {/* {isAdmin && (
+                    <NavLink 
+                        to="/admin/inventory" 
+                        className={({isActive}) =>
+                            isActive ? `${styles.sideNavTab} ${styles.active}` : styles.sideNavTab
+                        }
+                    >
+                        Manage Components
+                    </NavLink>
+                )} */}
             </div> 
                 
 

@@ -3,14 +3,14 @@ import './MainLayout.css'
 import SideNav from '../components/SideNav';
 import TopNav  from "../components/TopNav";
 
-function MainLayout(){
+function MainLayout({ currentUser, setCurrentUser }){
     return(
         <div className="mainlayout">
             <TopNav />
-            <SideNav />
+            <SideNav user={currentUser}/>
             <div className="contentContainer">
                 <div className="contentCard">
-                    <Outlet />
+                    <Outlet context={{ currentUser, setCurrentUser }}/>
                 </div>
             </div>
         </div>

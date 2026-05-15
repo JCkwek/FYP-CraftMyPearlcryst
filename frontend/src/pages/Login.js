@@ -3,46 +3,62 @@ import buttonStyles from '../components/buttons/ButtonTheme.module.css'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import BackButton from '../components/buttons/BackButton';
-// import axios from 'axios';
 import api from '../api/api';
 import AlertBanner from '../components/AlertBanner';
 
-function Login() {
+function Login({ onLoginSuccess }) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate()
 
-    // const user = JSON.parse(localStorage.getItem('user'))
-
     useEffect(() => {
         const token = localStorage.getItem('token');
-        if (token) {
-            navigate('/account');
+        const storedUser = localStorage.getItem('user');
+        if (token && storedUser) {
+            try {
+                const user = JSON.parse(storedUser);
+                if (user.role === 'admin') {
+                    navigate('/admin/dashboard');
+                } else {
+                    navigate('/account');
+                }
+            } catch (e) {
+                // Clear corruption just in case
+                localStorage.clear();
+            }
         }
     }, [navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        setError('');
 
-    try {
-        const res = await api.post('/auth/login', {
-            email,
-            password
-        });
-        localStorage.setItem('token', res.data.token);
-        localStorage.setItem('user', JSON.stringify(res.data.user));
-        console.log(res.data)
-        navigate('/account')// Redirect
-
-    } catch (err) {
-        const msg = err.response?.data?.error || "Login failed";
-        setError(msg);
-    }finally{
-        setLoading(false);
-    }
+        try {
+            const res = await api.post('/auth/login', {
+                email,
+                password
+            });
+            localStorage.setItem('token', res.data.token);
+            localStorage.setItem('user', JSON.stringify(res.data.user));
+            console.log(res.data)
+            if (onLoginSuccess) {
+                onLoginSuccess(res.data.user);
+            }
+            const user = res.data.user;
+            if (user && user.role === 'admin') {
+                navigate('/admin/dashboard');
+            } else {
+                navigate('/account');
+            }
+        } catch (err) {
+            const msg = err.response?.data?.error || "Login failed";
+            setError(msg);
+        }finally{
+            setLoading(false);
+        }
     }
 
     return (

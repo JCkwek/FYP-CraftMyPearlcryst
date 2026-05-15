@@ -1,6 +1,6 @@
 import styles from './Account.module.css';
 import buttonStyles from '../components/buttons/ButtonTheme.module.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext} from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 
@@ -8,6 +8,7 @@ function Account() {
     const navigate = useNavigate();
     const [token, setToken] = useState(null);
     const [user, setUser] = useState(null);
+    const { setCurrentUser } = useOutletContext();
 
         // Logout
     const handleLogout = () => {
@@ -15,6 +16,7 @@ function Account() {
         localStorage.removeItem('user');
         setToken(null);
         setUser(null);
+        setCurrentUser(null);
         // navigate('/login');
     };
 

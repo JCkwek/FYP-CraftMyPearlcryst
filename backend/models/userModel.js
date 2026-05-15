@@ -23,7 +23,7 @@ const User = sequelize.define('User', {
   phone_no: {
     type: DataTypes.STRING,
   },
-  user_type: {
+  role: {
     type: DataTypes.STRING,
     defaultValue: 'customer'
   }
