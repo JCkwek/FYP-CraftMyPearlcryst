@@ -6,7 +6,7 @@ const adminCheck = require('../middleware/adminCheck');
 
 router.post('/checkout', authMiddleware, orderController.checkout);
 router.get('/confirm', authMiddleware, orderController.confirmPayment);
-router.get('/',authMiddleware, orderController.getMyOrders);
+router.get('/',authMiddleware, orderController.getOrdersByUserId);
 
 //admin
 router.get('/admin/salesData', authMiddleware, adminCheck, orderController.getMonthlySalesData);

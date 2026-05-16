@@ -39,4 +39,18 @@ const getProductById = async (req, res) => {
     }
 }
 
-module.exports = { getProducts, getProductById};
+//admin
+const createProduct = async (req, res) => {
+    try {
+        const newProduct = await productService.createProduct(req.body);
+        return res.status(201).json({
+            message: "Product created successfully!",
+            product: newProduct
+        });
+    } catch (err) {
+        console.error("Error creating product:", err);
+        return res.status(400).json({ error: err.message });
+    }
+};
+
+module.exports = { getProducts, getProductById, createProduct};

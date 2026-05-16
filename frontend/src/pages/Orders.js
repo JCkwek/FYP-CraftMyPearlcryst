@@ -1,11 +1,10 @@
 import styles from './Orders.module.css';
 import BackButton from '../components/buttons/BackButton';
 import { useEffect, useState } from 'react';
-// import axios from 'axios';
-import api from '../api/api';
 import OrderItemCard from '../components/OrderItemCard';
 import { useNavigate } from 'react-router-dom';
 import Loading from "../components/Loading";
+import { getUserOrder } from '../api/orderApi';
 
 function Orders(){
     const navigate = useNavigate();
@@ -21,8 +20,8 @@ function Orders(){
 
         const fetchOrders = async () => {
             try{
-                const res = await api.get('/orders');
-                setOrders(res.data);
+                const orders = await getUserOrder();
+                setOrders(orders);
             }catch(err){
                 console.error("Error fetching orders:", err);
             } finally {
@@ -33,7 +32,6 @@ function Orders(){
     }, [token, navigate]);
 
     if (!token) return null;
-    // if (loading) return <Loading fullPage={false} />;
 
     return(
         <div className={styles.orders}>

@@ -77,10 +77,10 @@ const confirmPayment = async (req, res) => {
     }
 };
 
-const getMyOrders = async (req,res) => {
+const getOrdersByUserId = async (req,res) => {
     try{
         const userId = req.user.id;
-        const orders = await orderService.getMyOrders(userId);
+        const orders = await orderService.getOrdersByUserId(userId);
         res.json(orders);
     }catch(err){
         console.error("Order service error:", err);
@@ -103,4 +103,4 @@ const getMonthlySalesData = async (req, res) => {
     }
 };
 
-module.exports = {checkout, confirmPayment, getMyOrders, getMonthlySalesData };
+module.exports = {checkout, confirmPayment, getOrdersByUserId, getMonthlySalesData };

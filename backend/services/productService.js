@@ -64,4 +64,33 @@ const getProductById = async (id) => {
     });
 };
 
-module.exports = { getProducts, getProductById };
+//admin
+const createProduct = async (productData) => {
+    const {
+        product_name,
+        product_price,
+        product_desc,
+        product_image,
+        product_availability,
+        product_type,
+        product_material,
+        is_customisable,
+        product_size
+    } = productData;
+
+    const newProduct = await Product.create({
+        product_name,
+        product_price,
+        product_desc,
+        product_image,
+        product_availability: product_availability !== undefined ? product_availability : true,
+        product_type,
+        product_material,
+        is_customisable: is_customisable !== undefined ? is_customisable : false,
+        product_size // Sequelize automatically strings and parse DataTypes.JSON column
+    });
+
+    return newProduct;
+};
+
+module.exports = { getProducts, getProductById, createProduct};

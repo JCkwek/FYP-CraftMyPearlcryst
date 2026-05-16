@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const productController = require('../controllers/productController');
+const authMiddleware = require('../middleware/authMiddleware'); 
+const adminCheck = require('../middleware/adminCheck');
 
-// Main product endpoint (handles everything)
 router.get('/', productController.getProducts);
-
-// Admin endpoint 
-router.get('/admin', productController.getProducts);
-
 router.get('/:id', productController.getProductById);
+
+// admin 
+router.post('/admin', authMiddleware, adminCheck,productController.createProduct);
 
 module.exports = router;

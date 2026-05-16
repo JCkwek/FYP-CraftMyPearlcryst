@@ -16,7 +16,7 @@ function SalesBarChart({ data }) {
                     formatter={(value) => [`RM ${value}`, 'Sales']}
                 />
                 <Legend />
-                <Bar dataKey="Sales" fill="#2563eb" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="Sales" fill="#d8a7b1" radius={[4, 4, 0, 0]} />
             </BarChart>
         </ResponsiveContainer>
     );
