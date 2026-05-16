@@ -88,4 +88,19 @@ const getMyOrders = async (req,res) => {
     }
 };
 
-module.exports = {checkout, confirmPayment, getMyOrders};
+const getMonthlySalesData = async (req, res) => {
+    try {
+        const salesData = await orderService.getMonthlySalesData();
+        const formattedData = salesData.map(item => ({
+            month: item.dataValues.month,
+            Sales: parseFloat(item.dataValues.Sales || 0) // Convert "4500.00" -> 4500
+        }));
+        return res.status(200).json(formattedData);
+
+    } catch (error) {
+        console.error("Error running sales dashboard metrics:", error);
+        return res.status(500).json({ error: "Internal server error calculating sales data." });
+    }
+};
+
+module.exports = {checkout, confirmPayment, getMyOrders, getMonthlySalesData };

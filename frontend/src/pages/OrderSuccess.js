@@ -1,6 +1,8 @@
 import styles from './OrderSuccess.module.css';
+import buttonStyles from '../components/buttons/ButtonTheme.module.css';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { FaCheck } from 'react-icons/fa';
 import axios from 'axios';
 
 function OrderSuccess(){
@@ -32,11 +34,12 @@ function OrderSuccess(){
 
     return (
         <div className={styles.orderSuccess}>
-            <h1>✅ Payment Successful!</h1>
-            <p>Your order has been placed.</p>
-            <button onClick={() => navigate('/orders')} className={styles.viewMyOrdersBtn}>
-                View My Orders
-            </button>
+            <div className={styles.orderSuccessContentContainer}>
+                <h2><FaCheck /> Payment Successful</h2>
+                <p>Your order has been placed.</p>
+                <button onClick={() => navigate('/orders')} className={`${buttonStyles.button} ${buttonStyles.main}`}>View My Orders</button>
+            </div>
+
         </div>
     )
 }

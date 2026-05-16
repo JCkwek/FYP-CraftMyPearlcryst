@@ -1,8 +1,4 @@
-// const { Order } = require('../models/orderModel');
-// const { OrderItem } = require('../models/orderItemModel');
-// const sequelize = require('../db');
 const { Order, OrderItem, Product, sequelize } = require('../models');
-// const { get } = require('../routes/userRoutes');
 
 const createOrder = async (userId, cartItems, totalAmount, stripeSessionId) => {
     // Start a transaction to ensure both Order and OrderItems are saved together
@@ -75,11 +71,28 @@ const getMyOrders = async (userId) => {
     })
 }
 
+const getMonthlySalesData = async () => {
+    return await Order.findAll({
+        where: {
+            order_status: ['paid', 'in-progress', 'completed'] 
+        },
+        attributes: [
+            // Extract month name from timestamp
+            [sequelize.fn('DATE_FORMAT', sequelize.col('createdAt'), '%b'), 'month'],
+            // Sum total
+            [sequelize.fn('SUM', sequelize.col('total_amount')), 'Sales']
+        ],
+        group: [sequelize.fn('DATE_FORMAT', sequelize.col('createdAt'), '%b')],
+        order: [[sequelize.col('createdAt'), 'ASC']] 
+    });
+};
+
 module.exports = {
     createOrder,
     updateOrderStatus,
     getOrdersByUserId,
     getOrderDetails,
-    getMyOrders
+    getMyOrders,
+    getMonthlySalesData
 };
 
