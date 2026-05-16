@@ -2,20 +2,25 @@ import styles from './TopNav.module.css';
 import { FaShoppingBag, FaUser, FaMagic} from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-
-function TopNav(){
+function TopNav({ user }){
+    const isAdmin = user && user.role === 'admin';
     const navigate = useNavigate();
 
     return(
         <div className={styles.topNav}>
             <div><h2>CraftMyPearlcryst</h2></div>
             <div className={styles.topNavButtonsContainer}>
-                <button className={styles.topNavButton} onClick={() => navigate("/aiCustomOrder")}>
-                    <FaMagic className={styles.topNavButtonIcon} />
-                </button>
-                <button className={styles.topNavButton} onClick={() => navigate("/cart")}>
-                    <FaShoppingBag className={styles.topNavButtonIcon} />
-                </button>
+                {!isAdmin && (
+                    <>
+                        <button className={styles.topNavButton} onClick={() => navigate("/aiCustomOrder")}>
+                            <FaMagic className={styles.topNavButtonIcon} />
+                        </button>
+                        <button className={styles.topNavButton} onClick={() => navigate("/cart")}>
+                            <FaShoppingBag className={styles.topNavButtonIcon} />
+                        </button>
+                    </>
+                    )
+                }
                 <button className={styles.topNavButton} onClick={() => navigate("/account")}>
                     <FaUser className={styles.topNavButtonIcon} />
                 </button>

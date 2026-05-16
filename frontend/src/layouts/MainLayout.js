@@ -6,7 +6,7 @@ import TopNav  from "../components/TopNav";
 function MainLayout({ currentUser, setCurrentUser }){
     return(
         <div className="mainlayout">
-            <TopNav />
+            <TopNav user={currentUser}/>
             <SideNav user={currentUser}/>
             <div className="contentContainer">
                 <div className="contentCard">
