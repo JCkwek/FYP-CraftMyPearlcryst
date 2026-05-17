@@ -6,8 +6,12 @@
 .productsContentContainer{
     padding: 1rem;
 }
+.contentFirstRow{
+    display: flex;
+    justify-content: space-between;
+}
 .productCardContainer{
-    padding: 0.5rem;
+    padding: 1rem 0.5rem;
     display: flex;
     justify-content: flex-start;
     gap: 0.5rem;

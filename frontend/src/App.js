@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Navigate ,Route, Outlet } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import './App.css';
 import MainLayout from './layouts/MainLayout';
 import Home from './pages/Home';
@@ -18,6 +18,7 @@ import AiCustomOrder from './pages/AiCustomOrder';
 
 //Admin
 import AdminDashboard from './pages/admin/AdminDashboard';
+import AddProducts from './pages/admin/AddProducts';
 
 const AdminRouteGuard = () => {
   const token = localStorage.getItem('token');
@@ -63,6 +64,7 @@ function App() {
           {/*Admin routes */}
           <Route element={<AdminRouteGuard />}>
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/addProducts" element={<AddProducts />} />
           </Route>
         </Route>
       </Routes>

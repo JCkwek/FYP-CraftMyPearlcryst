@@ -1,0 +1,108 @@
+.addProducts{
+    padding: 1rem;
+    user-select: none;
+}
+
+.addProductsContentContainer {
+    padding: 1rem;
+}
+
+.addProductsTopSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.addProductsContentContainer h2 {
+    font-size: 1.8rem;
+    color: #1e293b;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 0.75rem;
+}
+
+.productForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .formGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.formGroupFull {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.formGroup label, .formGroupFull label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #475569;
+}
+
+.formGroup input, .formGroup select, .formGroupFull textarea {
+    padding: 0.75rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: #334155;
+    background-color: #f8fafc;
+    transition: all 0.2s ease;
+}
+
+.formGroup input:focus, .formGroup select:focus, .formGroupFull textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.checkboxRow {
+    display: flex;
+    gap: 2rem;
+    margin: 0.5rem 0;
+    flex-wrap: wrap;
+}
+
+.checkboxLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #334155;
+    cursor: pointer;
+}
+
+.checkboxLabel input {
+    width: 1.2rem;
+    height: 1.2rem;
+    cursor: pointer;
+}
+
+.formActionsButtons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    border-top: 2px solid #f1f5f9;
+    padding-top: 1.5rem;
+    margin-top: 1rem;
+}

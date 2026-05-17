@@ -41,8 +41,40 @@ const getProductById = async (req, res) => {
 
 //admin
 const createProduct = async (req, res) => {
-    try {
-        const newProduct = await productService.createProduct(req.body);
+try {
+        // check if a file successfully intercepted by Multer
+        let imagePath = null;
+        if (req.file) {
+            imagePath = `/uploads/${req.file.filename}`;
+        }
+
+        // extract standard parameters and format FormData strings back to original types
+        const {
+            product_name,
+            product_price,
+            product_desc,
+            product_availability,
+            product_type,
+            product_material,
+            is_customisable,
+            product_size
+        } = req.body;
+
+        // normalize data types explicitly
+        const productPayload = {
+            product_name,
+            product_price: parseFloat(product_price),
+            product_desc: product_desc || null,
+            product_image: imagePath, // Use the path string collected from Multer
+            product_availability: product_availability === 'true', // Convert FormData text string to Boolean
+            product_type,
+            product_material: product_material || null,
+            is_customisable: is_customisable === 'true', // Convert FormData text string to Boolean
+            product_size: product_size ? JSON.parse(product_size) : null // Parse array string back to array object
+        };
+        
+        const newProduct = await productService.createProduct(productPayload);
+
         return res.status(201).json({
             message: "Product created successfully!",
             product: newProduct

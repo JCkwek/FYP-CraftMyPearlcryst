@@ -18,3 +18,7 @@ export const getProductById = async (id) => {
 };
 
 //admin
+export const addProduct = async (formDataPayload) => {
+  const res = await api.post(`/products/admin/addProduct`, formDataPayload);
+  return res.data;
+};

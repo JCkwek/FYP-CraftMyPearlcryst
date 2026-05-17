@@ -1,14 +1,19 @@
 import styles from "./Products.module.css";
+import buttonStyles from "../components/buttons/ButtonTheme.module.css";
 import {useState, useEffect} from 'react';
 import { getProducts } from '../api/productApi';
 import ProductCard from "../components/ProductCard";
 import SearchBar from "../components/SearchBar";
 import Loading from "../components/Loading";
+import { useOutletContext , useNavigate} from 'react-router-dom';
 
 function Products(){
     const [products, setProducts] = useState([]);
     const [search, setSearch] = useState('');
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
+    const { currentUser }  = useOutletContext();
+    const isAdmin = currentUser?.role === 'admin';
 
     useEffect(() => {
         fetchProducts();
@@ -39,11 +44,22 @@ function Products(){
     <div className={styles.products}>
         <div className={styles.productsContentContainer}>
       <h1>Products</h1>
-      <SearchBar 
-        value={search}
-        onChange={setSearch}
-        onSearch={handleSearch}
-      />
+      <div className={styles.contentFirstRow}>
+        <SearchBar 
+            value={search}
+            onChange={setSearch}
+            onSearch={handleSearch}
+        />
+        {isAdmin && (
+            <button 
+                className={`${buttonStyles.button} ${buttonStyles.main}`} 
+                onClick={() => navigate('/admin/addProducts')} 
+            >
+            + Add New Product
+            </button>
+        )}
+      </div>
+
       <div className={styles.productList}>
         <div className={styles.productCardContainer}>
             {loading ? (
