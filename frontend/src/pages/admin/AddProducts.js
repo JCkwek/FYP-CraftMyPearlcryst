@@ -120,7 +120,7 @@ function AddProducts(){
                         
                         {/* Left Side fields */}
                         <div className={styles.formGroup}>
-                            <label htmlFor="product_name">Product Item Name *</label>
+                            <label htmlFor="product_name">Product Name *</label>
                             <input 
                                 id="product_name"
                                 type="text" 
@@ -133,7 +133,7 @@ function AddProducts(){
                         </div>
 
                         <div className={styles.formGroup}>
-                            <label htmlFor="product_price">Retail Value Price (RM) *</label>
+                            <label htmlFor="product_price">Price (RM) *</label>
                             <input 
                                 id="product_price"
                                 type="number" 
@@ -148,7 +148,7 @@ function AddProducts(){
                         </div>
 
                         <div className={styles.formGroup}>
-                            <label htmlFor="product_type">Product Classification Categories</label>
+                            <label htmlFor="product_type">Product Type</label>
                             <select 
                                 id="product_type"
                                 name="product_type" 
@@ -163,7 +163,7 @@ function AddProducts(){
                         </div>
 
                         <div className={styles.formGroup}>
-                            <label htmlFor="product_material">Base Structural Metallic Elements</label>
+                            <label htmlFor="product_material">Base Material</label>
                             <input 
                                 id="product_material"
                                 type="text" 
@@ -175,7 +175,7 @@ function AddProducts(){
                         </div>
 
                         <div className={styles.formGroup}>
-                            <label htmlFor="product_image">Image Asset Source Reference String URL</label>
+                            <label htmlFor="product_image">Product Image</label>
                             <input 
                                 id="product_image"
                                 type="file" 
@@ -186,7 +186,7 @@ function AddProducts(){
                         </div>
 
                         <div className={styles.formGroup}>
-                            <label htmlFor="sizeInput">Available Dimensions (Comma-Separated Array Strings)</label>
+                            <label htmlFor="sizeInput">Size (Comma-Separated Array Strings)</label>
                             <input 
                                 id="sizeInput"
                                 type="text" 
@@ -200,7 +200,7 @@ function AddProducts(){
                     </div>
 
                     <div className={styles.formGroupFull}>
-                        <label htmlFor="product_desc">Extended Item Description Markdown Text</label>
+                        <label htmlFor="product_desc">Description</label>
                         <textarea 
                             id="product_desc"
                             name="product_desc" 
@@ -220,7 +220,7 @@ function AddProducts(){
                                 checked={formData.product_availability} 
                                 onChange={handleChange} 
                             />
-                            Publish Live To Inventory Display Immediately
+                            Add Product To Inventory
                         </label>
 
                         <label className={styles.checkboxLabel}>
@@ -230,7 +230,7 @@ function AddProducts(){
                                 checked={formData.is_customisable} 
                                 onChange={handleChange} 
                             />
-                            Allow Deep AI Customizations Pipeline Configurations
+                            Allow Customizations
                         </label>
                     </div>
 
