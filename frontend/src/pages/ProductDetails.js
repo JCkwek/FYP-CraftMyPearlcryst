@@ -11,6 +11,7 @@ import Loading from '../components/Loading';
 import ColorSelect from '../components/ColorSelect';
 import LengthSlider from '../components/LengthSlider';
 import AlertBanner from '../components/AlertBanner';
+import { useOutletContext, useNavigate} from 'react-router-dom';
 
 function ProductDetails() {
     const { id } = useParams();
@@ -20,6 +21,9 @@ function ProductDetails() {
     const [isCustomising, setIsCustomising] = useState(false);
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
+    const { currentUser }  = useOutletContext();
+    const isAdmin = currentUser?.role === 'admin';
+    const navigate = useNavigate();
 
     const rangeOption = useMemo(() => {
         return product?.options?.find(opt => opt.option_type === 'range');
@@ -195,7 +199,9 @@ function ProductDetails() {
                         ))}
                     </div>
 
-                    <div className={styles.productDetailsButtons}>
+                    {!isAdmin ? (
+                        <>
+                        <div className={styles.productDetailsButtons}>
                         {product.is_customisable && !isCustomising && (
                             <button className={`${buttonStyles.button} ${buttonStyles.secondary}`} onClick={() => setIsCustomising(true)}>Customise</button>
                         )}
@@ -203,7 +209,13 @@ function ProductDetails() {
                             <button className={`${buttonStyles.button} ${buttonStyles.cancel}`} onClick={resetCustomization}>Cancel</button>
                         )}
                         <button className={`${buttonStyles.button} ${buttonStyles.green}`} onClick={handleAddToCart}> Add To Cart</button>
-                    </div>
+                        </div>
+                        </>
+                    ) : (
+                        <button className={`${buttonStyles.button} ${buttonStyles.main}`} onClick={() => navigate('/admin/editProducts', { state: { product } })}> Edit</button>
+                    )
+                    }
+                    
                     
                 </div>
             </div>

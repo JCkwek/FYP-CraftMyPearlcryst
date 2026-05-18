@@ -22,3 +22,8 @@ export const addProduct = async (formDataPayload) => {
   const res = await api.post(`/products/admin/addProduct`, formDataPayload);
   return res.data;
 };
+
+export const editProduct = async (id, formDataPayload) => {
+  const res = await api.put(`/products/admin/editProduct/${id}`, formDataPayload);
+  return res.data;
+};

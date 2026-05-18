@@ -19,6 +19,7 @@ import AiCustomOrder from './pages/AiCustomOrder';
 //Admin
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AddProducts from './pages/admin/AddProducts';
+import EditProducts from './pages/admin/EditProducts';
 
 const AdminRouteGuard = () => {
   const token = localStorage.getItem('token');
@@ -34,8 +35,14 @@ const AdminRouteGuard = () => {
       console.error(e);
     }
   }
-  // Access denied, boot them back to login
   return <Navigate to="/login" replace />;
+};
+
+const HomeDispatcher = ({ currentUser }) => {
+  if (currentUser && currentUser.role === 'admin') {
+    return <Navigate to="/admin/dashboard" replace />;
+  }
+  return <Home />;
 };
 
 function App() {
@@ -48,7 +55,8 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<MainLayout currentUser={currentUser} setCurrentUser={setCurrentUser}/>}>
-          <Route index element={<Home />} /> 
+          {/* <Route index element={<Home />} />  */}
+          <Route index element={<HomeDispatcher currentUser={currentUser} />} /> 
           <Route path="/products" element={<Products />} />
           <Route path="/products/:id" element={<ProductDetail />} />
           <Route path="/cart" element={<Cart />} />
@@ -65,6 +73,7 @@ function App() {
           <Route element={<AdminRouteGuard />}>
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/addProducts" element={<AddProducts />} />
+            <Route path="/admin/editProducts" element={<EditProducts />} />
           </Route>
         </Route>
       </Routes>
