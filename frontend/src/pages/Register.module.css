@@ -37,7 +37,8 @@
     border-bottom: 1px solid #D8A7B1;
 }
 .registerFormInput input:focus{
-    border-bottom: 2px solid #D8A7B1;
+    border-bottom: 1px solid #D8A7B1;
+    box-shadow: 0 1px 0 0 #D8A7B1;
 }
 
 .registerButton{

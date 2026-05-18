@@ -9,84 +9,111 @@
 
 .addProductsTopSection {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
 }
 
-.addProductsContentContainer h2 {
-    font-size: 1.8rem;
-    color: #1e293b;
-    margin-bottom: 2rem;
-    border-bottom: 2px solid #f1f5f9;
-    padding-bottom: 0.75rem;
-}
-
-.productForm {
+.addProductForm {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
 }
-
-.formGrid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
+.formInputContainer{
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem;  
 }
-
-@media (max-width: 768px) {
-    .formGrid {
-        grid-template-columns: 1fr;
-    }
-}
-
-.formGroup {
+.imageInputContainer{
+    padding: 0.5rem;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 1rem;
+    justify-content: start;
+    align-items: center;
+    width: 30%;
+}
+.productImageContainer{
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    user-select: none;
+    overflow: hidden;
+    height: 58vh;
+    width: 23vw;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    color: #94a3b8;
+}
+.productImageContainer img{
+    height: 54vh;
+    width: 21vw;
+}
+.productImageIcon {
+    font-size: 2rem;
+}
+.hiddenFileInput {
+    display: none;
+}
+.infoInputContainer{
+    width: 60%;
 }
 
-.formGroupFull {
+.formInput {
+    padding: 0.5rem;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
 }
-
-.formGroup label, .formGroupFull label {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #475569;
+.formInput input {
+    border: none;
+    outline: none;
+    border-bottom: 1px solid black;
+    padding: 0.5rem;
+    color: #334155;
+    transition: all 0.2s ease;
 }
-
-.formGroup input, .formGroup select, .formGroupFull textarea {
-    padding: 0.75rem;
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
-    font-size: 0.95rem;
+.formInput select{
+    padding: 0.5rem;
+    border: 1px solid black;
+    border-radius: 0.5rem;
     color: #334155;
     background-color: #f8fafc;
     transition: all 0.2s ease;
+    cursor: pointer;
 }
-
-.formGroup input:focus, .formGroup select:focus, .formGroupFull textarea:focus {
-    outline: none;
-    border-color: #2563eb;
-    background-color: #ffffff;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+.formInput textarea{
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+}
+.formInput input:hover{
+    border-bottom: 1px solid #D8A7B1;
+}
+.formInput input:focus{
+    border-bottom: 1px solid #D8A7B1;
+    box-shadow: 0 1px 0 0 #D8A7B1;
+}
+.formInput select:hover, .formInput textarea:hover{
+    border: 1px solid #D8A7B1;
+}
+.formInput select:focus, .formInput textarea:focus{
+    border: 1px solid #D8A7B1;
+    box-shadow: 0 0 0 1px #D8A7B1;
 }
 
 .checkboxRow {
+    padding: 0.5rem;
     display: flex;
     gap: 2rem;
-    margin: 0.5rem 0;
     flex-wrap: wrap;
 }
-
 .checkboxLabel {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 0.95rem;
     font-weight: 500;
     color: #334155;
     cursor: pointer;
@@ -98,11 +125,9 @@
     cursor: pointer;
 }
 
-.formActionsButtons {
+.addProductFormBtns {
+    padding: 1rem;
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
-    border-top: 2px solid #f1f5f9;
-    padding-top: 1.5rem;
-    margin-top: 1rem;
 }

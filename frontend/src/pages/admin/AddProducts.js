@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import styles from './AddProducts.module.css';
 import buttonStyles from '../../components/buttons/ButtonTheme.module.css';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import BackButton from '../../components/buttons/BackButton';
 import AlertBanner from '../../components/AlertBanner';
 import {addProduct} from '../../api/productApi';
-
+import { FaCamera } from 'react-icons/fa';
 
 function AddProducts(){
     const navigate = useNavigate();
@@ -64,19 +64,6 @@ function AddProducts(){
                 dataPayload.append('product_size', JSON.stringify(parsedSizes));
             }
 
-            // Assemble payload matching your model properties
-            // const payload = {
-            //     product_name: formData.product_name,
-            //     product_price: parseFloat(formData.product_price),
-            //     product_desc: formData.product_desc || null,
-            //     product_image: formData.product_image || null,
-            //     product_availability: formData.product_availability,
-            //     product_type: formData.product_type,
-            //     product_material: formData.product_material || null,
-            //     is_customisable: formData.is_customisable,
-            //     product_size: parsedSizes
-            // };
-
             await addProduct(dataPayload);
             setSuccessMessage(`"${formData.product_name}" successfully added to the database catalog!`);
             
@@ -106,135 +93,148 @@ function AddProducts(){
 
     return(
         <div className={styles.addProducts}>
-            <div className={styles.addProductsContentContainer}>
-                <div className={styles.addProductsTopSection}>
+            <div className={styles.addProductsTopSection}>
                     <BackButton />
                     {successMessage && <AlertBanner message={successMessage} type="success" onClose={() => setSuccessMessage(null)} />}
                     {error && <AlertBanner message={error} type="warning" onClose={() => setError(null)} />}
-                </div>
-
+            </div>
+            <div className={styles.addProductsContentContainer}>
                 <h2>Add Product</h2>
-
-                <form onSubmit={handleSubmit} className={styles.productForm}>
-                    <div className={styles.formGrid}>
-                        
-                        {/* Left Side fields */}
-                        <div className={styles.formGroup}>
-                            <label htmlFor="product_name">Product Name *</label>
-                            <input 
-                                id="product_name"
-                                type="text" 
-                                name="product_name" 
-                                value={formData.product_name} 
-                                onChange={handleChange} 
-                                required 
-                                placeholder="e.g., Baroque Pearl Drop Necklace"
-                            />
+                <form onSubmit={handleSubmit} className={styles.addProductForm}>
+                    <div className={styles.formInputContainer}>
+                        <div className={styles.imageInputContainer}>
+                            {formData.product_image ? (
+                                <div className={styles.productImageContainer}>
+                                    <img
+                                        src={URL.createObjectURL(formData.product_image)} 
+                                        alt="Preview Asset Grid" 
+                                    />  
+                                </div>
+                            ) : (
+                                <div className={styles.productImageContainer}>
+                                    <div className={styles.productImageIcon}><FaCamera /></div>
+                                    No image uploaded
+                                </div>
+                            )}
+                            <div className={styles.fileUploadFormGroup}>
+                                <label htmlFor="product_image" className={`${buttonStyles.button} ${buttonStyles.main}`}>
+                                    Upload Product Image
+                                </label>
+                                <input 
+                                    id="product_image"
+                                    type="file" 
+                                    name="product_image" 
+                                    accept="image/*" 
+                                    onChange={handleChange}
+                                    className={styles.hiddenFileInput}
+                                />
+                            </div>
                         </div>
+                            
+                        <div className={styles.infoInputContainer}>
+                            <div className={styles.formInput}>
+                                <label htmlFor="product_name">Product Name *</label>
+                                <input 
+                                    id="product_name"
+                                    type="text" 
+                                    name="product_name" 
+                                    value={formData.product_name} 
+                                    onChange={handleChange} 
+                                    required 
+                                    placeholder="e.g., Baroque Pearl Drop Necklace"
+                                />
+                            </div>
 
-                        <div className={styles.formGroup}>
-                            <label htmlFor="product_price">Price (RM) *</label>
-                            <input 
-                                id="product_price"
-                                type="number" 
-                                step="0.01" 
-                                min="0.00"
-                                name="product_price" 
-                                value={formData.product_price} 
-                                onChange={handleChange} 
-                                required 
-                                placeholder="59.99"
-                            />
+                            <div className={styles.formInput}>
+                                <label htmlFor="product_price">Price (RM) *</label>
+                                <input 
+                                    id="product_price"
+                                    type="number" 
+                                    step="0.01" 
+                                    min="0.00"
+                                    name="product_price" 
+                                    value={formData.product_price} 
+                                    onChange={handleChange} 
+                                    required 
+                                    placeholder="59.99"
+                                />
+                            </div>
+
+                            <div className={styles.formInput}>
+                                <label htmlFor="product_type">Product Type</label>
+                                <select 
+                                    id="product_type"
+                                    name="product_type" 
+                                    value={formData.product_type} 
+                                    onChange={handleChange}
+                                >
+                                    <option value="Necklace">Necklace</option>
+                                    <option value="Bracelet">Bracelet</option>
+                                    <option value="Earrings">Earrings</option>
+                                    <option value="Ring">Ring</option>
+                                </select>
+                            </div>
+
+                            <div className={styles.formInput}>
+                                <label htmlFor="product_material">Base Material</label>
+                                <input 
+                                    id="product_material"
+                                    type="text" 
+                                    name="product_material" 
+                                    value={formData.product_material} 
+                                    onChange={handleChange} 
+                                    placeholder="e.g., pearl, crystal, stone"
+                                />
+                            </div>
+
+                            <div className={styles.formInput}>
+                                <label htmlFor="sizeInput">Size (Comma-Separated Array Strings)</label>
+                                <input 
+                                    id="sizeInput"
+                                    type="text" 
+                                    name="sizeInput" 
+                                    value={formData.sizeInput} 
+                                    onChange={handleChange} 
+                                    placeholder="e.g., 16, 18, 20"
+                                />
+                            </div>
+
+                            <div className={styles.formInput}>
+                                <label htmlFor="product_desc">Product Description</label>
+                                <textarea 
+                                    id="product_desc"
+                                    name="product_desc" 
+                                    rows="4"
+                                    value={formData.product_desc} 
+                                    onChange={handleChange} 
+                                    placeholder="Provide structural metrics, gemstone context, or design specifications..."
+                                />
+                            </div>
+                            <div className={styles.checkboxRow}>
+                            <label className={styles.checkboxLabel}>
+                                <input 
+                                    type="checkbox" 
+                                    name="product_availability" 
+                                    checked={formData.product_availability} 
+                                    onChange={handleChange} 
+                                />
+                                Add Product To Inventory
+                            </label>
+
+                            <label className={styles.checkboxLabel}>
+                                <input 
+                                    type="checkbox" 
+                                    name="is_customisable" 
+                                    checked={formData.is_customisable} 
+                                    onChange={handleChange} 
+                                />
+                                Customizations
+                            </label>
+                            </div>
                         </div>
-
-                        <div className={styles.formGroup}>
-                            <label htmlFor="product_type">Product Type</label>
-                            <select 
-                                id="product_type"
-                                name="product_type" 
-                                value={formData.product_type} 
-                                onChange={handleChange}
-                            >
-                                <option value="Necklace">Necklace</option>
-                                <option value="Bracelet">Bracelet</option>
-                                <option value="Earrings">Earrings</option>
-                                <option value="Ring">Ring</option>
-                            </select>
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label htmlFor="product_material">Base Material</label>
-                            <input 
-                                id="product_material"
-                                type="text" 
-                                name="product_material" 
-                                value={formData.product_material} 
-                                onChange={handleChange} 
-                                placeholder="e.g., 14k Gold Filled, Sterling Silver"
-                            />
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label htmlFor="product_image">Product Image</label>
-                            <input 
-                                id="product_image"
-                                type="file" 
-                                name="product_image" 
-                                accept="image/*" // restrains search queries exclusively to device graphics items
-                                onChange={handleChange}
-                            />
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label htmlFor="sizeInput">Size (Comma-Separated Array Strings)</label>
-                            <input 
-                                id="sizeInput"
-                                type="text" 
-                                name="sizeInput" 
-                                value={formData.sizeInput} 
-                                onChange={handleChange} 
-                                placeholder="e.g., 16, 18, 20"
-                            />
-                        </div>
-
                     </div>
 
-                    <div className={styles.formGroupFull}>
-                        <label htmlFor="product_desc">Description</label>
-                        <textarea 
-                            id="product_desc"
-                            name="product_desc" 
-                            rows="5"
-                            value={formData.product_desc} 
-                            onChange={handleChange} 
-                            placeholder="Provide deep architectural product design info, pearl dimensions, styles context..."
-                        />
-                    </div>
-
-                    {/* Checkbox Flags Row */}
-                    <div className={styles.checkboxRow}>
-                        <label className={styles.checkboxLabel}>
-                            <input 
-                                type="checkbox" 
-                                name="product_availability" 
-                                checked={formData.product_availability} 
-                                onChange={handleChange} 
-                            />
-                            Add Product To Inventory
-                        </label>
-
-                        <label className={styles.checkboxLabel}>
-                            <input 
-                                type="checkbox" 
-                                name="is_customisable" 
-                                checked={formData.is_customisable} 
-                                onChange={handleChange} 
-                            />
-                            Allow Customizations
-                        </label>
-                    </div>
-
-                    <div className={styles.formActionsButtons}>
+                    <div className={styles.addProductFormBtns}>
                         <button 
                             type="button" 
                             className={`${buttonStyles.button} ${buttonStyles.cancel}`}
