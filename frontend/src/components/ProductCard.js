@@ -26,7 +26,7 @@ function ProductCard({product}){
             </div>
             <div className={styles.productCardDetails}>
                 <h6>{product.product_name}</h6>
-                <p>RM {product.product_price}</p>
+                RM {product.product_price}
             </div>
         </div>
     )

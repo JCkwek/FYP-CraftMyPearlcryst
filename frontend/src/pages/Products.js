@@ -16,15 +16,15 @@ function Products(){
     const isAdmin = currentUser?.role === 'admin';
 
     useEffect(() => {
-        fetchProducts();
-    },[]);
+        fetchProducts('', isAdmin);
+    },[isAdmin]);
 
-    const fetchProducts = async (searchValue = '') => {
+    const fetchProducts = async (searchValue = '', adminStatus = false) => {
         try{
             setLoading(true);
             const res = await getProducts({
                 query: searchValue,
-                onlyAvailable: true
+                onlyAvailable: !adminStatus
             });
             console.log(res);
             setProducts(res);
@@ -36,7 +36,7 @@ function Products(){
     };
 
     const handleSearch = async () =>{
-        fetchProducts(search);     
+        fetchProducts(search, isAdmin);     
     };
 
 

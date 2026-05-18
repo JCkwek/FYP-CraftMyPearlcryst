@@ -96,12 +96,14 @@
     border-bottom: 1px solid #D8A7B1;
     box-shadow: 0 1px 0 0 #D8A7B1;
 }
+
 .formInput select:hover, .formInput textarea:hover{
     border: 1px solid #D8A7B1;
 }
 .formInput select:focus, .formInput textarea:focus{
     border: 1px solid #D8A7B1;
     box-shadow: 0 0 0 1px #D8A7B1;
+    outline: none;
 }
 
 .checkboxRow {

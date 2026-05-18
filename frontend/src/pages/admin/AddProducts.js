@@ -16,7 +16,6 @@ function AddProducts(){
         product_name: '',
         product_price: '',
         product_desc: '',
-        // product_image: '',
         product_image: null ,
         product_availability: true,
         product_type: 'Necklace',
@@ -42,9 +41,14 @@ function AddProducts(){
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
         setError(null);
-        setLoading(true);
 
+        if (!formData.product_image) {
+            setError("Please upload a product image.");
+            return; // Stops submission early 
+        }       
+setLoading(true);
         try {
             const dataPayload = new FormData();
             dataPayload.append('product_name', formData.product_name);
@@ -96,7 +100,8 @@ function AddProducts(){
             <div className={styles.addProductsTopSection}>
                     <BackButton />
                     {successMessage && <AlertBanner message={successMessage} type="success" onClose={() => setSuccessMessage(null)} />}
-                    {error && <AlertBanner message={error} type="warning" onClose={() => setError(null)} />}
+                    {error && <AlertBanner message={error} type="error" onClose={() => setError(null)} />}
+                    <span></span><span></span>
             </div>
             <div className={styles.addProductsContentContainer}>
                 <h2>Add Product</h2>

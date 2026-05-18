@@ -83,11 +83,9 @@ const createProduct = async (productData) => {
         product_price,
         product_desc,
         product_image,
-        // product_availability: product_availability !== undefined ? product_availability : true,
         product_availability,
         product_type,
         product_material,
-        // is_customisable: is_customisable !== undefined ? is_customisable : false,
         is_customisable,
         product_size // Sequelize automatically strings and parse DataTypes.JSON column
     });

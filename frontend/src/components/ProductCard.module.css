@@ -30,4 +30,7 @@
     align-items: center;
     /* border: solid 1px; */
 }
+.productCardDetails{
+    padding: 0 0.5rem;
+}
 
