@@ -146,7 +146,7 @@ function ProductDetails() {
     return (
         <div className={styles.productDetails}>
             <div className={styles.productDetailsTopSection}>
-                <BackButton />
+                <BackButton to="/products"/>
                 {successMessage && <AlertBanner message={successMessage} type="success" onClose={() => setSuccessMessage(null)}/>}
                 {error && <AlertBanner message={error} type="warning" onClose={() => setError(null)}/>}
                 <span></span><span></span>

@@ -94,12 +94,11 @@ function EditProducts(){
             }
 
             await editProduct(existingProduct.product_id, dataPayload);
-            // setSuccessMessage(`"${formData.product_name}" details successfully updated!`);
 
             const fileInput = document.getElementById('product_image');
             if (fileInput) fileInput.value = '';
-            // navigate(`/products/${existingProduct.product_id}`);
             navigate(`/products/${existingProduct.product_id}`, {
+                replace: true,
                 state: { message: `"${formData.product_name}" details successfully updated!` }
             });
 

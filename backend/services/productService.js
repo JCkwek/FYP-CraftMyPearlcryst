@@ -171,6 +171,7 @@ const updateProduct = async (id, productData) => {
                     return OptionValue.create({
                         option_id: sizeOption.option_id,
                         visual_value: size,
+                        value_label: size,
                         is_active: 1
                     }, { transaction: t });
                 });

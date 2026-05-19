@@ -45,7 +45,7 @@
 
 .profileInput {
     padding: 0.8rem;
-    border: 1px solid #ccc;
+    border: 1px solid lightgray;
     border-radius: 8px;
     font-size: 1rem;
 }
@@ -61,41 +61,4 @@
     gap: 1rem;
     width: 20rem;
     width: 100%;
-}
-.editButton, .saveButton {
-    margin-top: 1rem;
-    padding: 0.5rem 1.5rem;
-    border: none;
-    background-color: #D8A7B1;
-    color: white;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    user-select: none;
-}
-.editButton:hover, .saveButton:hover{
-    background-color: #ca99a3;
-}
-/* .saveButton {
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    border: none;
-    background-color: green;
-    color: white;
-    user-select: none;
-}
-.saveButton:hover{
-    background-color: rgb(1, 103, 1);
-} */
-.cancelButton {
-    margin-top: 1rem;
-    padding: 0.5rem 1.5rem;
-    border-radius: 0.5rem;
-    background-color: transparent;
-    border: 1px solid rgb(190, 2, 2);
-    color:  rgb(190, 2, 2) ;
-    user-select: none;
-}
-.cancelButton:hover{
-    border: 1px solid red;
-    color: red ;
 }

@@ -1,4 +1,5 @@
 import styles from './Profile.module.css';
+import buttonStyles from '../components/buttons/ButtonTheme.module.css';
 import BackButton from '../components/buttons/BackButton.js';
 import { useState, useEffect } from 'react';
 import { updateProfile } from '../api/userApi';
@@ -124,12 +125,12 @@ function Profile(){
 
                     {isEditing ? (
                         <div className={styles.profileButtons}>
-                            <button className={styles.cancelButton} onClick={() => setIsEditing(false)}>Cancel</button>
-                            <button className={styles.saveButton} onClick={handleSave}>Save Changes</button>
+                            <button className={`${buttonStyles.button} ${buttonStyles.cancel}`} onClick={() => setIsEditing(false)}>Cancel</button>
+                            <button className={`${buttonStyles.button} ${buttonStyles.green}`} onClick={handleSave}>Save Changes</button>
                         </div>
                     ) : (
                         <div className={styles.profileButtons}>
-                            <button className={styles.editButton} onClick={() => setIsEditing(true)}>Edit Profile</button>
+                            <button className={`${buttonStyles.button} ${buttonStyles.main}`} onClick={() => setIsEditing(true)}>Edit Profile</button>
                         </div>
                     )
                 }

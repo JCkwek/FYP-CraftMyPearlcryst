@@ -35,7 +35,7 @@ function Orders(){
 
     return(
         <div className={styles.orders}>
-            <BackButton />
+            <BackButton  to="/account"/>
             <div className={styles.orderContentContainer}>
                 <h2>Orders</h2>
                 <div className={styles.orderItemContainer}>
