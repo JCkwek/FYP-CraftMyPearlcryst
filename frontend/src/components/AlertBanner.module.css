@@ -1,5 +1,6 @@
 .alertBanner{
     padding: 0.5rem 2rem;
+    user-select: none;
     font-size: 0.85rem;
     border-radius: 0.5rem;
     overflow: hidden;

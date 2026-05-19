@@ -10,5 +10,6 @@ router.get('/:id', productController.getProductById);
 
 // admin 
 router.post('/admin/addProduct', authMiddleware, adminCheck, uploadMiddleware.single('product_image'),productController.createProduct);
+router.put('/admin/editProduct/:id', authMiddleware, adminCheck, uploadMiddleware.single('product_image'),productController.updateProduct);
 
 module.exports = router;

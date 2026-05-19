@@ -85,4 +85,31 @@ try {
     }
 };
 
-module.exports = { getProducts, getProductById, createProduct};
+const updateProduct = async (req, res) => {
+    try {
+        const { id } = req.params;
+    
+        const productData = {
+            ...req.body,
+            product_image: req.file 
+            ? `/uploads/${req.file.filename}`
+            : null
+        };
+
+        const updatedResult = await productService.updateProduct(id, productData);
+        
+        return res.status(200).json({
+            success: true,
+            message: "Catalog entry synchronized successfully.",
+            data: updatedResult
+        });
+    } catch (error) {
+        console.error("Update Controller Exception Error: ", error);
+        return res.status(error.message === 'Product not found' ? 404 : 500).json({
+            success: false,
+            error: error.message || "Internal transaction level processing failure."
+        });
+    }
+};
+
+module.exports = { getProducts, getProductById, createProduct, updateProduct};

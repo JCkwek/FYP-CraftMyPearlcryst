@@ -1,10 +1,9 @@
-import styles from './AddProducts.module.css';
+import styles from './EditProducts.module.css';
 import buttonStyles from '../../components/buttons/ButtonTheme.module.css';
 import React, { useState, useEffect } from 'react';
 import { useNavigate,useLocation } from 'react-router-dom';
-import BackButton from '../../components/buttons/BackButton';
 import AlertBanner from '../../components/AlertBanner';
-import {addProduct, editProduct} from '../../api/productApi';
+import {editProduct} from '../../api/productApi';
 import { FaCamera } from 'react-icons/fa';
 
 function EditProducts(){
@@ -50,7 +49,7 @@ function EditProducts(){
             }
         }
     }, [existingProduct]);
-
+    
     const handleChange = (e) => {
         const { name, value, type, checked, files } = e.target;
         if (type === 'file') {
@@ -68,7 +67,6 @@ function EditProducts(){
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
         setError(null);
 
         if (!isEditMode && !formData.product_image) {
@@ -89,10 +87,6 @@ function EditProducts(){
             if (formData.product_image) {
                 dataPayload.append('product_image', formData.product_image);
             }
-
-            if (formData.product_image) {
-                dataPayload.append('product_image', formData.product_image);
-            }
             // Parse comma-separated text string (e.g. "5, 6, 7") into a true JSON array for Sequelize
             if (formData.sizeInput.trim()) {
                 const parsedSizes = formData.sizeInput.split(',').map(item => item.trim()); //FormData keys can only accept string parameters.
@@ -100,27 +94,18 @@ function EditProducts(){
             }
 
             await editProduct(existingProduct.product_id, dataPayload);
-            setSuccessMessage(`"${formData.product_name}" details successfully updated!`);
-            
-            // reset input
-            setFormData({
-                product_name: '',
-                product_price: '',
-                product_desc: '',
-                product_image: null,
-                product_availability: true,
-                product_type: 'Necklace',
-                product_material: '',
-                is_customisable: false,
-                sizeInput: ''
-            });
+            // setSuccessMessage(`"${formData.product_name}" details successfully updated!`);
+
             const fileInput = document.getElementById('product_image');
             if (fileInput) fileInput.value = '';
-            setTimeout(() => navigate('/products'), 2000);
+            // navigate(`/products/${existingProduct.product_id}`);
+            navigate(`/products/${existingProduct.product_id}`, {
+                state: { message: `"${formData.product_name}" details successfully updated!` }
+            });
 
         } catch (err) {
-            console.error("Error creating product:", err);
-            setError(err.response?.data?.error || "Failed to create new product entry.");
+            console.error("Error updating product:", err);
+            setError(err.response?.data?.error || "Failed to update product.");
         } finally {
             setLoading(false);
         }
@@ -129,13 +114,11 @@ function EditProducts(){
     return(
         <div className={styles.addProducts}>
             <div className={styles.addProductsTopSection}>
-                    <BackButton />
                     {successMessage && <AlertBanner message={successMessage} type="success" onClose={() => setSuccessMessage(null)} />}
                     {error && <AlertBanner message={error} type="error" onClose={() => setError(null)} />}
-                    <span></span><span></span>
             </div>
             <div className={styles.addProductsContentContainer}>
-                <h2>Add Product</h2>
+                <h2>Edit Product</h2>
                 <form onSubmit={handleSubmit} className={styles.addProductForm}>
                     <div className={styles.formInputContainer}>
                         <div className={styles.imageInputContainer}>
@@ -143,7 +126,14 @@ function EditProducts(){
                                 <div className={styles.productImageContainer}>
                                     <img
                                         src={URL.createObjectURL(formData.product_image)} 
-                                        alt="Preview Asset Grid" 
+                                        alt="Preview Product Img" 
+                                    />  
+                                </div>
+                            ) : existingProduct?.product_image ? (
+                                <div className={styles.productImageContainer}>
+                                    <img
+                                        src={`http://localhost:3000${existingProduct.product_image}`}
+                                        alt="Existing Database Product Img"
                                     />  
                                 </div>
                             ) : (
@@ -270,11 +260,11 @@ function EditProducts(){
                         </div>
                     </div>
 
-                    <div className={styles.addProductFormBtns}>
+                    <div className={styles.editProductFormBtns}>
                         <button 
                             type="button" 
                             className={`${buttonStyles.button} ${buttonStyles.cancel}`}
-                            onClick={() => navigate('/products')}
+                            onClick={() => navigate(`/products/${existingProduct.product_id}`)}
                             disabled={loading}
                         >
                             Discard
@@ -284,7 +274,7 @@ function EditProducts(){
                             className={`${buttonStyles.button} ${buttonStyles.green}`}
                             disabled={loading}
                         >
-                            {loading ? "Saving Item..." : "Publish Product Entry"}
+                            {loading ? "Saving Product Info..." : "Update Product"}
                         </button>
                     </div>
                 </form>

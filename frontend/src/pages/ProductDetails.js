@@ -11,7 +11,7 @@ import Loading from '../components/Loading';
 import ColorSelect from '../components/ColorSelect';
 import LengthSlider from '../components/LengthSlider';
 import AlertBanner from '../components/AlertBanner';
-import { useOutletContext, useNavigate} from 'react-router-dom';
+import { useOutletContext, useNavigate, useLocation} from 'react-router-dom';
 
 function ProductDetails() {
     const { id } = useParams();
@@ -24,6 +24,14 @@ function ProductDetails() {
     const { currentUser }  = useOutletContext();
     const isAdmin = currentUser?.role === 'admin';
     const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.state?.message) {
+            setSuccessMessage(location.state.message);
+            navigate(location.pathname, { replace: true, state: {} });
+        }
+    }, [location, navigate]);
 
     const rangeOption = useMemo(() => {
         return product?.options?.find(opt => opt.option_type === 'range');
@@ -212,7 +220,7 @@ function ProductDetails() {
                         </div>
                         </>
                     ) : (
-                        <button className={`${buttonStyles.button} ${buttonStyles.main}`} onClick={() => navigate('/admin/editProducts', { state: { product } })}> Edit</button>
+                        <button className={`${buttonStyles.button} ${buttonStyles.main}`} onClick={() => navigate('/admin/editProducts', { state: { product } })}> Edit Product</button>
                     )
                     }
                     
