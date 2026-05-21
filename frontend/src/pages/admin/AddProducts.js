@@ -6,6 +6,7 @@ import BackButton from '../../components/buttons/BackButton';
 import AlertBanner from '../../components/AlertBanner';
 import {addProduct} from '../../api/productApi';
 import { FaCamera } from 'react-icons/fa';
+import ProductImage from '../../components/productDetail/ProductImage';
 
 function AddProducts(){
     const navigate = useNavigate();
@@ -98,10 +99,10 @@ setLoading(true);
     return(
         <div className={styles.addProducts}>
             <div className={styles.addProductsTopSection}>
-                    <BackButton />
-                    {successMessage && <AlertBanner message={successMessage} type="success" onClose={() => setSuccessMessage(null)} />}
-                    {error && <AlertBanner message={error} type="error" onClose={() => setError(null)} />}
-                    <span></span><span></span>
+                <BackButton />
+                {successMessage && <AlertBanner message={successMessage} type="success" onClose={() => setSuccessMessage(null)} />}
+                {error && <AlertBanner message={error} type="error" onClose={() => setError(null)} />}
+                <span></span><span></span>
             </div>
             <div className={styles.addProductsContentContainer}>
                 <h2>Add Product</h2>
@@ -109,12 +110,10 @@ setLoading(true);
                     <div className={styles.formInputContainer}>
                         <div className={styles.imageInputContainer}>
                             {formData.product_image ? (
-                                <div className={styles.productImageContainer}>
-                                    <img
-                                        src={URL.createObjectURL(formData.product_image)} 
-                                        alt="Preview Asset Grid" 
-                                    />  
-                                </div>
+                                <ProductImage
+                                        image={URL.createObjectURL(formData.product_image)}
+                                        alt="Preview Product Img"
+                                />
                             ) : (
                                 <div className={styles.productImageContainer}>
                                     <div className={styles.productImageIcon}><FaCamera /></div>

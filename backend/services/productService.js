@@ -1,4 +1,3 @@
-// const { Product } = require('../models/productModel');
 const { Product, CustomizationOption, OptionValue, sequelize } = require('../models');
 const {Op, where} = require('sequelize');
 
@@ -10,11 +9,9 @@ const getProducts = async ({ query, type, onlyAvailable, limit, latest }) => {
             [Op.like]: `%${query}%`
         };
     }
-    // filter by type
     if (type) {
         whereClause.product_type = type;
     }
-    // availability filter
     if (onlyAvailable === true) {
         whereClause.product_availability = true;
     }
@@ -43,27 +40,101 @@ const getProducts = async ({ query, type, onlyAvailable, limit, latest }) => {
     });
 };
 
+// const getProductById = async (id) => {
+//     const product = await Product.findByPk(id, {
+//         include: [
+//             {
+//                 model: CustomizationOption,
+//                 as: 'options',
+//                 where: { is_active: 1 },
+//                 required: false,
+//                 include: [
+//                     {
+//                         model: OptionValue,
+//                         as: 'values',
+//                         where: { is_active: 1 },
+//                         required: false
+//                     }
+//                 ]
+//             }
+//         ]
+//     });
+
+//     if (!product) return null;
+
+//     const data = product.toJSON();
+
+//     // normalize range
+//     data.options = data.options?.map(opt => {
+//         if (opt.option_type === 'range') {
+//             return {
+//                 ...opt,
+//                 values: [] // clean unused list data
+//             };
+//         }
+//         return opt;
+//     });
+
+//     return data;
+// };
+
 const getProductById = async (id) => {
-    return await Product.findByPk(id, {
+    const product = await Product.findByPk(id, {
         include: [
             {
                 model: CustomizationOption,
                 as: 'options',
-                where: {is_active: 1},
-                required: false, //show product even if no options
+                where: { is_active: 1 },
+                required: false,
                 include: [
                     {
                         model: OptionValue,
                         as: 'values',
-                        where: {is_active: 1},
+                        where: { is_active: 1 },
                         required: false
                     }
                 ]
             }
         ]
     });
-};
 
+    if (!product) return null;
+
+    const data = product.toJSON();
+
+    // normalize range options
+    data.options = data.options?.map(opt => {
+        if (opt.option_type === 'range') {
+            return { ...opt, values: [] };
+        }
+        return opt;
+    }) || [];
+
+    // 🔥 FIX: inject product_size as "list option" if no options exist
+    if (data.options.length === 0 && data.product_size) {
+        let sizes = [];
+
+        try {
+            sizes = JSON.parse(data.product_size);
+        } catch (e) {
+            sizes = [];
+        }
+
+        if (sizes.length > 0) {
+            data.options.push({
+                option_id: null,
+                option_name: "Size",
+                option_type: "list",
+                values: sizes.map(s => ({
+                    value_id: s,
+                    visual_value: s
+                }))
+            });
+        }
+    }
+
+    return data;
+};
 //admin
 const createProduct = async (productData) => {
     const {
@@ -75,7 +146,8 @@ const createProduct = async (productData) => {
         product_type,
         product_material,
         is_customisable,
-        product_size
+        // product_size
+        options
     } = productData;
 
     const newProduct = await Product.create({
@@ -87,8 +159,34 @@ const createProduct = async (productData) => {
         product_type,
         product_material,
         is_customisable,
-        product_size // Sequelize automatically strings and parse DataTypes.JSON column
+        // product_size // Sequelize automatically strings and parse DataTypes.JSON column
     });
+    if (Array.isArray(options)) {
+        for (const opt of options) {
+
+            const option = await CustomizationOption.create({
+                product_id: newProduct.product_id,
+                option_name: opt.option_name,
+                option_type: opt.option_type,
+                is_active: 1,
+                default_value: opt.default_value || null
+            });
+
+            // ONLY for list type
+            if (opt.option_type === 'list' && Array.isArray(opt.values)) {
+                await Promise.all(
+                    opt.values.map(v =>
+                        OptionValue.create({
+                            option_id: option.option_id,
+                            value_label: v,
+                            visual_value: v,
+                            is_active: 1
+                        })
+                    )
+                );
+            }
+        }
+    }
 
     return newProduct;
 };
@@ -98,22 +196,24 @@ const updateProduct = async (id, productData) => {
         product_name,
         product_price,
         product_desc,
-        product_image, // This will be the new URL string if a file was uploaded
+        product_image,
         product_availability,
         product_type,
         product_material,
         is_customisable,
-        product_size // Passed as a JSON array or parsed string array
+        option_type,
+        sizeInput,
+        range_min,
+        range_max,
+        range_step,
+        default_value
     } = productData;
 
-    // Start a managed Sequelize transaction
-    return await sequelize.transaction(async (t) => {
-        // check if product exists
-        const product = await Product.findByPk(id, { transaction: t });
-        if (!product) {
-            throw new Error('Product not found');
-        }
+    const optionType = productData.option_type;
 
+    return await sequelize.transaction(async (t) => {
+        const product = await Product.findByPk(id, { transaction: t });
+        if (!product) throw new Error('Product not found');
         const updateFields = {
             product_name,
             product_price,
@@ -124,68 +224,96 @@ const updateProduct = async (id, productData) => {
             is_customisable: is_customisable === 'true' || is_customisable === true,
         };
 
-        // CRITICAL: Only overwrite the image path if a new file was sent from Multer
         if (product_image) {
             updateFields.product_image = product_image;
         }
-
-        // Handle stringified JSON safety depending on middleware parsing setup
-        if (product_size) {
-            updateFields.product_size = typeof product_size === 'string' 
-                ? JSON.parse(product_size) 
-                : product_size;
-        }
-
         await product.update(updateFields, { transaction: t });
 
-        // handle Sub-relational Customization Options Context Updates
         if (updateFields.is_customisable) {
-            // Check if a size/length customization row already exists for this product
-            let sizeOption = await CustomizationOption.findOne({
+            let option;
+            option = await CustomizationOption.findOne({
                 where: {
                     product_id: id,
-                    option_name: { [Op.like]: '%Size%' }
+                    option_name: 'Size'
                 },
                 transaction: t
             });
 
-            if (!sizeOption) {
-                // If it transitioned from non-customizable to customizable, create the configuration row
-                sizeOption = await CustomizationOption.create({
+            // Create option if not exists
+            if (!option) {
+                option = await CustomizationOption.create({
                     product_id: id,
-                    option_name: 'Size Selection',
-                    option_type: 'list',
+                    option_name: 'Size',
+                    option_type: optionType,
                     is_active: 1
                 }, { transaction: t });
             }
 
-            // Sync values if product_size modifications were sent along
-            if (updateFields.product_size && Array.isArray(updateFields.product_size)) {
-                await OptionValue.update(
-                    { is_active: 0 },
-                    { where: { option_id: sizeOption.option_id }, transaction: t }
-                );
+            // sync option type
+            await option.update(
+                { option_type: optionType },
+                { transaction: t }
+            );
+            
+            //type list
+            if (optionType === 'list') {
+                    await OptionValue.destroy({
+                        where: { option_id: option.option_id },
+                        transaction: t
+                    });
+                    await option.update(
+                        { default_value },
+                        { transaction: t }
+                    );
+                const parsedSizes = sizeInput
+                    ? sizeInput.split(',').map(s => s.trim())
+                    : [];
 
-                // Insert updated values
-                const valuePromises = updateFields.product_size.map((size) => {
-                    return OptionValue.create({
-                        option_id: sizeOption.option_id,
-                        visual_value: size,
-                        value_label: size,
-                        is_active: 1
-                    }, { transaction: t });
-                });
-                await Promise.all(valuePromises);
+                // recreate values
+                await Promise.all(
+                    parsedSizes.map(size =>
+                        OptionValue.create({
+                            option_id: option.option_id,
+                            value_label: size,
+                            visual_value: size,
+                            is_active: 1
+                        }, { transaction: t })
+                    )
+                );
             }
+
+            //type range
+            if (optionType === 'range') {
+                await OptionValue.destroy({
+                    where: { option_id: option.option_id },
+                    transaction: t
+                });
+
+                const rangeUpdate = {};
+                if (productData.range_min !== undefined)
+                    rangeUpdate.range_min = productData.range_min;
+                if (productData.range_max !== undefined)
+                    rangeUpdate.range_max = productData.range_max;
+                if (productData.range_step !== undefined)
+                    rangeUpdate.range_step = productData.range_step;
+                if (productData.default_value !== undefined)
+                    rangeUpdate.default_value = productData.default_value;
+                await option.update(rangeUpdate, { transaction: t });
+            }
+
         } else {
-            // If admin unchecked customization, existing option sets as inactive
+            // disable customization
             await CustomizationOption.update(
                 { is_active: 0 },
-                { where: { product_id: id }, transaction: t }
+                {
+                    where: { product_id: id },
+                    transaction: t
+                }
             );
         }
+
         return product;
     });
-}
+};
 
 module.exports = { getProducts, getProductById, createProduct, updateProduct};

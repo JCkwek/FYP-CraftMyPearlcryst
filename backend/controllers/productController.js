@@ -91,9 +91,11 @@ const updateProduct = async (req, res) => {
     
         const productData = {
             ...req.body,
-            product_image: req.file 
-            ? `/uploads/${req.file.filename}`
-            : null
+            ...(req.file && {
+                product_image: `/uploads/${req.file.filename}`
+            }),
+            is_customisable: req.body.is_customisable === 'true',
+            product_availability: req.body.product_availability === 'true'
         };
 
         const updatedResult = await productService.updateProduct(id, productData);

@@ -1,13 +1,13 @@
 import styles from './ProductImage.module.css'
 
-function ProductImage({product}){
-    if (!product) return null;
+function ProductImage({image, alt}){
+    if (!image) return null;
 
     return(
         <div className={styles.productImageContainer}>
             <img
-                src={`http://localhost:3000${product.product_image}`}
-                alt={product.product_name}
+                src={image}
+                alt={alt}
             />  
         </div>
     )

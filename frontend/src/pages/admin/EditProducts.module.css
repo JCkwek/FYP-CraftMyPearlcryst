@@ -35,24 +35,6 @@
     align-items: center;
     width: 30%;
 }
-.productImageContainer{
-    padding: 1rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-    user-select: none;
-    overflow: hidden;
-    height: 58vh;
-    width: 23vw;
-    background-color: white;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    text-align: center;
-    color: #94a3b8;
-}
-.productImageContainer img{
-    height: 54vh;
-    width: 21vw;
-}
 .productImageIcon {
     font-size: 2rem;
 }

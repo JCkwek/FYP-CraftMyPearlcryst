@@ -23,6 +23,27 @@ const CustomizationOption = sequelize.define('CustomizationOption', {
         type: DataTypes.ENUM('list', 'range'),
         defaultValue: 'list'
     },
+    range_min: {
+        type: DataTypes.DECIMAL(10,2),
+        allowNull: true
+    },
+
+    range_max: {
+        type: DataTypes.DECIMAL(10,2),
+        allowNull: true
+    },
+
+    range_step: {
+        type: DataTypes.DECIMAL(10,2),
+        allowNull: true,
+        defaultValue: 1
+    },
+
+    default_value: {
+        type: DataTypes.DECIMAL(10,2),
+        allowNull: true
+    },
+    
     is_active: {
         type: DataTypes.TINYINT(1),
         defaultValue: 1

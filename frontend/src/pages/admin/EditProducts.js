@@ -5,6 +5,7 @@ import { useNavigate,useLocation } from 'react-router-dom';
 import AlertBanner from '../../components/AlertBanner';
 import {editProduct} from '../../api/productApi';
 import { FaCamera } from 'react-icons/fa';
+import ProductImage from '../../components/productDetail/ProductImage';
 
 function EditProducts(){
     const navigate = useNavigate();
@@ -21,48 +22,96 @@ function EditProducts(){
         product_name: existingProduct?.product_name || '',
         product_price: existingProduct?.product_price || '',
         product_desc: existingProduct?.product_desc || '',
-        product_image: null, // Keeps binary file stream for uploads
+        product_image: null, 
         product_availability: existingProduct ? existingProduct.product_availability : true,
         product_type: existingProduct?.product_type || 'Necklace',
         product_material: existingProduct?.product_material || '',
         is_customisable: existingProduct ? existingProduct.is_customisable : false,
-        sizeInput: '' 
+        // sizeInput: '' 
+        // default_size: existingProduct?.product_size || '',
+        option_type: 'list',
+
+        // LIST TYPE
+        sizeInput: '',
+
+        // RANGE TYPE
+        range_min: '',
+        range_max: '',
+        range_step: 1,
+        default_value: ''
     });
 
     useEffect(() => {
-        if (existingProduct && existingProduct.options) {
-            const sizeOption = existingProduct.options.find(opt => 
-                opt.option_name.toLowerCase().includes('size') || 
-                opt.option_name.toLowerCase().includes('length')
-            );
+        if (!existingProduct || !existingProduct.options) return;
+        const sizeOption = existingProduct.options.find(opt => 
+            opt.option_name.toLowerCase().includes('size') || 
+            opt.option_name.toLowerCase().includes('length')
+        );
+        if (!sizeOption) return;
             
-            if (sizeOption) {
-                if (sizeOption.option_type === 'list') {
-                    // Turn [{visual_value: '16'}, {visual_value: '18'}] into "16, 18"
-                    const valuesArr = sizeOption.values.map(v => v.visual_value);
-                    setFormData(prev => ({ ...prev, sizeInput: valuesArr.join(', ') }));
-                } else if (sizeOption.option_type === 'range') {
-                    // Turn "14,22,16" string config back into readable text format
-                    const rawRange = sizeOption.values[0]?.visual_value || '';
-                    setFormData(prev => ({ ...prev, sizeInput: rawRange }));
-                }
-            }
+        if (sizeOption.option_type === 'list') {
+            const valuesArr = sizeOption.values.map(v => v.visual_value); // Turn [{visual_value: '16'}, {visual_value: '18'}] into "16, 18"
+            setFormData(prev => ({ 
+                ...prev, 
+                option_type: 'list',
+                sizeInput: valuesArr.join(', '),
+                default_value: sizeOption.default_value || ''
+            }));
+        } else if (sizeOption.option_type === 'range') {
+            setFormData(prev => ({
+                ...prev,
+                option_type: 'range',
+                range_min: sizeOption.range_min || '',
+                range_max: sizeOption.range_max || '',
+                range_step: sizeOption.range_step || 1,
+                default_value: sizeOption.default_value || '',
+                product_image: null
+            }));
         }
     }, [existingProduct]);
     
     const handleChange = (e) => {
         const { name, value, type, checked, files } = e.target;
+
+        if (name === 'option_type') {
+            setFormData(prev => ({
+                ...prev,
+                option_type: value,
+                sizeInput: '',
+                range_min: '',
+                range_max: '',
+                range_step: 1,
+                default_value: ''
+            }));
+            return;
+        }
+
+        if (name === 'is_customisable' && !checked) {
+            setFormData(prev => ({
+                ...prev,
+                is_customisable: false,
+                option_type: 'list',
+                sizeInput: '',
+                range_min: '',
+                range_max: '',
+                range_step: 1,
+                default_value: ''
+            }));
+            return;
+        }
+
         if (type === 'file') {
             setFormData(prev => ({
                 ...prev,
-                [name]: files[0] || null // Grab the first uploaded file binary 
+                [name]: files[0] || null
             }));
-        } else {
-            setFormData(prev => ({
-                ...prev,
-                [name]: type === 'checkbox' ? checked : value
-            }));
+            return;
         }
+
+        setFormData(prev => ({
+            ...prev,
+            [name]: type === 'checkbox' ? checked : value
+        }));
     };
 
     const handleSubmit = async (e) => {
@@ -81,16 +130,33 @@ function EditProducts(){
             dataPayload.append('product_type', formData.product_type);
             dataPayload.append('product_availability', formData.product_availability);
             dataPayload.append('is_customisable', formData.is_customisable);
-            
+            dataPayload.append('option_type', formData.option_type);
+            // dataPayload.append('default_size', formData.default_size);
+
+            // if (formData.option_type === 'list') {
+            //     const parsedSizes = formData.sizeInput
+            //         .split(',')
+            //         .map(item => item.trim());
+
+            //     dataPayload.append(
+            //         'product_size',
+            //         JSON.stringify(parsedSizes)
+            //     );
+            // }
+            if (formData.option_type === 'list') {
+                dataPayload.append('sizeInput', formData.sizeInput);
+                dataPayload.append('default_value', formData.default_value);
+            }
+            if (formData.option_type === 'range') {
+                dataPayload.append('range_min', formData.range_min);
+                dataPayload.append('range_max', formData.range_max);
+                dataPayload.append('range_step', formData.range_step);
+                dataPayload.append('default_value', formData.default_value);
+            }
             if (formData.product_desc) dataPayload.append('product_desc', formData.product_desc);
             if (formData.product_material) dataPayload.append('product_material', formData.product_material);
             if (formData.product_image) {
                 dataPayload.append('product_image', formData.product_image);
-            }
-            // Parse comma-separated text string (e.g. "5, 6, 7") into a true JSON array for Sequelize
-            if (formData.sizeInput.trim()) {
-                const parsedSizes = formData.sizeInput.split(',').map(item => item.trim()); //FormData keys can only accept string parameters.
-                dataPayload.append('product_size', JSON.stringify(parsedSizes));
             }
 
             await editProduct(existingProduct.product_id, dataPayload);
@@ -120,21 +186,18 @@ function EditProducts(){
                 <h2>Edit Product</h2>
                 <form onSubmit={handleSubmit} className={styles.addProductForm}>
                     <div className={styles.formInputContainer}>
+                        {/*product image*/}
                         <div className={styles.imageInputContainer}>
                             {formData.product_image ? (
-                                <div className={styles.productImageContainer}>
-                                    <img
-                                        src={URL.createObjectURL(formData.product_image)} 
-                                        alt="Preview Product Img" 
-                                    />  
-                                </div>
+                                <ProductImage
+                                    image={URL.createObjectURL(formData.product_image)}
+                                    alt="Preview Product Img"
+                                />
                             ) : existingProduct?.product_image ? (
-                                <div className={styles.productImageContainer}>
-                                    <img
-                                        src={`http://localhost:3000${existingProduct.product_image}`}
-                                        alt="Existing Database Product Img"
-                                    />  
-                                </div>
+                               <ProductImage
+                                    image={`http://localhost:3000${existingProduct.product_image}`}
+                                    alt="Existing Database Product Img"
+                                />
                             ) : (
                                 <div className={styles.productImageContainer}>
                                     <div className={styles.productImageIcon}><FaCamera /></div>
@@ -155,8 +218,9 @@ function EditProducts(){
                                 />
                             </div>
                         </div>
-                            
+                        {/*product details form*/}
                         <div className={styles.infoInputContainer}>
+                            {/*product name*/}
                             <div className={styles.formInput}>
                                 <label htmlFor="product_name">Product Name *</label>
                                 <input 
@@ -169,7 +233,7 @@ function EditProducts(){
                                     placeholder="e.g., Baroque Pearl Drop Necklace"
                                 />
                             </div>
-
+                            {/*product price*/}
                             <div className={styles.formInput}>
                                 <label htmlFor="product_price">Price (RM) *</label>
                                 <input 
@@ -184,7 +248,7 @@ function EditProducts(){
                                     placeholder="59.99"
                                 />
                             </div>
-
+                            {/*product type*/}
                             <div className={styles.formInput}>
                                 <label htmlFor="product_type">Product Type</label>
                                 <select 
@@ -199,7 +263,7 @@ function EditProducts(){
                                     <option value="Ring">Ring</option>
                                 </select>
                             </div>
-
+                            {/*product material*/}
                             <div className={styles.formInput}>
                                 <label htmlFor="product_material">Base Material</label>
                                 <input 
@@ -211,19 +275,7 @@ function EditProducts(){
                                     placeholder="e.g., pearl, crystal, stone"
                                 />
                             </div>
-
-                            <div className={styles.formInput}>
-                                <label htmlFor="sizeInput">Size (Comma-Separated Array Strings)</label>
-                                <input 
-                                    id="sizeInput"
-                                    type="text" 
-                                    name="sizeInput" 
-                                    value={formData.sizeInput} 
-                                    onChange={handleChange} 
-                                    placeholder="e.g., 16, 18, 20"
-                                />
-                            </div>
-
+                            {/*product description*/}
                             <div className={styles.formInput}>
                                 <label htmlFor="product_desc">Product Description</label>
                                 <textarea 
@@ -235,27 +287,113 @@ function EditProducts(){
                                     placeholder="Provide structural metrics, gemstone context, or design specifications..."
                                 />
                             </div>
-                            <div className={styles.checkboxRow}>
-                            <label className={styles.checkboxLabel}>
-                                <input 
-                                    type="checkbox" 
-                                    name="product_availability" 
-                                    checked={formData.product_availability} 
-                                    onChange={handleChange} 
-                                />
-                                Add Product To Inventory
-                            </label>
 
-                            <label className={styles.checkboxLabel}>
-                                <input 
-                                    type="checkbox" 
-                                    name="is_customisable" 
-                                    checked={formData.is_customisable} 
-                                    onChange={handleChange} 
-                                />
-                                Customizations
-                            </label>
+                            {/*checkbox row*/}
+                            <div className={styles.checkboxRow}>
+                                {/*set isAvailable or not*/}
+                                <label className={styles.checkboxLabel}>
+                                    <input 
+                                        type="checkbox" 
+                                        name="product_availability" 
+                                        checked={formData.product_availability} 
+                                        onChange={handleChange} 
+                                    />
+                                    Add Product To Inventory
+                                </label>
+                                {/*customizable*/}
+                                <label className={styles.checkboxLabel}>
+                                    <input 
+                                        type="checkbox" 
+                                        name="is_customisable" 
+                                        checked={formData.is_customisable} 
+                                        onChange={handleChange} 
+                                    />
+                                    Customizations
+                                </label>
+                            
                             </div>
+                            {/*customization type: fixed size/ length*/}
+                            {formData.is_customisable && (
+                                <div className={styles.formInput}>
+                                    <label htmlFor="option_type">Customization Type</label>
+                                    <select
+                                        id="option_type"
+                                        name="option_type"
+                                        value={formData.option_type}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="list">Fixed Sizes</option>
+                                        <option value="range">Adjustable Length</option>
+                                    </select>
+                                </div>
+                            )}
+                            {/*type list*/}
+                            {formData.is_customisable && formData.option_type === 'list' && (
+                                <>
+                                    <div className={styles.formInput}>
+                                        <label htmlFor="sizeInput">
+                                            Available Sizes
+                                        </label>
+                                        <input
+                                            id="sizeInput"
+                                            type="text"
+                                            name="sizeInput"
+                                            value={formData.sizeInput}
+                                            onChange={handleChange}
+                                            placeholder="e.g., 5, 6, 7"
+                                        />
+                                    </div>
+                            </>   
+                            )}
+                            {/*type range*/}
+                            {formData.is_customisable && formData.option_type === 'range' && (
+                            <>
+                                {/*default length*/}
+                                <div className={styles.formInput}>
+                                    <label htmlFor="default_value">
+                                        Default Length
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        name="default_value"
+                                        value={formData.default_value}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                                {/*min lenght*/}
+                                <div className={styles.formInput}>
+                                    <label htmlFor="range_min">Minimum Length</label>
+
+                                    <input
+                                        type="number"
+                                        name="range_min"
+                                        value={formData.range_min}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                                {/*max length*/}
+                                <div className={styles.formInput}>
+                                    <label htmlFor="range_max">Maximum Length</label>
+                                    <input
+                                        type="number"
+                                        name="range_max"
+                                        value={formData.range_max}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                                {/*increment value*/}
+                                <div className={styles.formInput}>
+                                    <label htmlFor="range_step">Step</label>
+                                    <input
+                                        type="number"
+                                        name="range_step"
+                                        value={formData.range_step}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                            </>
+                            )}
                         </div>
                     </div>
 

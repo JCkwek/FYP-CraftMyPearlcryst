@@ -126,7 +126,7 @@ function Profile(){
                     {isEditing ? (
                         <div className={styles.profileButtons}>
                             <button className={`${buttonStyles.button} ${buttonStyles.cancel}`} onClick={() => setIsEditing(false)}>Cancel</button>
-                            <button className={`${buttonStyles.button} ${buttonStyles.green}`} onClick={handleSave}>Save Changes</button>
+                            <button className={`${buttonStyles.button} ${buttonStyles.green }`} onClick={handleSave}>Save Changes</button>
                         </div>
                     ) : (
                         <div className={styles.profileButtons}>

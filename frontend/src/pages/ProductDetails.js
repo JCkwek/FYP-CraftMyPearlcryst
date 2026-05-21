@@ -16,7 +16,8 @@ import { useOutletContext, useNavigate, useLocation} from 'react-router-dom';
 function ProductDetails() {
     const { id } = useParams();
     const [product, setProduct] = useState(null);
-    const [selectedSize, setSelectedSize] = useState('');
+    // const [selectedSize, setSelectedSize] = useState('');
+    const [selectedSize, setSelectedSize] = useState(null);
     const [selectedColor, setSelectedColor] = useState('');
     const [isCustomising, setIsCustomising] = useState(false);
     const [error, setError] = useState(null);
@@ -33,20 +34,6 @@ function ProductDetails() {
         }
     }, [location, navigate]);
 
-    const rangeOption = useMemo(() => {
-        return product?.options?.find(opt => opt.option_type === 'range');
-    }, [product]);
-
-    const sliderConstraints = useMemo(() => {
-        if (!rangeOption) return null;
-        const values = rangeOption.values[0].visual_value.split(',');
-        return {
-            min: parseInt(values[0]),
-            max: parseInt(values[1]),
-            default: parseInt(values[2]),
-            unit: 'inch'
-        };
-    }, [rangeOption]);
 
     // Fetch Product
     useEffect(() => {
@@ -65,8 +52,9 @@ function ProductDetails() {
                     if (sizeOption.option_type === 'list') {
                         setSelectedSize(sizeOption.values[0]?.visual_value);
                     } else if (sizeOption.option_type === 'range') {
-                        const base = sizeOption.values[0]?.visual_value.split(',')[2];
-                        setSelectedSize(base);
+                        // const base = sizeOption.values[0]?.visual_value.split(',')[2];
+                        // setSelectedSize(base);
+                        setSelectedSize(sizeOption.default_value);
                     }
                 }
             } catch (err) {
@@ -83,11 +71,21 @@ function ProductDetails() {
         // for custom length (range size)
         product.options?.forEach(option => {
             if (option.option_type === 'range' && isCustomising) {
-                const config = option.values[0];
-                const [, , base] = config.visual_value.split(',').map(Number);
-                const current = parseFloat(selectedSize) || base;
-                const rate = parseFloat(config.price_modifier || 0);
-                total += (current - base) * rate;
+                // const config = option.values[0];
+                // const [, , base] = config.visual_value.split(',').map(Number);
+                // const current = parseFloat(selectedSize) || base;
+                // const rate = parseFloat(config.price_modifier || 0);
+            // const base = Number(option.default_value);
+            // const current = Number(selectedSize ?? base);
+            // const rate = Number(option.price_modifier ?? 0);
+
+            // total += (current - base) * rate;
+             const baseLength = Number(option.default_value);
+            const current = Number(selectedSize ?? baseLength);
+
+            const pricePerUnit = total / baseLength;
+
+            total = pricePerUnit * current;
             }    
         });
         return Math.max(5.00, total);
@@ -136,8 +134,9 @@ function ProductDetails() {
             opt.option_name.toLowerCase().includes('length')
         );
         if (sizeOption && sizeOption.option_type === 'range') {
-            const base = sizeOption.values[0]?.visual_value.split(',')[2];
-            setSelectedSize(base);
+            // const base = sizeOption.values[0]?.visual_value.split(',')[2];
+            // setSelectedSize(base);
+            setSelectedSize(sizeOption.default_value);
         }
     }
 
@@ -152,7 +151,8 @@ function ProductDetails() {
                 <span></span><span></span>
             </div>
             <div className={styles.productDetailsContentContainer}>
-                <ProductImage product={product} />
+                {/* <ProductImage product={product} /> */}
+                <ProductImage image={`http://localhost:3000${product.product_image}`} alt={product.product_name}/>
                 
                 <div className={styles.productDetailsInfo}>
                     <ProductInfo product={product} displayPrice={calculatedPrice} />
@@ -191,13 +191,22 @@ function ProductDetails() {
                                 {/* range type */}
                                 {option.option_type === 'range' && (
                                     <div className={styles.rangeSizeContainer}>
-                                        {!isCustomising ? (
-                                            <div>{option.option_name}: {selectedSize} inch</div>
-                                        ) : (
+                                        <div>
+                                            {option.option_name}: {selectedSize || option.default_value} inch
+                                        </div>
+
+                                        {isCustomising && (
                                             <div className={styles.rangeSizeInputContainer}>
                                                 <LengthSlider 
                                                     onSelect={(val) => setSelectedSize(val)}
-                                                    manualConstraints={sliderConstraints}
+                                                    manualConstraints={
+                                                        {
+                                                            min: Number(option.range_min),
+                                                            max: Number(option.range_max),
+                                                            step: Number(option.range_step),
+                                                            default: Number(option.default_value)
+                                                        }
+                                                    }
                                                 />
                                             </div>
                                         )}
