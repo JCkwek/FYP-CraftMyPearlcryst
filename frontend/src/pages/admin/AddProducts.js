@@ -22,7 +22,16 @@ function AddProducts(){
         product_type: 'Necklace',
         product_material: '',
         is_customisable: false,
-        sizeInput: '' // parse sizes into an array later
+        option_type: 'list',
+
+        // LIST TYPE
+        sizeInput: '',
+
+        // RANGE TYPE
+        range_min: '',
+        range_max: '',
+        range_step: 1,
+        default_value: ''
     });
 
     const handleChange = (e) => {
@@ -64,9 +73,15 @@ setLoading(true);
                 dataPayload.append('product_image', formData.product_image);
             }
             // Parse comma-separated text string (e.g. "5, 6, 7") into a true JSON array for Sequelize
-            if (formData.sizeInput.trim()) {
+            if (formData.is_customisable && formData.option_type === 'list' && formData.sizeInput?.trim()) {
                 const parsedSizes = formData.sizeInput.split(',').map(item => item.trim()); //FormData keys can only accept string parameters.
                 dataPayload.append('product_size', JSON.stringify(parsedSizes));
+            }
+            if (formData.is_customisable && formData.option_type === 'range') {
+                dataPayload.append('range_min', formData.range_min);
+                dataPayload.append('range_max', formData.range_max);
+                dataPayload.append('range_step', formData.range_step);
+                dataPayload.append('default_value', formData.default_value);
             }
 
             await addProduct(dataPayload);
@@ -82,11 +97,19 @@ setLoading(true);
                 product_type: 'Necklace',
                 product_material: '',
                 is_customisable: false,
-                sizeInput: ''
+                option_type: 'list',
+                sizeInput: '',
+                range_min: '',
+                range_max: '',
+                range_step: 1,
+                default_value: ''
             });
             const fileInput = document.getElementById('product_image');
             if (fileInput) fileInput.value = '';
-            setTimeout(() => navigate('/products'), 2000);
+            navigate(`/products`, {
+                replace: true,
+                state: { message: `"${formData.product_name}" added to inventory` }
+            });
 
         } catch (err) {
             console.error("Error creating product:", err);
@@ -97,168 +120,243 @@ setLoading(true);
     };
 
     return(
-        <div className={styles.addProducts}>
-            <div className={styles.addProductsTopSection}>
-                <BackButton />
-                {successMessage && <AlertBanner message={successMessage} type="success" onClose={() => setSuccessMessage(null)} />}
-                {error && <AlertBanner message={error} type="error" onClose={() => setError(null)} />}
-                <span></span><span></span>
-            </div>
-            <div className={styles.addProductsContentContainer}>
-                <h2>Add Product</h2>
-                <form onSubmit={handleSubmit} className={styles.addProductForm}>
-                    <div className={styles.formInputContainer}>
-                        <div className={styles.imageInputContainer}>
-                            {formData.product_image ? (
-                                <ProductImage
+            <div className={styles.addProducts}>
+                <div className={styles.addProductsTopSection}>
+                        <BackButton/>
+                        {successMessage && <AlertBanner message={successMessage} type="success" onClose={() => setSuccessMessage(null)} />}
+                        {error && <AlertBanner message={error} type="error" onClose={() => setError(null)} />}
+                        <span></span><span></span>
+                </div>
+                <div className={styles.addProductsContentContainer}>
+                    <h2>Add Product</h2>
+                    <form onSubmit={handleSubmit} className={styles.addProductForm}>
+                        <div className={styles.formInputContainer}>
+                            {/*product image*/}
+                            <div className={styles.imageInputContainer}>
+                                {formData.product_image ? (
+                                    <ProductImage
                                         image={URL.createObjectURL(formData.product_image)}
                                         alt="Preview Product Img"
-                                />
-                            ) : (
-                                <div className={styles.productImageContainer}>
-                                    <div className={styles.productImageIcon}><FaCamera /></div>
-                                    No image uploaded
+                                    />
+                                ): (
+                                    <div className={styles.productImageContainer}>
+                                        <div className={styles.productImageIcon}><FaCamera /></div>
+                                        No image uploaded
+                                    </div>
+                                )}
+                                <div className={styles.fileUploadFormGroup}>
+                                    <label htmlFor="product_image" className={`${buttonStyles.button} ${buttonStyles.main}`}>
+                                        Upload Product Image
+                                    </label>
+                                    <input 
+                                        id="product_image"
+                                        type="file" 
+                                        name="product_image" 
+                                        accept="image/*" 
+                                        onChange={handleChange}
+                                        className={styles.hiddenFileInput}
+                                    />
                                 </div>
-                            )}
-                            <div className={styles.fileUploadFormGroup}>
-                                <label htmlFor="product_image" className={`${buttonStyles.button} ${buttonStyles.main}`}>
-                                    Upload Product Image
-                                </label>
-                                <input 
-                                    id="product_image"
-                                    type="file" 
-                                    name="product_image" 
-                                    accept="image/*" 
-                                    onChange={handleChange}
-                                    className={styles.hiddenFileInput}
-                                />
+                            </div>
+                            {/*product details form*/}
+                            <div className={styles.infoInputContainer}>
+                                {/*product name*/}
+                                <div className={styles.formInput}>
+                                    <label htmlFor="product_name">Product Name *</label>
+                                    <input 
+                                        id="product_name"
+                                        type="text" 
+                                        name="product_name" 
+                                        value={formData.product_name} 
+                                        onChange={handleChange} 
+                                        required 
+                                        placeholder="e.g., Baroque Pearl Drop Necklace"
+                                    />
+                                </div>
+                                {/*product price*/}
+                                <div className={styles.formInput}>
+                                    <label htmlFor="product_price">Price (RM) *</label>
+                                    <input 
+                                        id="product_price"
+                                        type="number" 
+                                        step="0.01" 
+                                        min="0.00"
+                                        name="product_price" 
+                                        value={formData.product_price} 
+                                        onChange={handleChange} 
+                                        required 
+                                        placeholder="59.99"
+                                    />
+                                </div>
+                                {/*product type*/}
+                                <div className={styles.formInput}>
+                                    <label htmlFor="product_type">Product Type</label>
+                                    <select 
+                                        id="product_type"
+                                        name="product_type" 
+                                        value={formData.product_type} 
+                                        onChange={handleChange}
+                                    >
+                                        <option value="Necklace">Necklace</option>
+                                        <option value="Bracelet">Bracelet</option>
+                                        <option value="Earrings">Earrings</option>
+                                        <option value="Ring">Ring</option>
+                                    </select>
+                                </div>
+                                {/*product material*/}
+                                <div className={styles.formInput}>
+                                    <label htmlFor="product_material">Base Material</label>
+                                    <input 
+                                        id="product_material"
+                                        type="text" 
+                                        name="product_material" 
+                                        value={formData.product_material} 
+                                        onChange={handleChange} 
+                                        placeholder="e.g., pearl, crystal, stone"
+                                    />
+                                </div>
+                                {/*product description*/}
+                                <div className={styles.formInput}>
+                                    <label htmlFor="product_desc">Product Description</label>
+                                    <textarea 
+                                        id="product_desc"
+                                        name="product_desc" 
+                                        rows="4"
+                                        value={formData.product_desc} 
+                                        onChange={handleChange} 
+                                        placeholder="Provide structural metrics, gemstone context, or design specifications..."
+                                    />
+                                </div>
+    
+                                {/*checkbox row*/}
+                                <div className={styles.checkboxRow}>
+                                    {/*set isAvailable or not*/}
+                                    <label className={styles.checkboxLabel}>
+                                        <input 
+                                            type="checkbox" 
+                                            name="product_availability" 
+                                            checked={formData.product_availability} 
+                                            onChange={handleChange} 
+                                        />
+                                        Set Available
+                                    </label>
+                                    {/*customizable*/}
+                                    <label className={styles.checkboxLabel}>
+                                        <input 
+                                            type="checkbox" 
+                                            name="is_customisable" 
+                                            checked={formData.is_customisable} 
+                                            onChange={handleChange} 
+                                        />
+                                        Customizations
+                                    </label>
+                                
+                                </div>
+                                {/*customization type: fixed size/ length*/}
+                                {formData.is_customisable && (
+                                    <div className={styles.formInput}>
+                                        <label htmlFor="option_type">Customization Type</label>
+                                        <select
+                                            id="option_type"
+                                            name="option_type"
+                                            value={formData.option_type}
+                                            onChange={handleChange}
+                                        >
+                                            <option value="list">Fixed Sizes</option>
+                                            <option value="range">Adjustable Length</option>
+                                        </select>
+                                    </div>
+                                )}
+                                {/*type list*/}
+                                {formData.is_customisable && formData.option_type === 'list' && (
+                                    <>
+                                        <div className={styles.formInput}>
+                                            <label htmlFor="sizeInput">
+                                                Available Sizes
+                                            </label>
+                                            <input
+                                                id="sizeInput"
+                                                type="text"
+                                                name="sizeInput"
+                                                value={formData.sizeInput}
+                                                onChange={handleChange}
+                                                placeholder="e.g., 5, 6, 7"
+                                            />
+                                        </div>
+                                </>   
+                                )}
+                                {/*type range*/}
+                                {formData.is_customisable && formData.option_type === 'range' && (
+                                <>
+                                    {/*default length*/}
+                                    <div className={styles.formInput}>
+                                        <label htmlFor="default_value">
+                                            Default Length
+                                        </label>
+    
+                                        <input
+                                            type="number"
+                                            name="default_value"
+                                            value={formData.default_value}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    {/*min lenght*/}
+                                    <div className={styles.formInput}>
+                                        <label htmlFor="range_min">Minimum Length</label>
+    
+                                        <input
+                                            type="number"
+                                            name="range_min"
+                                            value={formData.range_min}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    {/*max length*/}
+                                    <div className={styles.formInput}>
+                                        <label htmlFor="range_max">Maximum Length</label>
+                                        <input
+                                            type="number"
+                                            name="range_max"
+                                            value={formData.range_max}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    {/*increment value*/}
+                                    <div className={styles.formInput}>
+                                        <label htmlFor="range_step">Step</label>
+                                        <input
+                                            type="number"
+                                            name="range_step"
+                                            value={formData.range_step}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                </>
+                                )}
                             </div>
                         </div>
-                            
-                        <div className={styles.infoInputContainer}>
-                            <div className={styles.formInput}>
-                                <label htmlFor="product_name">Product Name *</label>
-                                <input 
-                                    id="product_name"
-                                    type="text" 
-                                    name="product_name" 
-                                    value={formData.product_name} 
-                                    onChange={handleChange} 
-                                    required 
-                                    placeholder="e.g., Baroque Pearl Drop Necklace"
-                                />
-                            </div>
-
-                            <div className={styles.formInput}>
-                                <label htmlFor="product_price">Price (RM) *</label>
-                                <input 
-                                    id="product_price"
-                                    type="number" 
-                                    step="0.01" 
-                                    min="0.00"
-                                    name="product_price" 
-                                    value={formData.product_price} 
-                                    onChange={handleChange} 
-                                    required 
-                                    placeholder="59.99"
-                                />
-                            </div>
-
-                            <div className={styles.formInput}>
-                                <label htmlFor="product_type">Product Type</label>
-                                <select 
-                                    id="product_type"
-                                    name="product_type" 
-                                    value={formData.product_type} 
-                                    onChange={handleChange}
-                                >
-                                    <option value="Necklace">Necklace</option>
-                                    <option value="Bracelet">Bracelet</option>
-                                    <option value="Earrings">Earrings</option>
-                                    <option value="Ring">Ring</option>
-                                </select>
-                            </div>
-
-                            <div className={styles.formInput}>
-                                <label htmlFor="product_material">Base Material</label>
-                                <input 
-                                    id="product_material"
-                                    type="text" 
-                                    name="product_material" 
-                                    value={formData.product_material} 
-                                    onChange={handleChange} 
-                                    placeholder="e.g., pearl, crystal, stone"
-                                />
-                            </div>
-
-                            <div className={styles.formInput}>
-                                <label htmlFor="sizeInput">Size (Comma-Separated Array Strings)</label>
-                                <input 
-                                    id="sizeInput"
-                                    type="text" 
-                                    name="sizeInput" 
-                                    value={formData.sizeInput} 
-                                    onChange={handleChange} 
-                                    placeholder="e.g., 16, 18, 20"
-                                />
-                            </div>
-
-                            <div className={styles.formInput}>
-                                <label htmlFor="product_desc">Product Description</label>
-                                <textarea 
-                                    id="product_desc"
-                                    name="product_desc" 
-                                    rows="4"
-                                    value={formData.product_desc} 
-                                    onChange={handleChange} 
-                                    placeholder="Provide structural metrics, gemstone context, or design specifications..."
-                                />
-                            </div>
-                            <div className={styles.checkboxRow}>
-                            <label className={styles.checkboxLabel}>
-                                <input 
-                                    type="checkbox" 
-                                    name="product_availability" 
-                                    checked={formData.product_availability} 
-                                    onChange={handleChange} 
-                                />
-                                Add Product To Inventory
-                            </label>
-
-                            <label className={styles.checkboxLabel}>
-                                <input 
-                                    type="checkbox" 
-                                    name="is_customisable" 
-                                    checked={formData.is_customisable} 
-                                    onChange={handleChange} 
-                                />
-                                Customizations
-                            </label>
-                            </div>
+                        <div className={styles.addProductFormBtns}>
+                            <button 
+                                type="button" 
+                                className={`${buttonStyles.button} ${buttonStyles.cancel}`}
+                                onClick={() => navigate(`/products`)}
+                                disabled={loading}
+                            >
+                                Discard
+                            </button>
+                            <button 
+                                type="submit" 
+                                className={`${buttonStyles.button} ${buttonStyles.green}`}
+                                disabled={loading}
+                            >
+                                {loading ? "Saving Product Info..." : "Add Product"}
+                            </button>
                         </div>
-                    </div>
-
-                    <div className={styles.addProductFormBtns}>
-                        <button 
-                            type="button" 
-                            className={`${buttonStyles.button} ${buttonStyles.cancel}`}
-                            onClick={() => navigate('/products')}
-                            disabled={loading}
-                        >
-                            Discard
-                        </button>
-                        <button 
-                            type="submit" 
-                            className={`${buttonStyles.button} ${buttonStyles.green}`}
-                            disabled={loading}
-                        >
-                            {loading ? "Saving Item..." : "Publish Product Entry"}
-                        </button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
-        </div>
-    )
+        )
 }
 
 export default AddProducts;

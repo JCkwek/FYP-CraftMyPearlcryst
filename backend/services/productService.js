@@ -147,7 +147,12 @@ const createProduct = async (productData) => {
         product_material,
         is_customisable,
         // product_size
-        options
+        option_type,
+        sizeInput,
+        range_min,
+        range_max,
+        range_step,
+        default_value
     } = productData;
 
     const newProduct = await Product.create({
@@ -160,34 +165,45 @@ const createProduct = async (productData) => {
         product_material,
         is_customisable,
         // product_size // Sequelize automatically strings and parse DataTypes.JSON column
+        option_type,
+        sizeInput,
+        range_min,
+        range_max,
+        range_step,
+        default_value
     });
-    if (Array.isArray(options)) {
-        for (const opt of options) {
+    if (is_customisable) {
 
-            const option = await CustomizationOption.create({
-                product_id: newProduct.product_id,
-                option_name: opt.option_name,
-                option_type: opt.option_type,
-                is_active: 1,
-                default_value: opt.default_value || null
-            });
+        const option = await CustomizationOption.create({
+            product_id: newProduct.product_id,
+            option_name: "Size/Length",
+            option_type,
+            is_active: 1,
+            default_value: default_value || null,
+            range_min: option_type === "range" ? range_min : null,
+            range_max: option_type === "range" ? range_max : null,
+            range_step: option_type === "range" ? range_step : null
+        });
 
-            // ONLY for list type
-            if (opt.option_type === 'list' && Array.isArray(opt.values)) {
-                await Promise.all(
-                    opt.values.map(v =>
-                        OptionValue.create({
-                            option_id: option.option_id,
-                            value_label: v,
-                            visual_value: v,
-                            is_active: 1
-                        })
-                    )
-                );
-            }
+        // LIST TYPE
+        if (option_type === "list" && sizeInput?.trim()) {
+            const values = sizeInput
+                .split(",")
+                .map(v => v.trim())
+                .filter(Boolean);
+
+            await Promise.all(
+                values.map(v =>
+                    OptionValue.create({
+                        option_id: option.option_id,
+                        value_label: v,
+                        visual_value: v,
+                        is_active: 1
+                    })
+                )
+            );
         }
     }
-
     return newProduct;
 };
 
@@ -248,6 +264,13 @@ const updateProduct = async (id, productData) => {
                     is_active: 1
                 }, { transaction: t });
             }
+            await option.update(
+                {
+                    option_type: optionType,
+                    is_active: 1
+                },
+                { transaction: t }
+            );
 
             // sync option type
             await option.update(
@@ -316,4 +339,41 @@ const updateProduct = async (id, productData) => {
     });
 };
 
-module.exports = { getProducts, getProductById, createProduct, updateProduct};
+const deleteProduct = async (id) => {
+    return await sequelize.transaction(async (t) => {
+        const product = await Product.findByPk(id, { transaction: t });
+
+        if (!product) {
+            throw new Error('Product not found');
+        }
+
+        // delete option values first (child table)
+        const options = await CustomizationOption.findAll({
+            where: { product_id: id },
+            transaction: t
+        });
+
+        for (const opt of options) {
+            await OptionValue.destroy({
+                where: { option_id: opt.option_id },
+                transaction: t
+            });
+        }
+
+        // delete customization options
+        await CustomizationOption.destroy({
+            where: { product_id: id },
+            transaction: t
+        });
+
+        // delete product
+        await Product.destroy({
+            where: { product_id: id },
+            transaction: t
+        });
+
+        return true;
+    });
+};
+
+module.exports = { getProducts, getProductById, createProduct, updateProduct, deleteProduct};

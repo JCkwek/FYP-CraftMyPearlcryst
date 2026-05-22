@@ -36,6 +36,13 @@
     background-color: #5b9159;
 }
 
+.red{
+    background-color: red;
+}
+.red:hover{
+    background-color: rgb(190, 2, 2);
+}
+
 .cancel{
     background-color: transparent;
     border: 1px solid rgb(190, 2, 2);

@@ -19,11 +19,17 @@
     justify-content: space-between;
     flex-direction: column;
     align-items: center;
+    /* background-color: blue; */
 }
 
 .sizeSelectionContainer{
+    width: 100%;
     padding: 1rem;
     user-select: none;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-direction: column;
 }
 
 .fixedSizeContainer select{
@@ -39,12 +45,10 @@
     transition: all 0.2s ease;
 }
 
-/* Hover */
 .fixedSizeContainer select:hover {
     border-color: #888;
 }
 
-/* Focus */
 .fixedSizeContainer select:focus {
     border-color: #4f46e5;
     box-shadow: 0 0 0 3px rgba(79,70,229,0.15);

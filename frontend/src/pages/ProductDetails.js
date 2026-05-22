@@ -71,8 +71,6 @@ function ProductDetails() {
         // for custom length (range size)
         product.options?.forEach(option => {
             if (option.option_type === 'range' && isCustomising) {
-                // const config = option.values[0];
-                // const [, , base] = config.visual_value.split(',').map(Number);
                 // const current = parseFloat(selectedSize) || base;
                 // const rate = parseFloat(config.price_modifier || 0);
             // const base = Number(option.default_value);
@@ -80,12 +78,10 @@ function ProductDetails() {
             // const rate = Number(option.price_modifier ?? 0);
 
             // total += (current - base) * rate;
-             const baseLength = Number(option.default_value);
-            const current = Number(selectedSize ?? baseLength);
-
-            const pricePerUnit = total / baseLength;
-
-            total = pricePerUnit * current;
+                const baseLength = Number(option.default_value);
+                const current = Number(selectedSize ?? baseLength);
+                const pricePerUnit = total / baseLength;
+                total = pricePerUnit * current;
             }    
         });
         return Math.max(5.00, total);
@@ -160,7 +156,36 @@ function ProductDetails() {
                     <div className={styles.sizeSelectionContainer}>
                         {product.options?.map(option => (
                             <div key={option.option_id} className={styles.optionSection}>
-                                
+                                {/* range type */}
+                                {option.option_type === 'range' && (
+                                    <div className={styles.rangeSizeContainer}>
+                                        <div>
+                                            {option.option_name}: {Number(selectedSize || option.default_value)} inch
+                                        </div>
+
+                                        {isCustomising && (
+                                            <div className={styles.rangeSizeInputContainer}>
+                                                <LengthSlider 
+                                                    onSelect={(val) => setSelectedSize(val)}
+                                                    manualConstraints={
+                                                        {
+                                                            min: Number(option.range_min),
+                                                            max: Number(option.range_max),
+                                                            step: Number(option.range_step),
+                                                            default: Number(option.default_value)
+                                                        }
+                                                    }
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+
+
+                        {product.options?.map(option => (
+                            <div key={option.option_id} className={styles.optionSection}>
                                 {/* list type: color/fixed size */}
                                 {option.option_type === 'list' && (
                                     <div className={styles.listOptionContainer}>
@@ -183,35 +208,11 @@ function ProductDetails() {
                                                     ))}
                                                 </select>
                                             </div>
- 
                                         )}
                                     </div>
                                 )}
 
-                                {/* range type */}
-                                {option.option_type === 'range' && (
-                                    <div className={styles.rangeSizeContainer}>
-                                        <div>
-                                            {option.option_name}: {selectedSize || option.default_value} inch
-                                        </div>
-
-                                        {isCustomising && (
-                                            <div className={styles.rangeSizeInputContainer}>
-                                                <LengthSlider 
-                                                    onSelect={(val) => setSelectedSize(val)}
-                                                    manualConstraints={
-                                                        {
-                                                            min: Number(option.range_min),
-                                                            max: Number(option.range_max),
-                                                            step: Number(option.range_step),
-                                                            default: Number(option.default_value)
-                                                        }
-                                                    }
-                                                />
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
+                        
                             </div>
                         ))}
                     </div>

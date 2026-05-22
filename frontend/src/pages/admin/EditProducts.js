@@ -3,9 +3,10 @@ import buttonStyles from '../../components/buttons/ButtonTheme.module.css';
 import React, { useState, useEffect } from 'react';
 import { useNavigate,useLocation } from 'react-router-dom';
 import AlertBanner from '../../components/AlertBanner';
-import {editProduct} from '../../api/productApi';
+import {editProduct, deleteProduct} from '../../api/productApi';
 import { FaCamera } from 'react-icons/fa';
 import ProductImage from '../../components/productDetail/ProductImage';
+import Swal from 'sweetalert2';
 
 function EditProducts(){
     const navigate = useNavigate();
@@ -131,18 +132,7 @@ function EditProducts(){
             dataPayload.append('product_availability', formData.product_availability);
             dataPayload.append('is_customisable', formData.is_customisable);
             dataPayload.append('option_type', formData.option_type);
-            // dataPayload.append('default_size', formData.default_size);
 
-            // if (formData.option_type === 'list') {
-            //     const parsedSizes = formData.sizeInput
-            //         .split(',')
-            //         .map(item => item.trim());
-
-            //     dataPayload.append(
-            //         'product_size',
-            //         JSON.stringify(parsedSizes)
-            //     );
-            // }
             if (formData.option_type === 'list') {
                 dataPayload.append('sizeInput', formData.sizeInput);
                 dataPayload.append('default_value', formData.default_value);
@@ -173,6 +163,48 @@ function EditProducts(){
             setError(err.response?.data?.error || "Failed to update product.");
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleDeleteProduct = async () => {
+        const result = await Swal.fire({
+            title: 'Delete Product?',
+            text: `Are you sure you want to delete "${existingProduct.product_name}"? This cannot be undone.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it',
+            cancelButtonText: 'Cancel',
+        });
+
+        if (!result.isConfirmed) return;
+
+        try {
+            await deleteProduct(existingProduct.product_id);
+
+            await Swal.fire({
+                title: 'Deleted!',
+                text: `"${existingProduct.product_name}" has been deleted.`,
+                icon: 'success',
+                timer: 1500,
+                showConfirmButton: false
+            });
+
+            navigate('/products', {
+                state: {
+                    message: `"${existingProduct.product_name}" deleted successfully`
+                }
+            });
+
+        } catch (err) {
+            console.error("Delete error:", err);
+
+            Swal.fire({
+                title: 'Error',
+                text: 'Failed to delete product',
+                icon: 'error'
+            });
         }
     };
 
@@ -298,7 +330,7 @@ function EditProducts(){
                                         checked={formData.product_availability} 
                                         onChange={handleChange} 
                                     />
-                                    Add Product To Inventory
+                                    Set Avaailable
                                 </label>
                                 {/*customizable*/}
                                 <label className={styles.checkboxLabel}>
@@ -396,7 +428,6 @@ function EditProducts(){
                             )}
                         </div>
                     </div>
-
                     <div className={styles.editProductFormBtns}>
                         <button 
                             type="button" 
@@ -415,6 +446,9 @@ function EditProducts(){
                         </button>
                     </div>
                 </form>
+                <div className={styles.dltBtnContainer}>
+                    <button className={`${buttonStyles.button} ${buttonStyles.red}`}  onClick={handleDeleteProduct}> Delete Product</button>
+                </div>
             </div>
         </div>
     )

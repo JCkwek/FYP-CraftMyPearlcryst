@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Navigate ,Route, Outlet } from 'react-router-dom';
 import { useState } from 'react';
 import './App.css';
+import { jwtDecode } from 'jwt-decode';
 import MainLayout from './layouts/MainLayout';
 import Home from './pages/Home';
 import Products from './pages/Products';
@@ -46,10 +47,27 @@ const HomeDispatcher = ({ currentUser }) => {
 };
 
 function App() {
-  const [currentUser, setCurrentUser] = useState(() => {
+    const [currentUser, setCurrentUser] = useState(() => {
+    const token = localStorage.getItem('token');
     const savedUser = localStorage.getItem('user');
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
+    if (!token || !savedUser) {
+      return null;
+    }
+    try {
+      const decoded = jwtDecode(token);
+      const currentTime = Date.now() / 1000;
+      if (decoded.exp < currentTime) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        return null;
+      }
+        return JSON.parse(savedUser);
+      } catch (error) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        return null;
+      }
+    });
 
   return (
     <BrowserRouter>

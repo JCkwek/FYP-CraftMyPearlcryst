@@ -5,15 +5,25 @@ import { getProducts } from '../api/productApi';
 import ProductCard from "../components/ProductCard";
 import SearchBar from "../components/SearchBar";
 import Loading from "../components/Loading";
-import { useOutletContext , useNavigate} from 'react-router-dom';
+import AlertBanner from '../components/AlertBanner';
+import { useOutletContext , useNavigate, useLocation} from 'react-router-dom';
 
 function Products(){
     const [products, setProducts] = useState([]);
     const [search, setSearch] = useState('');
     const [loading, setLoading] = useState(true);
+    const [successMessage, setSuccessMessage] = useState(null);
     const navigate = useNavigate();
     const { currentUser }  = useOutletContext();
     const isAdmin = currentUser?.role === 'admin';
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.state?.message) {
+            setSuccessMessage(location.state.message);
+            navigate(location.pathname, { replace: true, state: {} });
+        }
+    }, [location, navigate]);
 
     useEffect(() => {
         fetchProducts('', isAdmin);
@@ -50,6 +60,7 @@ function Products(){
             onChange={setSearch}
             onSearch={handleSearch}
         />
+        {successMessage && <AlertBanner message={successMessage} type="success" onClose={() => setSuccessMessage(null)}/>}
         {isAdmin && (
             <button 
                 className={`${buttonStyles.button} ${buttonStyles.main}`} 

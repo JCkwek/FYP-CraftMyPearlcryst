@@ -114,4 +114,20 @@ const updateProduct = async (req, res) => {
     }
 };
 
-module.exports = { getProducts, getProductById, createProduct, updateProduct};
+const deleteProduct = async (req, res) => {
+    try {
+        await productService.deleteProduct(req.params.id);
+
+        res.json({
+            message: 'Product permanently deleted'
+        });
+    } catch (err) {
+        console.error(err);
+
+        res.status(500).json({
+            error: err.message || 'Failed to delete product'
+        });
+    }
+};
+
+module.exports = { getProducts, getProductById, createProduct, updateProduct, deleteProduct};

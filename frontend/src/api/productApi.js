@@ -27,3 +27,9 @@ export const editProduct = async (id, formDataPayload) => {
   const res = await api.put(`/products/admin/editProduct/${id}`, formDataPayload);
   return res.data;
 };
+
+export const deleteProduct = async (id) => {
+  const res = await api.delete(`/products/admin/deleteProduct/${id}`);
+  return res.data;
+};
+
