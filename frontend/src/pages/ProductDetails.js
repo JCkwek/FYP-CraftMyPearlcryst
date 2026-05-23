@@ -22,6 +22,7 @@ function ProductDetails() {
     const [isCustomising, setIsCustomising] = useState(false);
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
+    const [productAvailability, setProductAvailability] = useState('');
     const { currentUser }  = useOutletContext();
     const isAdmin = currentUser?.role === 'admin';
     const navigate = useNavigate();
@@ -41,6 +42,12 @@ function ProductDetails() {
             try {
                 const fetchedProduct = await getProductById(id);
                 setProduct(fetchedProduct);
+
+                if(fetchedProduct.product_availability){
+                    setProductAvailability("Available")
+                }else{
+                    setProductAvailability("Not Available")
+                }
 
                 // Initialize default size
                 const sizeOption = fetchedProduct.options?.find(opt =>
@@ -151,6 +158,7 @@ function ProductDetails() {
                 <ProductImage image={`http://localhost:3000${product.product_image}`} alt={product.product_name}/>
                 
                 <div className={styles.productDetailsInfo}>
+                    {isAdmin && (productAvailability !== "Available") && <b style={{ color: 'red' }}>{productAvailability}</b>}
                     <ProductInfo product={product} displayPrice={calculatedPrice} />
                     
                     <div className={styles.sizeSelectionContainer}>

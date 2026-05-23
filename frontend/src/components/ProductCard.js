@@ -1,10 +1,16 @@
 import styles from './ProductCard.module.css' 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
 function ProductCard({product}){
     const navigate = useNavigate();
+    const { currentUser }  = useOutletContext();
+    const isAdmin = currentUser?.role === 'admin';
 
-     if (!product) return null;
+    if (!product) return null;
+
+    const productAvailability = product.product_availability
+        ? "Available"
+        : "Not Available"
 
      const handleClick = () => {
         navigate(`/products/${product.product_id}`); 
@@ -26,8 +32,10 @@ function ProductCard({product}){
             </div>
             <div className={styles.productCardDetails}>
                 <h6>{product.product_name}</h6>
-                RM {product.product_price}
+                RM {product.product_price}<br></br>
+                {isAdmin && (productAvailability !== "Available") && <b style={{ color: 'red' }}>{productAvailability}</b>}
             </div>
+
         </div>
     )
 }
