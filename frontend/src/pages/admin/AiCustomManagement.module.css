@@ -1,0 +1,47 @@
+.aiCustomManagement{
+    padding: 1rem;
+}
+.aiCustomManagementContentContainer{
+    padding: 1rem;
+}
+
+.stepSection {
+    margin-bottom: 2rem;
+}
+
+.cardRow {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding: 0.5rem 0;
+}
+
+.cardRow::-webkit-scrollbar {
+    display: none;
+}
+
+.cardRow > * {
+    flex-shrink: 0;
+}
+
+.addCard {
+    min-width: 10rem;
+    height: 12rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 2px dashed #aaa;
+    border-radius: 0.5rem;
+
+    cursor: pointer;
+    flex-shrink: 0;
+
+    transition: 0.2s;
+}
+
+.addCard:hover {
+    background: #f3f3f3;
+    transform: scale(1.03);
+}

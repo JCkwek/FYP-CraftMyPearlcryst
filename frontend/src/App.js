@@ -21,6 +21,8 @@ import AiCustomOrder from './pages/AiCustomOrder';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AddProducts from './pages/admin/AddProducts';
 import EditProducts from './pages/admin/EditProducts';
+import AiCustomManagement from './pages/admin/AiCustomManagement';
+import AiOptionDetails from './pages/admin/AiOptionDetails';
 
 const AdminRouteGuard = () => {
   const token = localStorage.getItem('token');
@@ -84,7 +86,17 @@ function App() {
           <Route path="/checkout-success" element={<OrderSuccess />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />}/>
-          <Route path="/aiCustom" element={<AiCustom />}/>
+          {/* <Route path="/aiCustom" element={<AiCustom />}/> */}
+          <Route
+            path="/aiCustom"
+            element={
+              currentUser
+                ? (currentUser.role === 'admin'
+                    ? <AiCustomManagement />
+                    : <AiCustom />)
+                : <AiCustom /> // or loading / fallback
+            }
+          />
           <Route path="/aiChat" element={<AiChat />}/>
           <Route path="/aiCustomOrder" element={<AiCustomOrder />}/>
           {/*Admin routes */}
@@ -92,6 +104,8 @@ function App() {
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/addProducts" element={<AddProducts />} />
             <Route path="/admin/editProducts" element={<EditProducts />} />
+            {/* <Route path="/admin/aiCustomManage" element={<AiCustomManagement />} /> */}
+            <Route path="/admin/aiOption/:id" element={<AiOptionDetails />} />
           </Route>
         </Route>
       </Routes>

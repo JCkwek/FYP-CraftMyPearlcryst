@@ -53,8 +53,21 @@ const getLengths = async (req, res) => {
     }
 };
 
+//admin
+const getAllComponents = async (req, res) => {
+    try {
+        const components = await aiService.getAllComponents();
+        res.json(components);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            error: 'Failed to fetch components'
+        });
+    }
+};
 module.exports = {
     getStepOptions,
     generateImage,
     getLengths,
+    getAllComponents
 };

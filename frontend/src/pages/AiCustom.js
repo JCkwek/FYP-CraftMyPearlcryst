@@ -3,7 +3,7 @@ import buttonStyles from '../components/buttons/ButtonTheme.module.css';
 import React, { useState, useEffect } from 'react';
 import Loading from '../components/Loading';
 import api from '../api/api';
-import {submitForQuote} from '../api/aiCustomApi';
+import {submitForQuote} from '../api/aiCustomOrderApi';
 import LengthSlider from '../components/LengthSlider';
 import RotatingCarousel from '../components/RotatingCarousel';
 import AiOptionCard from '../components/AiOptionCard';

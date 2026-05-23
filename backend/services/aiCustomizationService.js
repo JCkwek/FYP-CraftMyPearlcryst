@@ -144,9 +144,20 @@ const generateJewelryImage = async ({
         resultId: newResult.result_id
     };
 };
+
+//admin
+const getAllComponents = async () => {
+    return await AiJewelryComponent.findAll({
+        order: [
+            ['step', 'ASC'],
+            ['name', 'ASC']
+        ]
+    });
+};
 module.exports = {
     getComponentsByStep,
     buildPromptFromSelections,
     getLengthConstraints,
-    generateJewelryImage
+    generateJewelryImage,
+    getAllComponents
 };

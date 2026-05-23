@@ -36,7 +36,8 @@ function SideNav({ user }){
                     }
                     >Products
                 </NavLink>
-
+                
+                {isAdmin}
                 <NavLink 
                     to="/aiCustom" 
                     className={({isActive}) =>

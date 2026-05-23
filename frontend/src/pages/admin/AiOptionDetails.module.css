@@ -1,0 +1,30 @@
+.aiOptionDetails{
+    padding: 1rem;
+}
+.aiOptionDetailsContentContainer{
+    padding: 1rem;
+}
+
+.aiOptionDetailsContentContainer {
+    max-width: 700px;
+    margin: auto;
+}
+
+.imageContainer img {
+    width: 100%;
+    border-radius: 8px;
+}
+
+.infoBox {
+    margin-top: 1rem;
+    line-height: 1.5;
+}
+
+.editButton {
+    margin-top: 2rem;
+    padding: 0.5rem 1rem;
+    background: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+}

@@ -1,6 +1,6 @@
 import styles from './AiCustomOrder.module.css'
 import { useState, useEffect } from 'react';
-import {fetchAiCustomOrder, removeAiCustomOrder} from '../api/aiCustomApi';
+import {fetchAiCustomOrder, removeAiCustomOrder} from '../api/aiCustomOrderApi';
 import AiCustomOrderCard from '../components/AiCustomOrderCard';
 import Loading from '../components/Loading';
 

@@ -53,8 +53,8 @@ function Products(){
  return (
     <div className={styles.products}>
         <div className={styles.productsContentContainer}>
-      <h1>Products</h1>
-      <div className={styles.contentFirstRow}>
+        <h1>Products</h1>
+        <div className={styles.contentFirstRow}>
         <SearchBar 
             value={search}
             onChange={setSearch}

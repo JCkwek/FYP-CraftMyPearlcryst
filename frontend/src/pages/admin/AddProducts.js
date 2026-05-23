@@ -51,14 +51,12 @@ function AddProducts(){
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
         setError(null);
-
         if (!formData.product_image) {
             setError("Please upload a product image.");
             return; // Stops submission early 
         }       
-setLoading(true);
+        setLoading(true);
         try {
             const dataPayload = new FormData();
             dataPayload.append('product_name', formData.product_name);
