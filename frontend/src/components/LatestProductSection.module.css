@@ -1,27 +1,13 @@
-.latestProductContainer{
+.latestProduct{
     padding: 2rem;
     text-align: center;
 }
 
-.latestProductColumnContainer{
-    display: flex;
-    justify-content: space-between;
-    flex-direction: row;
-}
-
-.productCardContainer{
+.latestProductContentContainer{
     padding: 1rem;
     display: flex;
     justify-content: space-evenly;
     gap: 1rem; 
-    width: 75%;
+    width: 100%;
     flex-wrap: wrap;
 }
-
-.viewMoreContainer {
-    display: flex;
-    justify-content: center;
-    margin-top: 1rem;
-    margin: 1rem;
-}
-

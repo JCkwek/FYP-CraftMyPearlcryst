@@ -1,9 +1,9 @@
 .specialtyCardContainer{
-    padding: 1rem;
+    padding: 2rem;
     align-items: center;
     background-color: #f8dde3;
-    width: 13rem;
-    height: 15rem;
+    width: 20rem;
+    height: 20rem;
     border-radius: 1rem;
     display: flex;
     justify-content: space-between;
@@ -13,8 +13,11 @@
     flex-wrap: wrap;
     overflow: hidden;
 }
+.specialtyCardInfo{
+    text-align: start;
+}
 
 .specialtyCardIcon{
-    font-size: 1.5rem;
-    padding: 0.5rem;
+    font-size: 2rem;
+    padding: 1rem;
 }

@@ -22,7 +22,7 @@ function LatestProductSection(){
             const res = await getProducts({
                 onlyAvailable: true,
                 latest: true,
-                limit: 4
+                limit: 5
             });
             console.log(res);
             setProducts(res);
@@ -38,32 +38,27 @@ function LatestProductSection(){
     };
 
     return(
-        <section className={styles.latestProductContainer}> 
-        <h2>Explore Our Latest Creations</h2>
-        <div className={styles.latestProductColumnContainer}>
-        <div className={styles.productCardContainer}>
-         {loading ? (
-            <Loading />
-         ) :  products.map((product) => (
-                <ProductCard 
-                    key={product.product_id}
-                    product={product}
-                />
-            ))
-        }
-        </div>
-        {!loading && (
-            <div className={styles.viewMoreContainer}>
+        <section className={styles.latestProduct}> 
+            <h2>Explore Our Latest Creations</h2>
+            <div className={styles.latestProductContentContainer}>
+                {/* <div className={styles.productCardContainer}> */}
+                {loading ? (
+                    <Loading />
+                ) :  products.map((product) => (
+                        <ProductCard 
+                            key={product.product_id}
+                            product={product}
+                        />
+                ))
+                    
+                }
                 <button 
-                    className={`${buttonStyles.button} ${buttonStyles.main}`}
-                    onClick={handleViewMore}
-                >
-                    View More
+                        className={`${buttonStyles.button} ${buttonStyles.main}`}
+                        onClick={handleViewMore}
+                    >
+                        View More
                 </button>
             </div>
-        )      
-        }
-        </div>
         </section>
     )
 }
