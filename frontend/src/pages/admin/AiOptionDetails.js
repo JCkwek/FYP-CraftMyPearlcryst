@@ -5,11 +5,13 @@ import Loading from '../../components/Loading';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { fetchAiComponents } from '../../api/aiCustomApi';
+import AiOptionForm from '../../components/admin/AiOptionForm';
 
 function AiOptionDetails(){
     const { id } = useParams();
     const [item, setItem] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
     useEffect(() => {
         const loadItem = async () => {
             try {
@@ -28,8 +30,27 @@ function AiOptionDetails(){
         loadItem();
     }, [id]);
 
+    const handleUpdate = async (updatedData) => {
+        console.log(updatedData);
+
+        // later:
+        // await updateAiComponent(id, updatedData)
+
+        setItem(updatedData);
+        setIsEditing(false);
+    };
+
     return(
-        <div className={styles.aiOptionDetails}>
+        isEditing? (
+            <AiOptionForm
+                initialData={item}
+                onSubmit={(updatedData) => {
+                    console.log(updatedData);
+                }}
+                onCancel={() => setIsEditing(false)}
+            />
+        ): (
+            <div className={styles.aiOptionDetails}>
             <BackButton/>
             <div className={styles.aiOptionDetailsContentContainer}>
                 {loading ? (
@@ -37,7 +58,7 @@ function AiOptionDetails(){
                 ):!item ?(
                     <p>Item not found</p>
                 ):(
-                <>
+                <div className={styles.aiOptionCard}>
                     <h2>{item.name}</h2>
                     <div className={styles.imageContainer}>
                         <img
@@ -51,11 +72,13 @@ function AiOptionDetails(){
                         <p><b>Prompt Fragment:</b></p>
                         <p>{item.prompt_fragment}</p>
                     </div>
-                    <button className={`${buttonStyles.button} ${buttonStyles.main}`}>Edit</button>
-                </>
+                    <button className={`${buttonStyles.button} ${buttonStyles.main}`} onClick={() => setIsEditing(true)}>Edit</button>
+                </div>
                 )}
             </div>
         </div>
+        )
+        
     )
 }
 

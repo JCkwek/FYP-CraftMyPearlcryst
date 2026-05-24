@@ -11,5 +11,6 @@ router.get('/admin/components', aiController.getAllComponents);
 // router.post('/components', aiController.createComponent);
 // router.put('/components/:id', aiController.updateComponent);
 // router.delete('/components/:id', aiController.deleteComponent);
+router.get('/admin/requirements',aiController.getAllRequirements);
 
 module.exports = router;

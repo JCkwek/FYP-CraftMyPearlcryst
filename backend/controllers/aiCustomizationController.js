@@ -65,9 +65,22 @@ const getAllComponents = async (req, res) => {
         });
     }
 };
+
+const getAllRequirements = async (req, res) => {
+    try {
+        const requirements = await aiService.getAllRequirements();
+        res.status(200).json(requirements);
+    } catch (error) {
+        console.error("Error fetching requirements:", error);
+        res.status(500).json({
+            message: "Failed to fetch requirements"
+        });
+    }
+};
 module.exports = {
     getStepOptions,
     generateImage,
     getLengths,
-    getAllComponents
+    getAllComponents,
+    getAllRequirements
 };

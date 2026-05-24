@@ -154,10 +154,25 @@ const getAllComponents = async () => {
         ]
     });
 };
+const getAllRequirements = async () => {
+    const requirements = await AiJewelryComponent.findAll({
+        attributes: ['requirement'],
+        where: {
+            requirement: {
+                [Op.ne]: null
+            }
+        },
+        group: ['requirement'],
+        order: [['requirement', 'ASC']]
+    });
+
+    return requirements.map(r => r.requirement);
+};
 module.exports = {
     getComponentsByStep,
     buildPromptFromSelections,
     getLengthConstraints,
     generateJewelryImage,
-    getAllComponents
+    getAllComponents,
+    getAllRequirements
 };

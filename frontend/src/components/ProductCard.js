@@ -32,8 +32,7 @@ function ProductCard({product}){
             </div>
             <div className={styles.productCardDetails}>
                 <h6>{product.product_name}</h6>
-                RM {product.product_price}<br></br>
-                {isAdmin && (productAvailability !== "Available") && <b style={{ color: 'red' }}>{productAvailability}</b>}
+                <div className={styles.productCardPrice}>RM {product.product_price} {isAdmin && (productAvailability !== "Available") && <b style={{ color: 'red' }}>{productAvailability}</b>}</div>
             </div>
 
         </div>

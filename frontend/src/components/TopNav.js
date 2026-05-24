@@ -8,7 +8,7 @@ function TopNav({ user }){
 
     return(
         <div className={styles.topNav}>
-            <div><h2>CraftMyPearlcryst</h2></div>
+            <div><h4>CraftMyPearlcryst</h4></div>
             <div className={styles.topNavButtonsContainer}>
                 {!isAdmin && (
                     <>

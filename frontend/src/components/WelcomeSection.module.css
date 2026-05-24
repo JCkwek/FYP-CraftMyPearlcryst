@@ -1,4 +1,8 @@
 .welcomeSectionContainer{
     padding: 2rem;
+    border-radius: 1rem;
+    background-color: white;
+    overflow: hidden;
     text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
