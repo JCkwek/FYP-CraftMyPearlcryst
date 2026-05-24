@@ -168,11 +168,44 @@ const getAllRequirements = async () => {
 
     return requirements.map(r => r.requirement);
 };
+
+const updateComponent = async (componentId, data) => {
+    const component = await AiJewelryComponent.findByPk(componentId);
+
+    if (!component) {
+        throw new Error('Component not found');
+    }
+
+    await component.update({
+        name: data.name,
+        step: data.step,
+        category: data.category,
+        requirement: data.requirement || null,
+        prompt_fragment: data.prompt_fragment,
+        image_preview: data.image_preview || component.image_preview
+    });
+
+    return component;
+};
+
+const createComponent = async (data) => {
+    return await AiJewelryComponent.create({
+        name: data.name,
+        step: data.step,
+        category: data.category,
+        requirement: data.requirement || null,
+        prompt_fragment: data.prompt_fragment,
+        image_preview: data.image_preview || null
+    });
+};
+
 module.exports = {
     getComponentsByStep,
     buildPromptFromSelections,
     getLengthConstraints,
     generateJewelryImage,
     getAllComponents,
-    getAllRequirements
+    getAllRequirements,
+    updateComponent,
+    createComponent
 };

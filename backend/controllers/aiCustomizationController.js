@@ -77,10 +77,42 @@ const getAllRequirements = async (req, res) => {
         });
     }
 };
+
+const updateComponent = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updated = await aiService.updateComponent(id, req.body);
+        res.json({
+            message: 'Component updated successfully',
+            data: updated
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: 'Failed to update component'
+        });
+    }
+};
+
+const createComponent = async (req, res) => {
+    try {
+        const created = await aiService.createComponent(req.body);
+        res.json({
+            message: 'Component created successfully',
+            data: created
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Failed to create component' });
+    }
+};
+
 module.exports = {
     getStepOptions,
     generateImage,
     getLengths,
     getAllComponents,
-    getAllRequirements
+    getAllRequirements,
+    updateComponent,
+    createComponent
 };

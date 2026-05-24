@@ -66,7 +66,7 @@ function Products(){
                 className={`${buttonStyles.button} ${buttonStyles.main}`} 
                 onClick={() => navigate('/admin/addProducts')} 
             >
-            + Add New Product
+            + New Product
             </button>
         )}
       </div>

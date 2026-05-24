@@ -45,14 +45,14 @@
     overflow: hidden;
 }
 
-.productCardDetails h6{
+.productCardName{
     font-size: 0.9rem;
+    font-weight: 500;
     line-height: 1rem;
-
     overflow: hidden;
     text-overflow: ellipsis;
-
     display: -webkit-box;
+    line-clamp: 2;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
 }

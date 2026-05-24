@@ -1,13 +1,16 @@
 import styles from './AiCustomManagement.module.css';
 import React, { useState, useEffect } from 'react';
 import AiOptionCard from '../../components/AiOptionCard';
-import { fetchAiComponents } from '../../api/aiCustomApi';
+import { fetchAiComponents, addAiComponent } from '../../api/aiCustomApi';
 import { useNavigate } from 'react-router-dom';
+import AiOptionForm from '../../components/admin/AiOptionForm';
 
 
 function AiCustomManagement(){
     const [items, setItems] = useState([]);
     const [grouped, setGrouped] = useState({});
+    const [isCreating, setIsCreating] = useState(false);
+    const [selectedStep, setSelectedStep] = useState(1);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -36,36 +39,60 @@ function AiCustomManagement(){
         console.log(groupedData);
     }, [items]);
 
-   return (
+return (
     <div className={styles.aiCustomManagement}>
         <div className={styles.aiCustomManagementContentContainer}>
-            <h2>Custom Lab Management</h2>
+            {!isCreating? (
+                <>
+                <h2>Custom Lab Management</h2>
+                {[1,2,3,4,5,6,7].map(stepNum => (
+                    <div key={stepNum} className={styles.stepSection}>
+                        <h4>Step {stepNum}</h4>
 
-            {[1,2,3,4,5,6,7].map(stepNum => (
-                <div key={stepNum} className={styles.stepSection}>
-                    
-                    <h4>Step {stepNum}</h4>
+                        <div className={styles.cardRow}>
+                            {grouped[stepNum]?.map(item => (
+                                <AiOptionCard
+                                    key={item.component_id}
+                                    item={item}
+                                    onClick={() =>
+                                        navigate(`/admin/aiOption/${item.component_id}`)
+                                    }
+                                />
+                            ))}
 
-                    <div className={styles.cardRow}>
-                        {grouped[stepNum]?.map(item => (
-                            <AiOptionCard
-                                key={item.component_id}
-                                item={item}
-                                onClick={() => navigate(`/admin/aiOption/${item.component_id}`)}
-                            />
-                        ))}
-
-                        {/* + Add button */}
-                        <div
-                            className={styles.addCard}
-                            onClick={() => console.log("Add step", stepNum)}
-                        >
-                            + Add
+                            <div
+                                className={styles.addCard}
+                                onClick={() => {
+                                    console.log("CLICK ADD STEP:", stepNum);
+                                    setSelectedStep(stepNum);
+                                    setIsCreating(true);
+                                }}
+                            >
+                                + Add
+                            </div>
                         </div>
                     </div>
+                ))}
+                </>
+            ): (
+                <>
+                    <h2>New Option</h2>
+                    <AiOptionForm
+                        initialData={{ step: selectedStep }}
+                        onCancel={() => setIsCreating(false)}
+                        onSubmit={async (data) => {
+                            await addAiComponent(data);
 
-                </div>
-            ))}
+                            setIsCreating(false);
+
+                            const refreshed = await fetchAiComponents();
+                            setItems(refreshed);
+                        }}
+                    />
+                </>
+            )
+            }
+            
         </div>
     </div>
 );

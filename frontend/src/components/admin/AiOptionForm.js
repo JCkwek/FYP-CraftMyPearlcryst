@@ -7,13 +7,29 @@ import {fetchAiOptionRequirements} from '../../api/aiCustomApi';
 function AiOptionForm({ initialData, onSubmit,onCancel }){
     const [requirements, setRequirements] = useState([]);
     const [isNewRequirement, setIsNewRequirement] = useState(false);
-    const [formData, setFormData] = useState({
-        name: initialData?.name || '',
-        step: initialData?.step || 1,
-        requirement: initialData?.requirement || '',
-        prompt_fragment: initialData?.prompt_fragment || '',
-        image_preview: initialData?.image_preview || ''
-    });
+    const isEditMode = !!initialData?.component_id;
+    const emptyForm = {
+        name: '',
+        step: 1,
+        category: '',
+        requirement: '',
+        prompt_fragment: '',
+        image_preview: ''
+    };
+
+    const [formData, setFormData] = useState(emptyForm);
+
+    useEffect(() => {
+    if (initialData) {
+            setFormData(prev => ({
+                ...emptyForm,
+                ...initialData
+            }));
+        } else {
+            setFormData(emptyForm);
+        }
+    }, [initialData]);
+
     useEffect(() => {
         const loadRequirements = async () => {
             try {
@@ -35,16 +51,20 @@ function AiOptionForm({ initialData, onSubmit,onCancel }){
             [name]: value
         }));
     };
+
+  
     return(
        <div className={styles.aiOptionDetails}>
             <div className={styles.aiOptionDetailsContentContainer}>
                 <div className={styles.aiOptionCard}>
                     <div className={styles.formInput}>
+                        <label>Label</label>
                         <input
                             type="text"
                             name="name"
                             value={formData.name}
                             onChange={handleChange}
+                            placeholder='e.g. color,material'
                         />
                     </div>
 
@@ -72,6 +92,28 @@ function AiOptionForm({ initialData, onSubmit,onCancel }){
                                 ))}
                             </select>
                         </div>
+                        <div className={styles.formInput}>
+                        <label>Category</label>
+                        <select
+                            name="category"
+                            value={formData.category}
+                            onChange={handleChange}
+                        >
+                            <option value="">-- Select Category --</option>
+
+                            {[
+                                'base_type',
+                                'pendant',
+                                'material',
+                                'variant',
+                                'style'
+                            ].map(cat => (
+                                <option key={cat} value={cat}>
+                                    {cat}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
                         <div className={styles.formInput}>
                             <label>Requirement</label>
                                 {!isNewRequirement ? (
@@ -104,8 +146,13 @@ function AiOptionForm({ initialData, onSubmit,onCancel }){
                                     type="button"
                                     className={`${buttonStyles.button} ${buttonStyles.main}`}
                                     onClick={() => {
-                                        setIsNewRequirement(prev => !prev);
-                                        setFormData(prev => ({ ...prev, requirement: '' }));
+                                        setIsNewRequirement(prev => {
+                                            const next = !prev;
+                                            if (next) {
+                                                setFormData(prev => ({ ...prev, requirement: '' }));
+                                            }
+                                            return next;
+                                        });
                                     }}
                                 >
                                     {isNewRequirement ? 'Choose Existing' : 'Add New Requirement'}
@@ -137,7 +184,7 @@ function AiOptionForm({ initialData, onSubmit,onCancel }){
                         >
                             Discard
                         </button>
-                        <button className={`${buttonStyles.button} ${buttonStyles.green}`} onClick={() => onSubmit(formData)}>Save</button>
+                        <button className={`${buttonStyles.button} ${buttonStyles.green}`} onClick={() => onSubmit(formData, isEditMode)}>Save</button>
                     </div>
                 </div>
             </div>
