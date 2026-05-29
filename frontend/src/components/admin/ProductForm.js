@@ -7,6 +7,11 @@ function ProductForm({
     formData,
     handleChange,
     handleSubmit,
+
+    addCustomization,
+    removeCustomization,
+    handleCustomizationChange,
+    
     loading,
     submitText,
     cancelText,
@@ -156,9 +161,185 @@ function ProductForm({
                             Customizations
                         </label>
                     </div>
-
-                    {/* option type */}
                     {formData.is_customisable && (
+                        <div className={styles.customizationContainer}>
+                            <button
+                                type="button"
+                                className={`${buttonStyles.button} ${buttonStyles.main}`}
+                                onClick={addCustomization}
+                            >
+                                Add Customization
+                            </button>
+
+                            {(formData.customizations || []).length === 0 &&  (
+                                <p>No customizations added yet.</p>
+                            )}
+
+                            {(formData.customizations || []).map((custom, index) => {
+                                const selectedOptions =
+                                    formData.customizations.map(
+                                        c => c.option_name
+                                    );
+                                const availableOptions =
+                                    ['Size', 'Color']
+                                        .filter(
+                                            opt =>
+                                                !selectedOptions.includes(opt)
+                                                || opt === custom.option_name
+                                        );
+                                return (
+                                    <div key={index} className={styles.customizationCard}>
+                                        <h5>Customization Option</h5>
+                                        {/* CATEGORY */}
+                                        <div className={styles.formInput} >
+                                            <label>Category</label>
+                                            <select
+                                                value={custom.option_name}
+                                                onChange={(e) =>
+                                                    handleCustomizationChange(
+                                                        index,
+                                                        'option_name',
+                                                        e.target.value
+                                                    )
+                                                }
+                                            >
+                                                {availableOptions.map(opt => (
+                                                    <option
+                                                        key={opt}
+                                                        value={opt}
+                                                    >
+                                                        {opt}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        {/* TYPE */}
+                                        <div className={styles.formInput}>
+                                            <label>Type</label>
+                                            <select
+                                                value={custom.option_type}
+                                                onChange={(e) =>
+                                                    handleCustomizationChange(
+                                                        index,
+                                                        'option_type',
+                                                        e.target.value
+                                                    )
+                                                }
+                                            >
+                                                <option value="list">Fixed List</option>
+                                                {custom.option_name === 'Size' && (
+                                                    <option value="range">
+                                                        Adjustable Range
+                                                    </option>
+                                                )}
+                                            </select>
+                                        </div>
+
+                                        {/* LIST TYPE */}
+                                        {custom.option_type === 'list' && (
+                                            <div className={styles.formInput}>
+                                                <label>{custom.option_name} Values</label>
+                                                <input
+                                                    type="text"
+                                                    value={custom.values}
+                                                    onChange={(e) =>
+                                                        handleCustomizationChange(
+                                                            index,
+                                                            'values',
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    placeholder={
+                                                        custom.option_name === 'Color'
+                                                            ? 'Gold, Silver, Rose Gold'
+                                                            : '5, 6, 7'
+                                                    }
+                                                />
+
+                                            </div>
+                                        )}
+
+                                        {/* RANGE TYPE */}
+                                        {custom.option_type === 'range' && (
+                                            <>
+                                                <div className={styles.formInput}>
+                                                    <label>Default Value</label>
+                                                    <input
+                                                        type="number"
+                                                        value={custom.default_value}
+                                                        onChange={(e) =>
+                                                            handleCustomizationChange(
+                                                                index,
+                                                                'default_value',
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                    />
+                                                </div>
+
+                                                <div className={styles.formInput}>
+                                                    <label>Minimum</label>
+                                                    <input
+                                                        type="number"
+                                                        value={custom.range_min}
+                                                        onChange={(e) =>
+                                                            handleCustomizationChange(
+                                                                index,
+                                                                'range_min',
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                    />
+                                                </div>
+
+                                                <div className={styles.formInput}>
+                                                    <label>Maximum</label>
+                                                    <input
+                                                        type="number"
+                                                        value={custom.range_max}
+                                                        onChange={(e) =>
+                                                            handleCustomizationChange(
+                                                                index,
+                                                                'range_max',
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                    />
+                                                </div>
+
+                                                <div className={styles.formInput}>
+                                                    <label>Step </label>
+                                                    <input
+                                                        type="number"
+                                                        value={custom.range_step}
+                                                        onChange={(e) =>
+                                                            handleCustomizationChange(
+                                                                index,
+                                                                'range_step',
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                    />
+                                                </div>
+                                            </>
+                                        )}
+
+                                        <button
+                                            type="button"
+                                            className={`${buttonStyles.button} ${buttonStyles.cancel}`}
+                                            onClick={() =>
+                                                removeCustomization(index)
+                                            }
+                                        >
+                                            Remove
+                                        </button>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+
+                    {/* {formData.is_customisable && (
                         <div className={styles.formInput}>
                             <label htmlFor="option_type">Customization Type</label>
                             <select
@@ -178,7 +359,7 @@ function ProductForm({
                         </div>
                     )}
 
-                    {/* list type */}
+                
                     {formData.is_customisable &&
                         formData.option_type === 'list' && (
                             <div className={styles.formInput}>
@@ -194,7 +375,7 @@ function ProductForm({
                             </div>
                     )}
 
-                    {/* range type */}
+                 
                     {formData.is_customisable &&
                         formData.option_type === 'range' && (
                             <>
@@ -239,7 +420,7 @@ function ProductForm({
                                 </div>
                             </>
                         )
-                    }
+                    } */}
 
                     {children}
                 </div>

@@ -31,6 +31,7 @@ function EditProducts(){
         is_customisable: existingProduct ? existingProduct.is_customisable : false,
         // sizeInput: '' 
         // default_size: existingProduct?.product_size || '',
+        customizations: [],
         option_type: 'list',
 
         // LIST TYPE
@@ -43,8 +44,83 @@ function EditProducts(){
         default_value: ''
     });
 
+     const addCustomization = () => {
+        const selectedOptions = formData.customizations.map(
+            c => c.option_name
+        );
+
+        const availableOptions = ['Size', 'Color']
+            .filter(opt => !selectedOptions.includes(opt));
+
+        if (availableOptions.length === 0) {
+            return;
+        }
+
+        const newCustomization = {
+            option_name: availableOptions[0],
+            option_type: 'list',
+            values: '',
+            range_min: '',
+            range_max: '',
+            range_step: 1,
+            default_value: ''
+        };
+
+        setFormData(prev => ({
+            ...prev,
+            customizations: [
+                ...prev.customizations,
+                newCustomization
+            ]
+        }));
+    };
+
+    const removeCustomization = (index) => {
+        setFormData(prev => ({
+            ...prev,
+            customizations: prev.customizations.filter(
+                (_, i) => i !== index
+            )
+        }));
+    };
+
+    const handleCustomizationChange = (
+        index,
+        field,
+        value
+    ) => {
+        const updated = [...formData.customizations];
+        updated[index][field] = value;
+        setFormData(prev => ({
+            ...prev,
+            customizations: updated
+        }));
+    };
+
+
     useEffect(() => {
         if (!existingProduct || !existingProduct.options) return;
+        
+        const mapped = existingProduct.options.map(opt => {
+            return {
+                option_name: opt.option_name,
+                option_type: opt.option_type,
+                default_value: opt.default_value || '',
+                range_min: opt.range_min || '',
+                range_max: opt.range_max || '',
+                range_step: opt.range_step || 1,
+                values:
+                    opt.option_type === 'list'
+                        ? (opt.values || []).map(v => v.visual_value).join(', ')
+                        : ''
+            };
+        });
+
+        setFormData(prev => ({
+            ...prev,
+            customizations: mapped
+        }));
+
         const sizeOption = existingProduct.options.find(opt => 
             opt.option_name.toLowerCase().includes('size') || 
             opt.option_name.toLowerCase().includes('length')
@@ -92,12 +168,13 @@ function EditProducts(){
             setFormData(prev => ({
                 ...prev,
                 is_customisable: false,
-                option_type: 'list',
-                sizeInput: '',
-                range_min: '',
-                range_max: '',
-                range_step: 1,
-                default_value: ''
+                // option_type: 'list',
+                // sizeInput: '',
+                // range_min: '',
+                // range_max: '',
+                // range_step: 1,
+                // default_value: ''
+                customizations: []
             }));
             return;
         }
@@ -130,25 +207,51 @@ function EditProducts(){
             dataPayload.append('product_name', formData.product_name);
             dataPayload.append('product_price', formData.product_price);
             dataPayload.append('product_type', formData.product_type);
-            dataPayload.append('product_availability', formData.product_availability);
-            dataPayload.append('is_customisable', formData.is_customisable);
-            dataPayload.append('option_type', formData.option_type);
-
-            if (formData.option_type === 'list') {
-                dataPayload.append('sizeInput', formData.sizeInput);
-                dataPayload.append('default_value', formData.default_value);
-            }
-            if (formData.option_type === 'range') {
-                dataPayload.append('range_min', formData.range_min);
-                dataPayload.append('range_max', formData.range_max);
-                dataPayload.append('range_step', formData.range_step);
-                dataPayload.append('default_value', formData.default_value);
-            }
             if (formData.product_desc) dataPayload.append('product_desc', formData.product_desc);
             if (formData.product_material) dataPayload.append('product_material', formData.product_material);
             if (formData.product_image) {
                 dataPayload.append('product_image', formData.product_image);
             }
+            dataPayload.append('product_availability', formData.product_availability);
+            dataPayload.append('is_customisable', formData.is_customisable);
+
+            // dataPayload.append('option_type', formData.option_type);
+            // if (formData.option_type === 'list') {
+            //     dataPayload.append('sizeInput', formData.sizeInput);
+            //     dataPayload.append('default_value', formData.default_value);
+            // }
+            // if (formData.option_type === 'range') {
+            //     dataPayload.append('range_min', formData.range_min);
+            //     dataPayload.append('range_max', formData.range_max);
+            //     dataPayload.append('range_step', formData.range_step);
+            //     dataPayload.append('default_value', formData.default_value);
+            // }
+            const customizations = [];
+            // if (formData.is_customisable) {
+            //     if (formData.option_type === 'list') {
+            //         customizations.push({
+            //             option_name: 'Size',
+            //             option_type: 'list',
+            //             values: formData.sizeInput
+            //         });
+            //     }
+
+            //     if (formData.option_type === 'range') {
+            //         customizations.push({
+            //             option_name: 'Size',
+            //             option_type: 'range',
+            //             range_min: formData.range_min,
+            //             range_max: formData.range_max,
+            //             range_step: formData.range_step,
+            //             default_value: formData.default_value
+            //         });
+            //     }
+            // }
+            // dataPayload.append('customizations', JSON.stringify(customizations));
+            dataPayload.append(
+                'customizations',
+                JSON.stringify(formData.customizations)
+            );
 
             await editProduct(existingProduct.product_id, dataPayload);
 
@@ -216,6 +319,9 @@ function EditProducts(){
                     formData={formData} 
                     handleChange={handleChange} 
                     handleSubmit={handleSubmit} 
+                    addCustomization={addCustomization}
+                    removeCustomization={removeCustomization}
+                    handleCustomizationChange={handleCustomizationChange}
                     loading={loading} 
                     submitText="Update Product" 
                     cancelText="Discard" 

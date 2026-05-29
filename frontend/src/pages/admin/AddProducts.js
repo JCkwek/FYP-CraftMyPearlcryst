@@ -24,47 +24,56 @@ function AddProducts(){
         product_type: 'Necklace',
         product_material: '',
         is_customisable: false,
-        option_type: 'list',
 
-        // LIST TYPE
-        sizeInput: '',
-
-        // RANGE TYPE
-        range_min: '',
-        range_max: '',
-        range_step: 1,
-        default_value: ''
+        customizations: []
+        // option_type: 'list',
+        // // LIST TYPE
+        // sizeInput: '',
+        // // RANGE TYPE
+        // range_min: '',
+        // range_max: '',
+        // range_step: 1,
+        // default_value: ''
     });
 
     const handleChange = (e) => {
         const { name, value, type, checked, files } = e.target;
         //reset when switch type
-        if (name === 'option_type') {
-            setFormData(prev => ({
-                ...prev,
-                option_type: value,
-                sizeInput: '',
-                range_min: '',
-                range_max: '',
-                range_step: 1,
-                default_value: ''
-            }));
-            return;
-        }
+        // if (name === 'option_type') {
+        //     setFormData(prev => ({
+        //         ...prev,
+        //         option_type: value,
+        //         sizeInput: '',
+        //         range_min: '',
+        //         range_max: '',
+        //         range_step: 1,
+        //         default_value: ''
+        //     }));
+        //     return;
+        // }
         //reset when toggled off customisable
+        // if (name === 'is_customisable' && !checked) {
+        //     setFormData(prev => ({
+        //         ...prev,
+        //         is_customisable: false,
+        //         option_type: 'list',
+        //         sizeInput: '',
+        //         range_min: '',
+        //         range_max: '',
+        //         range_step: 1,
+        //         default_value: ''
+        //     }));
+        //     return;
+        // }
         if (name === 'is_customisable' && !checked) {
             setFormData(prev => ({
                 ...prev,
                 is_customisable: false,
-                option_type: 'list',
-                sizeInput: '',
-                range_min: '',
-                range_max: '',
-                range_step: 1,
-                default_value: ''
+                customizations: []
             }));
             return;
         }
+
         if (type === 'file') {
             console.log("FILE SELECTED:", files);
             setFormData(prev => ({
@@ -77,6 +86,58 @@ function AddProducts(){
                 [name]: type === 'checkbox' ? checked : value
             }));
         }
+    };
+    const addCustomization = () => {
+        const selectedOptions = formData.customizations.map(
+            c => c.option_name
+        );
+
+        const availableOptions = ['Size', 'Color']
+            .filter(opt => !selectedOptions.includes(opt));
+
+        if (availableOptions.length === 0) {
+            return;
+        }
+
+        const newCustomization = {
+            option_name: availableOptions[0],
+            option_type: 'list',
+            values: '',
+            range_min: '',
+            range_max: '',
+            range_step: 1,
+            default_value: ''
+        };
+
+        setFormData(prev => ({
+            ...prev,
+            customizations: [
+                ...prev.customizations,
+                newCustomization
+            ]
+        }));
+    };
+
+    const removeCustomization = (index) => {
+        setFormData(prev => ({
+            ...prev,
+            customizations: prev.customizations.filter(
+                (_, i) => i !== index
+            )
+        }));
+    };
+
+    const handleCustomizationChange = (
+        index,
+        field,
+        value
+    ) => {
+        const updated = [...formData.customizations];
+        updated[index][field] = value;
+        setFormData(prev => ({
+            ...prev,
+            customizations: updated
+        }));
     };
 
     const handleSubmit = async (e) => {
@@ -100,22 +161,27 @@ function AddProducts(){
             if (formData.product_image) {
                 dataPayload.append('product_image', formData.product_image);
             }
-            dataPayload.append('option_type', formData.option_type);
+            // dataPayload.append('option_type', formData.option_type);
 
-            if (formData.is_customisable && formData.option_type === 'list') {
-                dataPayload.append('sizeInput', formData.sizeInput);
-                dataPayload.append('default_value', formData.default_value);
-            }
+            // if (formData.is_customisable && formData.option_type === 'list') {
+            //     dataPayload.append('sizeInput', formData.sizeInput);
+            //     dataPayload.append('default_value', formData.default_value);
+            // }
 
-            if (formData.is_customisable && formData.option_type === 'range') {
-                dataPayload.append('range_min', formData.range_min);
-                dataPayload.append('range_max', formData.range_max);
-                dataPayload.append('range_step', formData.range_step);
-                dataPayload.append('default_value', formData.default_value);
+            // if (formData.is_customisable && formData.option_type === 'range') {
+            //     dataPayload.append('range_min', formData.range_min);
+            //     dataPayload.append('range_max', formData.range_max);
+            //     dataPayload.append('range_step', formData.range_step);
+            //     dataPayload.append('default_value', formData.default_value);
+            // }
+            if (formData.is_customisable) {
+
+                dataPayload.append(
+                    'customizations',
+                    JSON.stringify(formData.customizations)
+                );
             }
-            console.log("ABOUT TO CALL API");
             await addProduct(dataPayload);
-            console.log("API CALL DONE");
             setSuccessMessage(`"${formData.product_name}" successfully added to the database catalog!`);
             
             // reset input
@@ -128,12 +194,13 @@ function AddProducts(){
                 product_type: 'Necklace',
                 product_material: '',
                 is_customisable: false,
-                option_type: 'list',
-                sizeInput: '',
-                range_min: '',
-                range_max: '',
-                range_step: 1,
-                default_value: ''
+                // option_type: 'list',
+                // sizeInput: '',
+                // range_min: '',
+                // range_max: '',
+                // range_step: 1,
+                // default_value: '',
+                customizations: []
             });
             const fileInput = document.getElementById('product_image');
             if (fileInput) fileInput.value = '';
@@ -164,6 +231,9 @@ function AddProducts(){
                         formData={formData} 
                         handleChange={handleChange} 
                         handleSubmit={handleSubmit} 
+                        addCustomization={addCustomization}
+                        removeCustomization={removeCustomization}
+                        handleCustomizationChange={handleCustomizationChange}
                         loading={loading} 
                         submitText="Add Product" 
                         cancelText="Discard"

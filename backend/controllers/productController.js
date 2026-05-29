@@ -47,7 +47,6 @@ try {
         if (req.file) {
             imagePath = `/uploads/${req.file.filename}`;
         }
-
         // extract standard parameters and format FormData strings back to original types
         const {
             product_name,
@@ -57,8 +56,18 @@ try {
             product_type,
             product_material,
             is_customisable,
-            product_size
+            // product_size
+            customizations
         } = req.body;
+
+        let parsedCustomizations = [];
+        if (customizations) {
+            try {
+                parsedCustomizations = JSON.parse(customizations);
+            } catch (err) {
+                parsedCustomizations = [];
+            }
+        }
 
         // normalize data types explicitly
         const productPayload = {
@@ -71,12 +80,13 @@ try {
             product_material: product_material || null,
             is_customisable: is_customisable === 'true',
 
-            option_type: req.body.option_type,
-            sizeInput: req.body.sizeInput,   // 🔥 IMPORTANT FIX
-            range_min: req.body.range_min,
-            range_max: req.body.range_max,
-            range_step: req.body.range_step,
-            default_value: req.body.default_value
+            // option_type: req.body.option_type,
+            // sizeInput: req.body.sizeInput,   
+            // range_min: req.body.range_min,
+            // range_max: req.body.range_max,
+            // range_step: req.body.range_step,
+            // default_value: req.body.default_value
+            customizations: parsedCustomizations
         };
         
         const newProduct = await productService.createProduct(productPayload);
@@ -94,9 +104,29 @@ try {
 const updateProduct = async (req, res) => {
     try {
         const { id } = req.params;
-    
+
+        let parsedCustomizations = [];
+        if (req.body.customizations) {
+            try {
+                parsedCustomizations = JSON.parse(req.body.customizations);
+            } catch (err) {
+                parsedCustomizations = [];
+            }
+        }
+
+        // const productData = {
+        //     ...req.body,
+        //     ...(req.file && {
+        //         product_image: `/uploads/${req.file.filename}`
+        //     }),
+        //     is_customisable: req.body.is_customisable === 'true',
+        //     product_availability: req.body.product_availability === 'true',
+        //     customizations: parsedCustomizations
+        // };
+
         const productData = {
             ...req.body,
+            customizations: parsedCustomizations,
             ...(req.file && {
                 product_image: `/uploads/${req.file.filename}`
             }),
