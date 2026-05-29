@@ -82,9 +82,7 @@ return (
                         onCancel={() => setIsCreating(false)}
                         onSubmit={async (data) => {
                             await addAiComponent(data);
-
                             setIsCreating(false);
-
                             const refreshed = await fetchAiComponents();
                             setItems(refreshed);
                         }}

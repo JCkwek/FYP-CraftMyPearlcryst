@@ -65,12 +65,18 @@ try {
             product_name,
             product_price: parseFloat(product_price),
             product_desc: product_desc || null,
-            product_image: imagePath, // Use the path string collected from Multer
-            product_availability: product_availability === 'true', // Convert FormData text string to Boolean
+            product_image: imagePath,
+            product_availability: product_availability === 'true',
             product_type,
             product_material: product_material || null,
-            is_customisable: is_customisable === 'true', // Convert FormData text string to Boolean
-            product_size: product_size ? JSON.parse(product_size) : null // Parse array string back to array object
+            is_customisable: is_customisable === 'true',
+
+            option_type: req.body.option_type,
+            sizeInput: req.body.sizeInput,   // 🔥 IMPORTANT FIX
+            range_min: req.body.range_min,
+            range_max: req.body.range_max,
+            range_step: req.body.range_step,
+            default_value: req.body.default_value
         };
         
         const newProduct = await productService.createProduct(productPayload);

@@ -48,7 +48,6 @@ const buildPromptFromSelections = async (selectionIds, length =null) => {
 
     const lengthContext = length ? `${length} inch length` : '';
     const materialMapping = ['Pearl', 'Crystal', 'Stone', 'Beaded'];
-    // const colorEmphasis = colorFragment ? `featuring vibrant ${colorFragment} tones` : "";
     let pieceDescription = "";
     if (materialMapping.includes(mainMaterial)) {
         pieceDescription = `made of matching ${colorValue} ${mainMaterial}s, where every single bead is a consistent ${colorValue} hue`;
@@ -93,7 +92,6 @@ const generateJewelryImage = async ({
         selectionIds,
         length
     );
-
     console.log("Generated Prompt:", prompt);
 
     const client = new InferenceClient(

@@ -146,7 +146,6 @@ const createProduct = async (productData) => {
         product_type,
         product_material,
         is_customisable,
-        // product_size
         option_type,
         sizeInput,
         range_min,
@@ -155,56 +154,56 @@ const createProduct = async (productData) => {
         default_value
     } = productData;
 
-    const newProduct = await Product.create({
-        product_name,
-        product_price,
-        product_desc,
-        product_image,
-        product_availability,
-        product_type,
-        product_material,
-        is_customisable,
-        // product_size // Sequelize automatically strings and parse DataTypes.JSON column
-        option_type,
-        sizeInput,
-        range_min,
-        range_max,
-        range_step,
-        default_value
-    });
-    if (is_customisable) {
+    const isCustomisable =
+        is_customisable === 'true' || is_customisable === true;
 
-        const option = await CustomizationOption.create({
-            product_id: newProduct.product_id,
-            option_name: "Size/Length",
-            option_type,
-            is_active: 1,
-            default_value: default_value || null,
-            range_min: option_type === "range" ? range_min : null,
-            range_max: option_type === "range" ? range_max : null,
-            range_step: option_type === "range" ? range_step : null
-        });
+    return await sequelize.transaction(async (t) => {
 
-        // LIST TYPE
-        if (option_type === "list" && sizeInput?.trim()) {
-            const values = sizeInput
-                .split(",")
-                .map(v => v.trim())
-                .filter(Boolean);
+        const newProduct = await Product.create({
+            product_name,
+            product_price,
+            product_desc,
+            product_image,
+            product_availability:
+            product_availability === 'true' || product_availability === true,
+            product_type,
+            product_material,
+            is_customisable: isCustomisable,
+        }, { transaction: t });
 
-            await Promise.all(
-                values.map(v =>
-                    OptionValue.create({
-                        option_id: option.option_id,
-                        value_label: v,
-                        visual_value: v,
-                        is_active: 1
-                    })
-                )
-            );
+        if (isCustomisable) {
+
+            const option = await CustomizationOption.create({
+                product_id: newProduct.product_id,
+                option_name: "Size",
+                option_type,
+                is_active: 1,
+                default_value: default_value || null,
+                range_min: option_type === "range" ? range_min : null,
+                range_max: option_type === "range" ? range_max : null,
+                range_step: option_type === "range" ? range_step : null
+            }, { transaction: t });
+
+            if (option_type === "list" && sizeInput?.trim()) {
+                const values = sizeInput
+                    .split(",")
+                    .map(v => v.trim())
+                    .filter(Boolean);
+
+                await Promise.all(
+                    values.map(v =>
+                        OptionValue.create({
+                            option_id: option.option_id,
+                            value_label: v,
+                            visual_value: v,
+                            is_active: 1
+                        }, { transaction: t })
+                    )
+                );
+            }
         }
-    }
-    return newProduct;
+        return newProduct;
+    });
 };
 
 const updateProduct = async (id, productData) => {
