@@ -4,8 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate,useLocation } from 'react-router-dom';
 import AlertBanner from '../../components/AlertBanner';
 import {editProduct, deleteProduct} from '../../api/productApi';
-// import { FaCamera } from 'react-icons/fa';
-// import ProductImage from '../../components/productDetail/ProductImage';
 import Swal from 'sweetalert2';
 import ProductForm from '../../components/admin/ProductForm';
 
@@ -29,8 +27,6 @@ function EditProducts(){
         product_type: existingProduct?.product_type || 'Necklace',
         product_material: existingProduct?.product_material || '',
         is_customisable: existingProduct ? existingProduct.is_customisable : false,
-        // sizeInput: '' 
-        // default_size: existingProduct?.product_size || '',
         customizations: [],
         option_type: 'list',
 
@@ -168,12 +164,6 @@ function EditProducts(){
             setFormData(prev => ({
                 ...prev,
                 is_customisable: false,
-                // option_type: 'list',
-                // sizeInput: '',
-                // range_min: '',
-                // range_max: '',
-                // range_step: 1,
-                // default_value: ''
                 customizations: []
             }));
             return;
@@ -214,40 +204,7 @@ function EditProducts(){
             }
             dataPayload.append('product_availability', formData.product_availability);
             dataPayload.append('is_customisable', formData.is_customisable);
-
-            // dataPayload.append('option_type', formData.option_type);
-            // if (formData.option_type === 'list') {
-            //     dataPayload.append('sizeInput', formData.sizeInput);
-            //     dataPayload.append('default_value', formData.default_value);
-            // }
-            // if (formData.option_type === 'range') {
-            //     dataPayload.append('range_min', formData.range_min);
-            //     dataPayload.append('range_max', formData.range_max);
-            //     dataPayload.append('range_step', formData.range_step);
-            //     dataPayload.append('default_value', formData.default_value);
-            // }
-            const customizations = [];
-            // if (formData.is_customisable) {
-            //     if (formData.option_type === 'list') {
-            //         customizations.push({
-            //             option_name: 'Size',
-            //             option_type: 'list',
-            //             values: formData.sizeInput
-            //         });
-            //     }
-
-            //     if (formData.option_type === 'range') {
-            //         customizations.push({
-            //             option_name: 'Size',
-            //             option_type: 'range',
-            //             range_min: formData.range_min,
-            //             range_max: formData.range_max,
-            //             range_step: formData.range_step,
-            //             default_value: formData.default_value
-            //         });
-            //     }
-            // }
-            // dataPayload.append('customizations', JSON.stringify(customizations));
+        
             dataPayload.append(
                 'customizations',
                 JSON.stringify(formData.customizations)

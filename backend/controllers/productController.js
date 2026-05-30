@@ -79,13 +79,6 @@ try {
             product_type,
             product_material: product_material || null,
             is_customisable: is_customisable === 'true',
-
-            // option_type: req.body.option_type,
-            // sizeInput: req.body.sizeInput,   
-            // range_min: req.body.range_min,
-            // range_max: req.body.range_max,
-            // range_step: req.body.range_step,
-            // default_value: req.body.default_value
             customizations: parsedCustomizations
         };
         
@@ -113,17 +106,6 @@ const updateProduct = async (req, res) => {
                 parsedCustomizations = [];
             }
         }
-
-        // const productData = {
-        //     ...req.body,
-        //     ...(req.file && {
-        //         product_image: `/uploads/${req.file.filename}`
-        //     }),
-        //     is_customisable: req.body.is_customisable === 'true',
-        //     product_availability: req.body.product_availability === 'true',
-        //     customizations: parsedCustomizations
-        // };
-
         const productData = {
             ...req.body,
             customizations: parsedCustomizations,

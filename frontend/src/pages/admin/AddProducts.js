@@ -1,12 +1,9 @@
 import styles from './AddProducts.module.css';
-// import buttonStyles from '../../components/buttons/ButtonTheme.module.css';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BackButton from '../../components/buttons/BackButton';
 import AlertBanner from '../../components/AlertBanner';
 import {addProduct} from '../../api/productApi';
-// import { FaCamera } from 'react-icons/fa';
-// import ProductImage from '../../components/productDetail/ProductImage';
 import ProductForm from '../../components/admin/ProductForm';
 
 
@@ -24,47 +21,12 @@ function AddProducts(){
         product_type: 'Necklace',
         product_material: '',
         is_customisable: false,
-
         customizations: []
-        // option_type: 'list',
-        // // LIST TYPE
-        // sizeInput: '',
-        // // RANGE TYPE
-        // range_min: '',
-        // range_max: '',
-        // range_step: 1,
-        // default_value: ''
     });
 
     const handleChange = (e) => {
         const { name, value, type, checked, files } = e.target;
-        //reset when switch type
-        // if (name === 'option_type') {
-        //     setFormData(prev => ({
-        //         ...prev,
-        //         option_type: value,
-        //         sizeInput: '',
-        //         range_min: '',
-        //         range_max: '',
-        //         range_step: 1,
-        //         default_value: ''
-        //     }));
-        //     return;
-        // }
-        //reset when toggled off customisable
-        // if (name === 'is_customisable' && !checked) {
-        //     setFormData(prev => ({
-        //         ...prev,
-        //         is_customisable: false,
-        //         option_type: 'list',
-        //         sizeInput: '',
-        //         range_min: '',
-        //         range_max: '',
-        //         range_step: 1,
-        //         default_value: ''
-        //     }));
-        //     return;
-        // }
+
         if (name === 'is_customisable' && !checked) {
             setFormData(prev => ({
                 ...prev,
@@ -161,19 +123,7 @@ function AddProducts(){
             if (formData.product_image) {
                 dataPayload.append('product_image', formData.product_image);
             }
-            // dataPayload.append('option_type', formData.option_type);
-
-            // if (formData.is_customisable && formData.option_type === 'list') {
-            //     dataPayload.append('sizeInput', formData.sizeInput);
-            //     dataPayload.append('default_value', formData.default_value);
-            // }
-
-            // if (formData.is_customisable && formData.option_type === 'range') {
-            //     dataPayload.append('range_min', formData.range_min);
-            //     dataPayload.append('range_max', formData.range_max);
-            //     dataPayload.append('range_step', formData.range_step);
-            //     dataPayload.append('default_value', formData.default_value);
-            // }
+            
             if (formData.is_customisable) {
 
                 dataPayload.append(
@@ -194,12 +144,6 @@ function AddProducts(){
                 product_type: 'Necklace',
                 product_material: '',
                 is_customisable: false,
-                // option_type: 'list',
-                // sizeInput: '',
-                // range_min: '',
-                // range_max: '',
-                // range_step: 1,
-                // default_value: '',
                 customizations: []
             });
             const fileInput = document.getElementById('product_image');
