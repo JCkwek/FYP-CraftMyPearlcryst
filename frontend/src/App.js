@@ -23,6 +23,7 @@ import AddProducts from './pages/admin/AddProducts';
 import EditProducts from './pages/admin/EditProducts';
 import AiCustomManagement from './pages/admin/AiCustomManagement';
 import AiOptionDetails from './pages/admin/AiOptionDetails';
+import OrderManagement from './pages/admin/OrderManagement';
 
 const AdminRouteGuard = () => {
   const token = localStorage.getItem('token');
@@ -104,8 +105,8 @@ function App() {
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/addProducts" element={<AddProducts />} />
             <Route path="/admin/editProducts" element={<EditProducts />} />
-            {/* <Route path="/admin/aiCustomManage" element={<AiCustomManagement />} /> */}
             <Route path="/admin/aiOption/:id" element={<AiOptionDetails />} />
+            <Route path="/admin/orderManagement" element={<OrderManagement />} />
           </Route>
         </Route>
       </Routes>

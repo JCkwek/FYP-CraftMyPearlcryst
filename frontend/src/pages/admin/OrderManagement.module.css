@@ -1,0 +1,81 @@
+.orderManagement{
+    padding: 1rem;
+}
+
+.orderManagementContentContainer{
+    padding: 1rem;
+}
+
+.tabContainer {
+    display: flex;
+    padding: 1rem 0rem;
+}
+
+.tabButton {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    background: #ececec;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.activeTab {
+    background: #D8A7B1;
+    color: white;
+}
+
+.toolbar {
+    display: flex;
+    justify-content: start;
+    gap: 1rem;
+    align-items: center;
+}
+
+.filterSelect{
+    height: 100%;
+    padding: 0.8rem;
+    border: 1px solid #dcdcdc;
+    border-radius: 2rem;
+    cursor: pointer;
+    width: 10%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.filterSelect:hover,
+.filterSelect:focus-within{
+    outline: 1.5px solid #cfcece ;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.statusSelect,
+.inputGroup input,
+.inputGroup textarea,
+.requestSection textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid #dcdcdc;
+    border-radius: 10px;
+}
+
+.ordersContainer{
+    padding: 1rem;
+}
+
+.orderGroup{
+    padding: 0.5rem 1rem 1.5rem 1rem;
+    border-bottom: 2px solid #e0e0e0;
+    width: 100%;
+}
+.orderInfoContainer{
+    padding: 1rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 1rem;
+}
+
+.orderInfo{
+    padding: 0rem 1rem;
+    border-left: 1px solid black;
+}

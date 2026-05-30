@@ -45,11 +45,11 @@ return (
             {!isCreating? (
                 <>
                 <h2>Custom Lab Management</h2>
-                {[1,2,3,4,5,6,7].map(stepNum => (
+                {[1,2,3,4,5,6,7].map((stepNum, index) => (
                     <div key={stepNum} className={styles.stepSection}>
                         <h4>Step {stepNum}</h4>
 
-                        <div className={styles.cardRow}>
+                        <div className={`${styles.cardRow} ${styles.cardEntry}`} style={{ animationDelay: `${index * 0.1}s` }}>
                             {grouped[stepNum]?.map(item => (
                                 <AiOptionCard
                                     key={item.component_id}
@@ -57,6 +57,7 @@ return (
                                     onClick={() =>
                                         navigate(`/admin/aiOption/${item.component_id}`)
                                     }
+                                    
                                 />
                             ))}
 

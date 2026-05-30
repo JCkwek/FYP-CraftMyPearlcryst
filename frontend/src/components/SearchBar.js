@@ -1,6 +1,6 @@
 import styles from './SearchBar.module.css'
 
-function SearchBar({value, onChange, onSearch}){
+function SearchBar({value, onChange, onSearch, placeholder}){
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
         onSearch();
@@ -10,7 +10,7 @@ function SearchBar({value, onChange, onSearch}){
         <div className={styles.searchBarContainer}>
             <input type="text" 
                 className={styles.searchInput}
-                placeholder="Search product"
+                placeholder={placeholder}
                 value={value}
                 onChange={(e)=> onChange(e.target.value)}
                 onKeyDown={handleKeyDown}

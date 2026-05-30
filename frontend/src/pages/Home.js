@@ -4,7 +4,6 @@ import WelcomeSection from '../components/WelcomeSection';
 import SpecialtiesSection from '../components/SpecialtiesSection';
 import LatestProductSection from '../components/LatestProductSection';
 
-
 function Home(){
 return(
       <div className={style.home}>
@@ -14,7 +13,6 @@ return(
           <SpecialtiesSection />
           <LatestProductSection />
         </div>
-   
       </div>
   )
 }

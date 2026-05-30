@@ -11,7 +11,6 @@ function LatestProductSection(){
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
-
     useEffect(() => {
         fetchLatestProducts();
     },[]);
@@ -34,7 +33,7 @@ function LatestProductSection(){
     };
 
     const handleViewMore = () => {
-        navigate('/products'); // redirect to products page
+        navigate('/products');
     };
 
     return(

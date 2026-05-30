@@ -1,6 +1,6 @@
 import styles from './OrderItemCard.module.css'; 
 
-function OrderItemCard({ item , status, customization}) {
+function OrderItemCard({ item , customization}) {
     const product = item.Product;
     const itemPrice = parseFloat(item.price_at_purchase) || 0;
 
@@ -44,28 +44,20 @@ function OrderItemCard({ item , status, customization}) {
                         {customDetails?.size && <span>Size: {customDetails.size}</span>}
                         {customDetails?.color && (
                             <div className={styles.colorRow}>
-                                    Color: <span 
-                                        className={styles.colorCircle} 
-                                        style={{ backgroundColor: customDetails.color }}
-                                    />
-                                </div>
+                                Color: <span 
+                                    className={styles.colorCircle} 
+                                    style={{ backgroundColor: customDetails.color }}
+                                />
+                            </div>
                         )}
                     </div>
                     {/*price*/}
                     <div className={styles.orderItemPriceContainer}>
                         RM {itemPrice.toFixed(2)}
                     </div>
-                    { /* size */}
-                    {/* <div className={styles.orderItemSizeContainer}>
-                        {size ? `size: ${size}` : 'Standard Size'}
-                    </div> */}
                     {/* quantity */}
                     <div className={styles.quantityContainer}>
                         x {item.quantity}
-                    </div>
-                    {/* status */}
-                    <div className={styles.statusContainer}>
-                        {status}
                     </div>
                 </div>
             </div>

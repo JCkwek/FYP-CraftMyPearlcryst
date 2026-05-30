@@ -10,5 +10,7 @@ router.get('/',authMiddleware, orderController.getOrdersByUserId);
 
 //admin
 router.get('/admin/salesData', authMiddleware, adminCheck, orderController.getMonthlySalesData);
+router.get('/admin/allOrders', authMiddleware, adminCheck, orderController.getOrders);
+
 
 module.exports = router;

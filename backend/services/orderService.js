@@ -1,4 +1,5 @@
-const { Order, OrderItem, Product, sequelize } = require('../models');
+const { Order, OrderItem, Product, User, sequelize } = require('../models');
+const {Op, where} = require('sequelize');
 
 const createOrder = async (userId, cartItems, totalAmount, stripeSessionId) => {
     // Start a transaction to ensure both Order and OrderItems are saved together
@@ -75,17 +76,59 @@ const getMonthlySalesData = async () => {
     });
 };
 
-const getAllOrders = async () => {
-    return await Order.findAll({
-        order: [['createdAt', 'DESC']]
-    })
-}
+const getOrders = async ({ query, status, fromDate, toDate }) => {
+    let whereClause = {};
+    // search
+    if (query) {
+        whereClause[Op.or] = [
+            { order_id: { [Op.like]: `%${query}%` } }
+        ];
+    }
+    // status filter
+    if (status) {
+        whereClause.order_status = status;
+    }
+    // date filter
+    if (fromDate && toDate) {
+        whereClause.createdAt = {
+            [Op.between]: [fromDate, toDate]
+        };
+    } else if (fromDate) {
+        whereClause.createdAt = {
+            [Op.gte]: fromDate
+        };
+    } else if (toDate) {
+        whereClause.createdAt = {
+            [Op.lte]: toDate
+        };
+    }
 
+    return await Order.findAll({
+        where: whereClause,
+        include: [
+            {
+                model: OrderItem,
+                as: 'OrderItems',
+                include: [{
+                model: Product,
+                as: 'Product'
+                }]
+            },
+            {
+                model: User, 
+                as: 'User',
+                attributes: ['user_id', 'name', 'email', 'phone_no']
+            }
+        ],
+        order: [['createdAt', 'DESC']]
+    });
+};
 module.exports = {
     createOrder,
     updateOrderStatus,
     getOrdersByUserId,
     getOrderDetails,
-    getMonthlySalesData
+    getMonthlySalesData,
+    getOrders
 };
 

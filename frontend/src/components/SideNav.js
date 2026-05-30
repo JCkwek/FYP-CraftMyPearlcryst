@@ -8,14 +8,25 @@ function SideNav({ user }){
         <div className={styles.sideNav}>
             <div className={styles.sideNavTabContainer}>
                 {isAdmin ? (
-                    <NavLink 
-                        to="/admin/dashboard"
-                        className={({isActive}) =>
-                            isActive ? `${styles.sideNavTab} ${styles.active}` : styles.sideNavTab
-                        }
-                    >
-                        Dashboard
-                    </NavLink>
+                    <>
+                        <NavLink 
+                            to="/admin/dashboard"
+                            className={({isActive}) =>
+                                isActive ? `${styles.sideNavTab} ${styles.active}` : styles.sideNavTab
+                            }
+                        >
+                            Dashboard
+                        </NavLink>
+
+                        <NavLink 
+                            to="/admin/orderManagement"
+                            className={({isActive}) =>
+                                isActive ? `${styles.sideNavTab} ${styles.active}` : styles.sideNavTab
+                            }
+                        >
+                            Orders
+                        </NavLink>
+                    </>
                 ) : (
                     <NavLink 
                         to="/"
@@ -58,17 +69,6 @@ function SideNav({ user }){
                     >Concierge
                 </NavLink>
 
-                {/*Admin only tabs*/}
-                {/* {isAdmin && (
-                    <NavLink 
-                        to="/admin/inventory" 
-                        className={({isActive}) =>
-                            isActive ? `${styles.sideNavTab} ${styles.active}` : styles.sideNavTab
-                        }
-                    >
-                        Manage Components
-                    </NavLink>
-                )} */}
             </div> 
                 
 

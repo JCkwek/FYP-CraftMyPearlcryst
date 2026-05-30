@@ -40,44 +40,6 @@ const getProducts = async ({ query, type, onlyAvailable, limit, latest }) => {
     });
 };
 
-// const getProductById = async (id) => {
-//     const product = await Product.findByPk(id, {
-//         include: [
-//             {
-//                 model: CustomizationOption,
-//                 as: 'options',
-//                 where: { is_active: 1 },
-//                 required: false,
-//                 include: [
-//                     {
-//                         model: OptionValue,
-//                         as: 'values',
-//                         where: { is_active: 1 },
-//                         required: false
-//                     }
-//                 ]
-//             }
-//         ]
-//     });
-
-//     if (!product) return null;
-
-//     const data = product.toJSON();
-
-//     // normalize range
-//     data.options = data.options?.map(opt => {
-//         if (opt.option_type === 'range') {
-//             return {
-//                 ...opt,
-//                 values: [] // clean unused list data
-//             };
-//         }
-//         return opt;
-//     });
-
-//     return data;
-// };
-
 const getProductById = async (id) => {
     const product = await Product.findByPk(id, {
         include: [

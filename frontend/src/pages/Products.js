@@ -10,7 +10,9 @@ import { useOutletContext , useNavigate, useLocation} from 'react-router-dom';
 
 function Products(){
     const [products, setProducts] = useState([]);
+    const [latestProducts, setLatestProducts] = useState([]);
     const [search, setSearch] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
     const [loading, setLoading] = useState(true);
     const [successMessage, setSuccessMessage] = useState(null);
     const navigate = useNavigate();
@@ -45,7 +47,29 @@ function Products(){
         }
     };
 
+    useEffect(() => {
+        fetchLatestProducts();
+    },[]);
+
+    const fetchLatestProducts = async () => {
+        try{
+            setLoading(true);
+            const res = await getProducts({
+                onlyAvailable: true,
+                latest: true,
+                limit: 5
+            });
+            console.log(res);
+            setLatestProducts(res);
+        }catch(err){
+            console.error("Error fetching latest products:", err);
+        }finally{
+            setLoading(false);
+        }
+    };
+
     const handleSearch = async () =>{
+        setSearchQuery(search);
         fetchProducts(search, isAdmin);     
     };
 
@@ -53,45 +77,69 @@ function Products(){
  return (
     <div className={styles.products}>
         <div className={styles.productsContentContainer}>
-        <h1>Products</h1>
+        <h2>Products</h2>
         <div className={styles.contentFirstRow}>
-        <SearchBar 
-            value={search}
-            onChange={setSearch}
-            onSearch={handleSearch}
-        />
-        {successMessage && <AlertBanner message={successMessage} type="success" onClose={() => setSuccessMessage(null)}/>}
-        {isAdmin && (
-            <button 
-                className={`${buttonStyles.button} ${buttonStyles.main}`} 
-                onClick={() => navigate('/admin/addProducts')} 
-            >
-            + New Product
-            </button>
-        )}
-      </div>
-
-      <div className={styles.productList}>
-        <div className={styles.productCardContainer}>
-            {loading ? (
-                <Loading />
-                ) : products.length === 0 ? (
-                    <p>No products found</p>
-                ) : (
-            products.map((product, index) => (
-                <div 
-                    key={product.product_id} 
-                    className={styles.productCardEntry}        
-                    style={{ animationDelay: `${index * 0.1}s` }} /*  inline style creates the 'one-after-another' effect */
+            <SearchBar 
+                value={search}
+                onChange={setSearch}
+                onSearch={handleSearch}
+                placeholder="Search products"
+            />
+            {successMessage && <AlertBanner message={successMessage} type="success" onClose={() => setSuccessMessage(null)}/>}
+            {isAdmin && (
+                <button 
+                    className={`${buttonStyles.button} ${buttonStyles.main}`} 
+                    onClick={() => navigate('/admin/addProducts')} 
                 >
-                    <ProductCard 
-                        key={product.product_id}
-                        product={product}
-                    />
-                </div>
-                ))
+                + New Product
+                </button>
             )}
+        </div>
+        {!searchQuery && 
+        <section className={styles.productList}> 
+            <h4>Latest Creations</h4>
+            <div className={styles.productCardContainer}>
+                {loading ? (
+                    <Loading />
+                ) :  latestProducts.map((latestProducts,index) => (
+                    <div 
+                        key={latestProducts.product_id} 
+                        className={styles.productCardEntry}        
+                        style={{ animationDelay: `${index * 0.1}s` }} /*  inline style creates the 'one-after-another' effect */
+                    >
+                        <ProductCard 
+                            key={latestProducts.product_id}
+                            product={latestProducts}
+                        />
+                    </div>
+                ))   
+                }
             </div>
+        </section>
+        }
+
+        <div className={styles.productList}>
+            <h4>Collections</h4>
+            <div className={styles.productCardContainer}>
+                {loading ? (
+                    <Loading />
+                    ) : products.length === 0 ? (
+                            <p>No products found</p>
+                    ) : (
+                products.map((product, index) => (
+                    <div 
+                        key={product.product_id} 
+                        className={styles.productCardEntry}        
+                        style={{ animationDelay: `${index * 0.1}s` }} /*  inline style creates the 'one-after-another' effect */
+                    >
+                        <ProductCard 
+                            key={product.product_id}
+                            product={product}
+                        />
+                    </div>
+                    ))
+                )}
+                </div>
             </div>
         </div>
     </div>

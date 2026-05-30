@@ -9,9 +9,9 @@ import { getUserOrder } from '../api/orderApi';
 function Orders(){
     const navigate = useNavigate();
     const [orders, setOrders] = useState([]);
-     const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
      
-     const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
     useEffect(() => {
         if (!token) {
@@ -45,16 +45,14 @@ function Orders(){
                         orders.map((order) => (
                             <div key={order.order_id} className={styles.orderGroup}>
                                 <u><h3>Order #{order.order_id}</h3></u>
-                                <h5>Total: RM {order.total_amount}</h5>
-                                <h5>Date:  {new Date(order.createdAt).toLocaleString()}</h5>
-                                {/* <h5>Payment method: </h5> */}
-                                <h5>Order item(s): </h5>
+                                <h6>Total: RM {order.total_amount}</h6>
+                                <h6>Date:  {new Date(order.createdAt).toLocaleString()}</h6>
+                                <h6>Status: {order.order_status}</h6>
+                                <h6>Order item(s): </h6>
                                 {order.OrderItems.map((item) => (
                                     <OrderItemCard 
                                         key={item.id} 
                                         item={item} 
-                                        status={order.order_status}
-                                        // size={item.size}
                                         customization={item.customization}
                                     />
                                 ))   

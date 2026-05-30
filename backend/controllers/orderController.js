@@ -88,6 +88,7 @@ const getOrdersByUserId = async (req,res) => {
     }
 };
 
+//admin
 const getMonthlySalesData = async (req, res) => {
     try {
         const salesData = await orderService.getMonthlySalesData();
@@ -103,4 +104,29 @@ const getMonthlySalesData = async (req, res) => {
     }
 };
 
-module.exports = {checkout, confirmPayment, getOrdersByUserId, getMonthlySalesData };
+const getOrders = async (req, res) => {
+    try {
+        const {
+            query,
+            status,
+            fromDate,
+            toDate
+        } = req.query;
+
+        const orders = await orderService.getOrders({
+            query,
+            status,
+            fromDate,
+            toDate
+        });
+        res.json(orders);
+
+    } catch (error) {
+        console.error("Get Orders Error:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to fetch orders"
+        });
+    }
+};
+module.exports = {checkout, confirmPayment, getOrdersByUserId, getMonthlySalesData, getOrders };
