@@ -95,52 +95,55 @@ function Products(){
                 </button>
             )}
         </div>
-        {!searchQuery && 
-        <section className={styles.productList}> 
-            <h4>Latest Creations</h4>
-            <div className={styles.productCardContainer}>
-                {loading ? (
-                    <Loading />
-                ) :  latestProducts.map((latestProducts,index) => (
-                    <div 
-                        key={latestProducts.product_id} 
-                        className={styles.productCardEntry}        
-                        style={{ animationDelay: `${index * 0.1}s` }} /*  inline style creates the 'one-after-another' effect */
-                    >
-                        <ProductCard 
-                            key={latestProducts.product_id}
-                            product={latestProducts}
-                        />
-                    </div>
-                ))   
-                }
-            </div>
-        </section>
-        }
 
-        <div className={styles.productList}>
-            <h4>Collections</h4>
-            <div className={styles.productCardContainer}>
-                {loading ? (
-                    <Loading />
-                    ) : products.length === 0 ? (
-                            <p>No products found</p>
-                    ) : (
-                products.map((product, index) => (
-                    <div 
-                        key={product.product_id} 
-                        className={styles.productCardEntry}        
-                        style={{ animationDelay: `${index * 0.1}s` }} /*  inline style creates the 'one-after-another' effect */
-                    >
-                        <ProductCard 
-                            key={product.product_id}
-                            product={product}
-                        />
+        {loading ? (
+            <Loading />
+        ) : products.length === 0 ? (
+            <div className={styles.noProductContainer}>No products found</div>
+        ) : (
+            <>
+                {/*Latest Creatiokn*/}
+                {!searchQuery && 
+                    <section className={styles.productList}> 
+                        <h4>Latest Creations</h4>
+                        <div className={styles.productCardContainer}>
+                            {latestProducts.map((latestProducts,index) => (
+                                <div 
+                                    key={latestProducts.product_id} 
+                                    className={styles.productCardEntry}        
+                                    style={{ animationDelay: `${index * 0.1}s` }} /*  inline style creates the 'one-after-another' effect */
+                                >
+                                    <ProductCard 
+                                        key={latestProducts.product_id}
+                                        product={latestProducts}
+                                    />
+                                </div>
+                                ))   
+                            }
+                        </div>
+                    </section>
+                }
+                {/*Collection*/}
+                <section className={styles.productList}>
+                    <h4>Collections</h4>
+                    <div className={styles.productCardContainer}>
+                        {products.map((product, index) => (
+                            <div 
+                                key={product.product_id} 
+                                className={styles.productCardEntry}        
+                                style={{ animationDelay: `${index * 0.1}s` }} /*  inline style creates the 'one-after-another' effect */
+                            >
+                                <ProductCard 
+                                    key={product.product_id}
+                                    product={product}
+                                />
+                            </div>
+                        ))}
                     </div>
-                    ))
-                )}
-                </div>
-            </div>
+                </section>
+            </>
+        )
+        }
         </div>
     </div>
   );

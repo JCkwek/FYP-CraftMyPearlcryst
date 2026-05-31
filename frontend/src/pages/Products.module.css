@@ -12,6 +12,15 @@
     justify-content: space-between;
 }
 
+.noProductContainer{
+    height: 60vh;
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+    align-items: center;
+    text-align: center;
+}
+
 .productList{
     padding: 2rem 0rem;
 }
