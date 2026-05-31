@@ -32,7 +32,11 @@ function ProductCard({product}){
             </div>
             <div className={styles.productCardDetails}>
                 <div className={styles.productCardName}>{product.product_name}</div>
-                <div className={styles.productCardPrice}>RM {product.product_price} {isAdmin && (productAvailability !== "Available") && <b style={{ color: 'red' }}>{productAvailability}</b>}</div>
+                <div className={styles.productCardPriceContainer}>
+                    <div className={styles.productCardPrice}>RM {product.product_price}</div>
+                    {isAdmin && (productAvailability !== "Available") && <div className={styles.productCardPrice}><b style={{ color: 'red' }}>{productAvailability}</b></div>}
+                </div>
+                
             </div>
 
         </div>

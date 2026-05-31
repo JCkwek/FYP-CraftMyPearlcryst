@@ -55,6 +55,12 @@
     -webkit-box-orient: vertical;
 }
 
+.productCardPriceContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
 .productCardPrice{
     font-size:0.8rem;
 }
+
