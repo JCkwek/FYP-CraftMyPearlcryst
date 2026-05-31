@@ -5,10 +5,12 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 const generateRecommendation = async (userPrompt) => {
     const products = await Product.findAll({
-        attributes: ['product_name', 'product_desc', 'product_price', 'product_material']
+      where: {
+        product_availability: 1
+      },
+        attributes: ['product_id','product_name', 'product_desc', 'product_price', 'product_material']
     });
 
-    // const model = genAI.getGenerativeModel({ model: "gemini-3.1-flash-lite-preview"});
     const models = ["gemini-3.1-flash-lite-preview", "gemini-2.5-flash-lite"];
 
     const productContext = `

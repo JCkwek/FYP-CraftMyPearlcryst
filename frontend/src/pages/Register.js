@@ -1,7 +1,7 @@
 import styles from './Register.module.css';
 import buttonStyles from '../components/buttons/ButtonTheme.module.css';
 import BackButton from '../components/buttons/BackButton';
-import { useState, useEffect} from 'react'
+import { useState, useEffect, useRef} from 'react'
 import { useNavigate } from 'react-router-dom'
 import { registerUser } from '../api/userApi';
 import AlertBanner from '../components/AlertBanner';
@@ -16,6 +16,7 @@ function Register(){
     });
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const errorRef = useRef(null);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -23,6 +24,15 @@ function Register(){
             navigate('/account');
         }
     }, [navigate]);
+
+    useEffect(() => {
+        if (error) {
+            errorRef.current?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
+    }, [error]);
 
     const handleChange = (e) =>{
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -51,12 +61,12 @@ function Register(){
 
     return (
         <div className={styles.register}>
-            <BackButton />
-            <div className={styles.registerCard}>
+            <BackButton/>
+            <div className={styles.registerCard} ref={errorRef}>
                 <div className={styles.registerCardHeader}>
                     <h2>Create Account</h2>
                 </div>
-                {error && <AlertBanner message={error} onClose={() => setError(null)}/>}
+                    {error && <AlertBanner message={error} type="error" onClose={() => setError(null)} />}
                 <form onSubmit={handleSubmit} className={styles.registerForm}>
                     <div className={styles.registerFormInput}>
                         <label>Name</label>

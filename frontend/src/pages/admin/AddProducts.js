@@ -1,5 +1,5 @@
 import styles from './AddProducts.module.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect,  useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BackButton from '../../components/buttons/BackButton';
 import AlertBanner from '../../components/AlertBanner';
@@ -9,6 +9,7 @@ import ProductForm from '../../components/admin/ProductForm';
 
 function AddProducts(){
     const navigate = useNavigate();
+    const errorRef = useRef(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
@@ -23,6 +24,15 @@ function AddProducts(){
         is_customisable: false,
         customizations: []
     });
+
+    useEffect(() => {
+        if (error) {
+            errorRef.current?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
+    }, [error]);
 
     const handleChange = (e) => {
         const { name, value, type, checked, files } = e.target;
@@ -49,6 +59,7 @@ function AddProducts(){
             }));
         }
     };
+
     const addCustomization = () => {
         const selectedOptions = formData.customizations.map(
             c => c.option_name
@@ -163,11 +174,11 @@ function AddProducts(){
 
     return(
             <div className={styles.addProducts}>
-                <div className={styles.addProductsTopSection}>
+                <div className={styles.addProductsTopSection} ref={errorRef}>
                         <BackButton/>
                         {successMessage && <AlertBanner message={successMessage} type="success" onClose={() => setSuccessMessage(null)} />}
-                        {error && <AlertBanner message={error} type="error" onClose={() => setError(null)} />}
-                        <span></span><span></span>
+                        {error &&  <AlertBanner message={error} type="error" onClose={() => setError(null)} />}
+                        <span></span>
                 </div>
                 <div className={styles.addProductsContentContainer}>
                     <h2>Add Product</h2>

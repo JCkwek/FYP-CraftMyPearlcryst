@@ -1,6 +1,6 @@
 import styles from './EditProducts.module.css';
 import buttonStyles from '../../components/buttons/ButtonTheme.module.css';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,  useRef } from 'react';
 import { useNavigate,useLocation } from 'react-router-dom';
 import AlertBanner from '../../components/AlertBanner';
 import {editProduct, deleteProduct} from '../../api/productApi';
@@ -10,6 +10,7 @@ import ProductForm from '../../components/admin/ProductForm';
 function EditProducts(){
     const navigate = useNavigate();
     const location = useLocation();
+    const errorRef = useRef(null);
     
     // Detect if a product was passed via router navigation state
     const existingProduct = location.state?.product || null;
@@ -39,6 +40,15 @@ function EditProducts(){
         range_step: 1,
         default_value: ''
     });
+
+    useEffect(() => {
+        if (error) {
+            errorRef.current?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
+    }, [error]);
 
      const addCustomization = () => {
         const selectedOptions = formData.customizations.map(
@@ -266,7 +276,7 @@ function EditProducts(){
 
     return(
         <div className={styles.editProducts}>
-            <div className={styles.editProductsTopSection}>
+            <div className={styles.editProductsTopSection} ref={errorRef}>
                     {successMessage && <AlertBanner message={successMessage} type="success" onClose={() => setSuccessMessage(null)} />}
                     {error && <AlertBanner message={error} type="error" onClose={() => setError(null)} />}
             </div>
