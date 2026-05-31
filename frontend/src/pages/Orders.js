@@ -1,7 +1,7 @@
 import styles from './Orders.module.css';
 import BackButton from '../components/buttons/BackButton';
 import { useEffect, useState } from 'react';
-import OrderItemCard from '../components/OrderItemCard';
+import OrderCard from '../components/OrderCard';
 import { useNavigate } from 'react-router-dom';
 import Loading from "../components/Loading";
 import { getUserOrder } from '../api/orderApi';
@@ -43,22 +43,7 @@ function Orders(){
                         <Loading/>
                     ) : orders.length > 0 ? (
                         orders.map((order) => (
-                            <div key={order.order_id} className={styles.orderGroup}>
-                                <u><h3>Order #{order.order_id}</h3></u>
-                                <h6>Total: RM {order.total_amount}</h6>
-                                <h6>Date:  {new Date(order.createdAt).toLocaleString()}</h6>
-                                <h6>Status: {order.order_status}</h6>
-                                <h6>Order item(s): </h6>
-                                {order.OrderItems.map((item) => (
-                                    <OrderItemCard 
-                                        key={item.id} 
-                                        item={item} 
-                                        customization={item.customization}
-                                    />
-                                ))   
-                                }
-                                
-                            </div>
+                            <OrderCard order={order} key={order.order_id}/>
                         ))
                     ) : (
                         <p>You do not have any orders.</p>

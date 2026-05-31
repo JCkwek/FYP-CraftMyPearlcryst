@@ -106,7 +106,7 @@ function App() {
             <Route path="/admin/addProducts" element={<AddProducts />} />
             <Route path="/admin/editProducts" element={<EditProducts />} />
             <Route path="/admin/aiOption/:id" element={<AiOptionDetails />} />
-            <Route path="/admin/orderManagement" element={<OrderManagement />} />
+            <Route path="/admin/orderManagement" element={<OrderManagement currentUser={currentUser} />} />
           </Route>
         </Route>
       </Routes>

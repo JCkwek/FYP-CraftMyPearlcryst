@@ -37,7 +37,7 @@ function OrderItemCard({ item , customization}) {
                     </div>
                     {/*name*/}
                     <div className={styles.orderItemNameContainer}>
-                        <h4>{product?.product_name || `Product ID: ${item.product_id}`}</h4>
+                        <h5>{product?.product_name || `Product ID: ${item.product_id}`}</h5>
                     </div>
                     {/*custom details*/}
                     <div className={styles.customSpecs}>

@@ -32,7 +32,7 @@ const createOrder = async (userId, cartItems, totalAmount, stripeSessionId) => {
     }
 };
 
-const updateOrderStatus = async (sessionId, status) => {
+const stripeUpdateOrderStatus = async (sessionId, status) => {
     return await Order.update(
         { order_status: status },
         { where: {stripe_session_id: sessionId} }
@@ -123,12 +123,21 @@ const getOrders = async ({ query, status, fromDate, toDate }) => {
         order: [['createdAt', 'DESC']]
     });
 };
+
+const updateOrderStatus = async(orderId, status) => {
+    return await Order.update(
+        { order_status: status },
+        { where: { order_id: orderId } }
+    );
+}
+
 module.exports = {
     createOrder,
-    updateOrderStatus,
+    stripeUpdateOrderStatus,
     getOrdersByUserId,
     getOrderDetails,
     getMonthlySalesData,
-    getOrders
+    getOrders,
+    updateOrderStatus
 };
 

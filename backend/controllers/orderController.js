@@ -67,7 +67,7 @@ const confirmPayment = async (req, res) => {
         const session = await stripe.checkout.sessions.retrieve(session_id);
 
         if(session.payment_status === 'paid'){
-            await orderService.updateOrderStatus(session_id, 'paid');
+            await orderService.stripeUpdateOrderStatus(session_id, 'paid');
             await cartService.clearCart(userId);
             return res.status(200).json({message: "Order placed successfully!"});
         }
@@ -129,4 +129,29 @@ const getOrders = async (req, res) => {
         });
     }
 };
-module.exports = {checkout, confirmPayment, getOrdersByUserId, getMonthlySalesData, getOrders };
+
+const updateOrderStatus = async (req,res) => {
+    try {
+        const { orderId } = req.params;
+        const { status } = req.body;
+
+        if (!orderId || !status) {
+            return res.status(400).json({
+                message: "orderId and status are required"
+            });
+        }
+
+        await orderService.updateOrderStatus(orderId, status);
+
+        return res.status(200).json({
+            message: "Order status updated successfully"
+        });
+
+    } catch (error) {
+        console.error("Update Order Status Error:", error);
+        return res.status(500).json({
+            message: "Failed to update order status"
+        });
+    }
+}
+module.exports = {checkout, confirmPayment, getOrdersByUserId, getMonthlySalesData, getOrders, updateOrderStatus };

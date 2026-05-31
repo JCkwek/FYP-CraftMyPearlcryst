@@ -1,13 +1,13 @@
 import styles from './OrderManagement.module.css';
-// import buttonStyles from '../../components/buttons/ButtonTheme.module.css';
 import { useState, useEffect } from 'react';
 import SearchBar from '../../components/SearchBar';
 import { ORDER_STATUSES } from '../../constants/OrderStatus';
 import Loading from '../../components/Loading';
-import OrderItemCard from '../../components/OrderItemCard';
-import {getOrders} from '../../api/orderApi';
+import OrderCard from '../../components/OrderCard';
+import {getOrders, updateOrderStatus} from '../../api/orderApi';
 
-function OrderManagement(){
+
+function OrderManagement({ currentUser }){
     const [loading, setLoading] = useState(true);
     const [selectedTab, setSelectedTab] = useState('regular');
     const [orders, setOrders] = useState([]);
@@ -24,7 +24,24 @@ function OrderManagement(){
             }
         };
         fetchOrders();
-        }, []);
+    }, []);
+
+    const handleStatusChange = async (orderId, newStatus) => {
+        try {
+            await updateOrderStatus(orderId, newStatus);
+
+            setOrders(prev =>
+                prev.map(order =>
+                    order.order_id === orderId
+                        ? { ...order, order_status: newStatus }
+                        : order
+                )
+            );
+
+        } catch (err) {
+            console.error("Failed to update order status:", err);
+        }
+    };
 
     return(
         <div className={styles.orderManagement}>
@@ -66,34 +83,12 @@ function OrderManagement(){
                         <Loading/>
                     ) : Array.isArray(orders) && orders.length > 0 && selectedTab === 'regular'? (
                         orders.map((order) => (
-                            <div key={order.order_id} className={styles.orderGroup}>
-                                <u><h3>Order #{order.order_id}</h3></u>
-                                <div className={styles.orderInfoContainer} >
-                                    <div className={styles.orderInfo} >                                     
-                                        <h6>Total: RM {order.total_amount}</h6>
-                                        <h6>Date:  {new Date(order.createdAt).toLocaleString()}</h6>
-                                        <h6>Status: {order.order_status}</h6>
-                                    </div>
-                                    <div className={styles.orderInfo} >
-                                        <h6>Customer: {order.User?.name}</h6>
-                                        <h6>Contact: {order.User?.phone_no} / {order.User?.email}</h6>
-                                    </div>
-                                    <div className={styles.orderInfo} >
-                                        <h6>Status: {order.order_status}</h6>
-                                    </div>
-                                </div>
-                                
-                                <h6>Order item(s): </h6>
-                                {order.OrderItems.map((item) => (
-                                    <OrderItemCard 
-                                        key={item.id} 
-                                        item={item} 
-                                        customization={item.customization}
-                                    />
-                                ))   
-                                }
-                                
-                            </div>
+                            <OrderCard 
+                                order={order} 
+                                key={order.order_id} 
+                                currentUser={currentUser} 
+                                onStatusChange={handleStatusChange}
+                            />
                         ))
                     ) : (
                         <p>You do not have any orders.</p>

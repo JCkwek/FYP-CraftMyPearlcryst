@@ -1,56 +1,41 @@
 .orderItemCardContentContainer {
     align-items: center;
-    padding: 0.5rem 3rem;
-    gap: 0.5rem;
+    padding: 0.5rem;
 }
 
 .orderItemDetailsContainer {
     display: flex;
     justify-content: space-between;
+    gap: 0.5rem;
     align-items: center;
-    gap: 1rem;
     padding: 0.5rem;
-    border-radius: 1rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-bottom: 2px solid #e0e0e0;
     overflow: hidden;
 }
-.orderItemDetailsContainer:hover{
-    transform: scale(1.05); 
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); 
-}
 
+.orderItemImageContainer{
+    flex: 1;
+}
 .orderItemImageContainer img {
     width: 80px;
     height: 80px;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 0.5rem;
     background-color: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+.orderItemNameContainer{
+    flex: 4;
 }
 
-.orderItemPriceContainer{
-    padding: 1rem;
-}
-
-.quantityContainer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-}
-
-.statusContainer{
-    padding: 1rem 2rem;
-}
 
 .customSpecs {
+    flex: 2;
     font-size: 0.85rem;
     color: #555;
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    margin-top: 5px;
+    gap: 0.2rem;
 }
 
 .colorRow {
@@ -75,3 +60,19 @@
     text-transform: capitalize;
 }
 
+.orderItemPriceContainer{
+    padding: 1rem;
+    flex: 2;
+}
+
+.quantityContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    flex: 1;
+}
+
+.statusContainer{
+    padding: 1rem 2rem;
+}
