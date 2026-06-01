@@ -1,5 +1,6 @@
 .orderManagement{
     padding: 1rem;
+    user-select: none;
 }
 
 .orderManagementContentContainer{

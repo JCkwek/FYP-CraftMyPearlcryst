@@ -6,7 +6,6 @@ import Loading from '../../components/Loading';
 import OrderCard from '../../components/OrderCard';
 import {getOrders, updateOrderStatus} from '../../api/orderApi';
 
-
 function OrderManagement({ currentUser }){
     const [loading, setLoading] = useState(true);
     const [selectedTab, setSelectedTab] = useState('regular');

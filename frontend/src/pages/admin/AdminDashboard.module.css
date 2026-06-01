@@ -6,22 +6,41 @@
     padding: 1rem;
 }
 
-.chartRow {
+.cardRow {
     display: flex;
     width: 100%;
     margin-bottom: 2rem;
+    gap: 0.5rem;
 }
 
-.chartCard {
-    background-color: #ffffff;
-    border-radius: 12px;
-    padding: 1.5rem;
+.dashboardCard {
+    background-color: white;
+    border-radius: 1rem;
+    padding: 2rem;
     width: 100%;
     border: 1px solid #e2e8f0;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
 }
 
 
-.chartWrapper {
+.cardContentWrapper {
     width: 100%;
-    height: 350px; 
+    height: 20rem; 
+}
+
+.newOrdersCard{
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.newOrdersItemContainer{
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    max-height: 14rem;
+    gap: 0.5rem;
 }

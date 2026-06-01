@@ -1,0 +1,33 @@
+.orderCard{
+    padding: 1rem;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    border-radius: 1rem;
+    border: 1px solid #e2e8f0;
+}
+.orderInfoContainer{
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 1rem;
+}
+
+.orderInfo{
+    padding: 0rem 0.5rem;
+    border-left: 2px solid #e0e0e0;
+}
+
+.cancelled{
+    color: red;
+}
+.paid{
+    color: blue;
+}
+.pending, .in-progress{
+    color: orange;
+}
+.completed{
+    color: green;
+}
