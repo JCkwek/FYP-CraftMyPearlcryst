@@ -8,6 +8,7 @@ function OrderCard({order, currentUser, onStatusChange }){
     const isAdmin = currentUser?.role === 'admin';
     const [selectedStatus, setSelectedStatus] = useState(order.order_status);
     const hasChanges = selectedStatus !== order.order_status;
+    const [updating, setUpdating] = useState(false);
 
     return(
         <div key={order.order_id} className={styles.orderCard}>
@@ -28,42 +29,54 @@ function OrderCard({order, currentUser, onStatusChange }){
                 </div>
 
                 {isAdmin && (
-                    <div className={styles.statusControls}>
-                        <select
-                            className={styles.statusDropDown}
-                            value={selectedStatus}
-                            onChange={(e) => setSelectedStatus(e.target.value)}
+                    !updating ? (
+                        <button 
+                            className={`${buttonStyles.button} ${buttonStyles.main}`}
+                            onClick={() => setUpdating(true)}
                         >
-                            {ORDER_STATUSES.map(status => (
-                                <option key={status} value={status}>
-                                    {status}
-                                </option>
-                            ))}
-                        </select>
-
-                        {hasChanges && (
-                            <div className={styles.statusButtons}>
-                                <button
-                                    className={`${buttonStyles.button} ${buttonStyles.green}`}
-                                    onClick={() =>
-                                        onStatusChange(order.order_id, selectedStatus)
-                                    }
+                            Update Status
+                        </button>
+                        ) : (
+                            <div className={styles.statusControls}>
+                                <select
+                                    className={styles.statusDropDown}
+                                    value={selectedStatus}
+                                    onChange={(e) => setSelectedStatus(e.target.value)}
                                 >
-                                    Save
-                                </button>
+                                    {ORDER_STATUSES.map(status => (
+                                        <option key={status} value={status}>
+                                            {status}
+                                        </option>
+                                    ))}
+                                </select>
 
-                                <button
-                                    className={`${buttonStyles.button} ${buttonStyles.cancel}`}
-                                    onClick={() =>
-                                        setSelectedStatus(order.order_status)
-                                    }
-                                >
-                                    Cancel
-                                </button>
+                                {hasChanges && (
+                                    <div className={styles.statusButtons}>
+                                        <button
+                                            className={`${buttonStyles.button} ${buttonStyles.green}`}
+                                            onClick={() =>{
+                                                onStatusChange(order.order_id, selectedStatus);
+                                                setUpdating(false);
+                                            }}
+                                        >
+                                            Save
+                                        </button>
+
+                                        <button
+                                            className={`${buttonStyles.button} ${buttonStyles.cancel}`}
+                                            onClick={() =>{
+                                                setSelectedStatus(order.order_status);
+                                                setUpdating(false);
+                                            }}
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
+                                )}
                             </div>
-                        )}
-                    </div>
-                )}
+                        ) 
+                    )
+                }
             </div> 
 
             <h6>Order item(s): </h6>

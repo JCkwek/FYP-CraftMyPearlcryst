@@ -34,7 +34,7 @@
     height: 100%;
     padding: 0.8rem;
     border: 1px solid #dcdcdc;
-    border-radius: 2rem;
+    border-radius: 1rem;
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
