@@ -25,7 +25,7 @@ function OrderCard({order, currentUser, onStatusChange }){
                     </div>
                 }
                 <div className={styles.orderInfo} >
-                    <h6>Status: {order.order_status}</h6>
+                    Status: <h6 className={styles[order.order_status]}>{order.order_status}</h6>
                 </div>
 
                 {isAdmin && (
