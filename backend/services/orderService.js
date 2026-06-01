@@ -81,7 +81,12 @@ const getOrders = async ({ query, status, fromDate, toDate }) => {
     // search
     if (query) {
         whereClause[Op.or] = [
-            { order_id: { [Op.like]: `%${query}%` } }
+            { 
+                order_id: { [Op.like]: `%${query}%` } 
+            }, 
+            {
+                '$User.name$': { [Op.like]: `%${query}%` }
+            }
         ];
     }
     // status filter

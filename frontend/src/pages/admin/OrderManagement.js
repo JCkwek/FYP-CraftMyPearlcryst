@@ -11,20 +11,27 @@ function OrderManagement({ currentUser }){
     const [loading, setLoading] = useState(true);
     const [selectedTab, setSelectedTab] = useState('regular');
     const [orders, setOrders] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedStatus, setSelectedStatus] = useState('');
 
-     useEffect(() => {
-        const fetchOrders = async () => {
+    const fetchOrders = async () => {
             try{
-                const orders = await getOrders();
+                setLoading(true);
+                const orders = await getOrders({
+                    query: searchTerm,
+                    status: selectedStatus
+                });
                 setOrders(orders);
             }catch(err){
                 console.error("Error fetching orders:", err);
             } finally {
                 setLoading(false);
             }
-        };
+    };
+
+    useEffect(() => {
         fetchOrders();
-    }, []);
+    }, [selectedStatus]);
 
     const handleStatusChange = async (orderId, newStatus) => {
         try {
@@ -65,9 +72,18 @@ function OrderManagement({ currentUser }){
                 </div>
 
                 <div className={styles.toolbar}>
-                    <SearchBar placeholder="Search orders"/>
+                    <SearchBar 
+                        placeholder="Search orders by id and customer name"
+                        value={searchTerm}
+                        onChange={setSearchTerm}
+                        onSearch={fetchOrders}
+                    />
 
-                    <select className={styles.filterSelect}>
+                    <select 
+                        className={styles.filterSelect}
+                        value={selectedStatus}
+                        onChange={(e) => setSelectedStatus(e.target.value)}
+                    >
                         <option value="">All Status</option>
                         {ORDER_STATUSES.map(status => (
                             <option key={status} value={status}>

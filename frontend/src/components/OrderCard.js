@@ -7,7 +7,6 @@ import { useState } from 'react';
 function OrderCard({order, currentUser, onStatusChange }){
     const isAdmin = currentUser?.role === 'admin';
     const [selectedStatus, setSelectedStatus] = useState(order.order_status);
-    const hasChanges = selectedStatus !== order.order_status;
     const [updating, setUpdating] = useState(false);
 
     return(
@@ -49,9 +48,7 @@ function OrderCard({order, currentUser, onStatusChange }){
                                         </option>
                                     ))}
                                 </select>
-
-                                {hasChanges && (
-                                    <div className={styles.statusButtons}>
+                                <div className={styles.statusButtons}>
                                         <button
                                             className={`${buttonStyles.button} ${buttonStyles.green}`}
                                             onClick={() =>{
@@ -72,7 +69,6 @@ function OrderCard({order, currentUser, onStatusChange }){
                                             Cancel
                                         </button>
                                     </div>
-                                )}
                             </div>
                         ) 
                     )

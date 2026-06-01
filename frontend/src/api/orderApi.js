@@ -10,8 +10,10 @@ export const getSalesData = async () => {
     return res.data;
 };
 
-export const getOrders = async () => {
-    const res = await api.get('/orders/admin/allOrders');
+export const getOrders = async (filters = {}) => {
+    const res = await api.get('/orders/admin/allOrders', {
+        params: filters
+    });
     return res.data;
 };
 
