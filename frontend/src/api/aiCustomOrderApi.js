@@ -14,3 +14,12 @@ export const removeAiCustomOrder = async (orderId) => {
     const res = await api.delete(`/aicustomorder/${orderId}`);
     return res.data;
 };
+
+//admin
+export const getAllAiCustomOrder = async () => {
+    const res = await api.get('/aicustomorder/admin/allAiCustomOrders')
+    return res.data;
+}
+
+
+

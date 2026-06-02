@@ -1,5 +1,5 @@
 .aiOrderCard{
-    padding: 1rem;
+    /* padding: 1rem; */
     display: flex;
     justify-content: space-between;
     gap: 1rem;
@@ -7,21 +7,30 @@
     flex-wrap: wrap;
 }
 
-.aiOrderCardContentContainer {
+.aiOrderItemCard {
+    padding: 2rem;
     display: flex;
     justify-content: start;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
+    flex-direction: column;
     border-radius: 1rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     overflow: hidden;
 
 }
-.aiOrderCardContentContainer:hover{
+/* .aiOrderItemCard:hover{
     transform: scale(1.05); 
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); 
+} */
+
+.aiOrderItemInfoContainer{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.aiOrderDetails{
+    padding: 1rem;
 }
 .aiOrderItemImageContainer{
     width: 7rem;

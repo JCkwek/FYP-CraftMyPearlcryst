@@ -2,22 +2,28 @@ import styles from './AiCustomOrderCard.module.css';
 import buttonStyles from '../components/buttons/ButtonTheme.module.css';
 // import { removeAiCustomOrder } from '../api/aiCustomApi';
 
-function AiCustomOrderCard({order, aiResult, onDelete}){
+function AiCustomOrderCard({order, aiResult, onDelete,currentUser}){
     const priceDisplay = order.admin_price > 0 
         ? `RM ${order.admin_price}` 
         : `${order.status}`;
+    const isAdmin = currentUser?.role === 'admin';
 
     return(
         <div className={styles.aiOrderCard}>
-                <div className={styles.aiOrderCardContentContainer}>
-                    <div className={styles.aiOrderItemImageContainer}>
-                        <img 
-                            src={`http://localhost:3000${aiResult?.image_url}`} 
-                            alt="Custom Ai design" 
-                        />
-                    </div>
+                <div className={styles.aiOrderItemCard}>
+                    <u><h4>Request ID #{order.id}</h4></u>
+                    <h6>Date:  {new Date(order.created_at).toLocaleString()}</h6>
+                    <h6>Status: <strong>{order.status.toUpperCase()}</strong></h6>
+
+
                     <div className={styles.aiOrderItemInfoContainer}>
-                        <h4>Custom Jewelry Design</h4>
+                        <div className={styles.aiOrderItemImageContainer}>
+                            <img 
+                                src={`http://localhost:3000${aiResult?.image_url}`} 
+                                alt="Custom Ai design" 
+                            />
+                        </div>
+                        <div className={styles.aiOrderDetails}>
                         <p>
                             <strong>Prompt:</strong> {aiResult?.full_prompt?.substring(0, 100)}...
                         </p>
@@ -27,17 +33,36 @@ function AiCustomOrderCard({order, aiResult, onDelete}){
                                 <strong>Note from Artisan:</strong> {order.admin_note}
                             </p>
                         )}
+                        </div>
                     </div>
                 </div>
-                <div className={styles.aiOrderBtnContainer}>
-                    <button 
-                        className={`${buttonStyles.button} ${buttonStyles.cancel}`}
-                        onClick={() => onDelete(order.id)}
-                        title="Remove item"
-                    >
-                       Cancel Request
-                    </button>
-                </div>
+
+
+                {isAdmin? (
+                    <div className={styles.aiOrderBtnContainer}>
+                        <button 
+                            className={`${buttonStyles.button} ${buttonStyles.green}`}
+                        >
+                        Accept
+                        </button>
+                                                <button 
+                            className={`${buttonStyles.button} ${buttonStyles.red}`}
+                        >
+                        Reject
+                        </button>
+                    </div>
+                ): (
+                    <div className={styles.aiOrderBtnContainer}>
+                        <button 
+                            className={`${buttonStyles.button} ${buttonStyles.cancel}`}
+                            onClick={() => onDelete(order.id)}
+                            title="Remove item"
+                        >
+                        Cancel Request
+                        </button>
+                    </div>
+                )
+                }
         </div>
     )
 }

@@ -29,10 +29,10 @@ const submitForQuote = async (req, res) => {
     }
 };
 
-const getAiCustomOrders = async (req, res) => {
+const getAiCustomOrdersByUserId = async (req, res) => {
     try {
         const userId = req.user?.id;
-        const orders = await AiCustomOrderService.getAiCustomOrders(userId);
+        const orders = await AiCustomOrderService.getAiCustomOrdersByUserId(userId);
         res.status(200).json(orders);
     } catch (error) {
         console.error('Fetch Custom Orders Error:', error);
@@ -52,8 +52,21 @@ const removeAiCustomOrder = async (req, res) => {
     }
 };
 
+//admin
+const getAllAiCustomOrder = async (req,res) => {
+    try{
+        const orders = await AiCustomOrderService.getAllAiCustomOrder();
+        res.status(200).json(orders);
+    }catch(error){
+        console.error('Fetch All Ai Custom Orders Error:', error);
+        res.status(500).json({ error: 'Could not retrieve All Ai Custom Orders.' });
+    }
+    
+}
+
 module.exports = {
     submitForQuote,
-    getAiCustomOrders,
-    removeAiCustomOrder
+    getAiCustomOrdersByUserId,
+    removeAiCustomOrder,
+    getAllAiCustomOrder
 };

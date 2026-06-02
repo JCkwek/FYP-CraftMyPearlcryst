@@ -27,7 +27,7 @@ const submitForQuote = async (userId, resultId) => {
     });
 };
 
-const getAiCustomOrders = async (userId) => {
+const getAiCustomOrdersByUserId = async (userId) => {
     return await AiCustomOrder.findAll({
         where: { user_id: userId },
         include: [{
@@ -49,8 +49,21 @@ const removeAiCustomOrder = async (userId, orderId) => {
     return await order.destroy();
 };
 
+//admin
+const getAllAiCustomOrder = async () => {
+     return await AiCustomOrder.findAll({
+        include: [{
+            model: AiGeneratedResult,
+            as: 'aiResult',
+            attributes: ['image_url', 'full_prompt', 'selections']
+        }],
+        order: [['updated_at', 'DESC']]
+    });
+}
+
 module.exports = {
     submitForQuote,
-    getAiCustomOrders,
-    removeAiCustomOrder
+    getAiCustomOrdersByUserId,
+    removeAiCustomOrder,
+    getAllAiCustomOrder
 };

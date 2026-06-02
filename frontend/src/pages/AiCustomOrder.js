@@ -43,14 +43,13 @@ function AiCustomOrder(){
                     ) : orders.length > 0 ? (
                         orders.map((order) => (
                             <div key={order.id} className={styles.orderGroup}>
-                                <u><h3>Request ID #{order.id}</h3></u>
-                                <h5>Date:  {new Date(order.created_at).toLocaleString()}</h5>
+                                
                                 {order.status !== 'pending' && (
                                     <small className={styles.updateTime}>
                                         Updated on: {new Date(order.updated_at || order.updatedAt).toLocaleDateString()}
                                     </small>
                                 )}
-                                <h5>Status: <strong>{order.status.toUpperCase()}</strong></h5>
+                                
                                     <AiCustomOrderCard 
                                         order={order} 
                                         aiResult={order.aiResult}

@@ -5,14 +5,18 @@ import { ORDER_STATUSES } from '../../constants/OrderStatus';
 import Loading from '../../components/Loading';
 import OrderCard from '../../components/OrderCard';
 import {getOrders, updateOrderStatus} from '../../api/orderApi';
+import {getAllAiCustomOrder} from '../../api/aiCustomOrderApi';
+import AiCustomOrderCard from '../../components/AiCustomOrderCard';
 
 function OrderManagement({ currentUser }){
     const [loading, setLoading] = useState(true);
     const [selectedTab, setSelectedTab] = useState('regular');
     const [orders, setOrders] = useState([]);
+    const [aiOrders, setAiOrders] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedStatus, setSelectedStatus] = useState('');
 
+    //fetch regular orders
     const fetchOrders = async () => {
             try{
                 setLoading(true);
@@ -31,6 +35,24 @@ function OrderManagement({ currentUser }){
     useEffect(() => {
         fetchOrders();
     }, [selectedStatus]);
+
+    //fetch ai custom orders
+    const fetchAiOrders = async () => {
+        try{
+            console.log("Fetching AI orders...");
+            const res  =  await getAllAiCustomOrder();
+            console.log("AI Orders:", res);
+            setAiOrders(res);
+        }catch(err){
+            console.error("Error fetching Ai custom orders", err);
+        }finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+            fetchAiOrders();
+    }, [])
 
     const handleStatusChange = async (orderId, newStatus) => {
         try {
@@ -105,9 +127,19 @@ function OrderManagement({ currentUser }){
                                 onStatusChange={handleStatusChange}
                             />
                         ))
+                    ) : Array.isArray(aiOrders) && aiOrders.length > 0 && selectedTab === 'ai'?(
+                        aiOrders.map((order) => (
+                            <AiCustomOrderCard 
+                                order={order} 
+                                key={order.order_id} 
+                                aiResult={order.aiResult}
+                                currentUser={currentUser}
+                            />
+                        ))
                     ) : (
                         <p>You do not have any orders.</p>
-                    )}
+                    )
+                    }
                 </div>
             </div>
         </div>
