@@ -53,7 +53,7 @@ function AdminDashboard(){
                 <div className={styles.cardRow}>
                     <div className={styles.dashboardCard}>
                         <h4>Monthly Sales Performance</h4>
-                        <div className={styles.cardContentWrapper}>
+                        <div className={styles.cardContentContainer}>
                             {loading?  (
                                 <Loading />
                             ):(
@@ -64,7 +64,7 @@ function AdminDashboard(){
                     </div>
                     <div className={styles.dashboardCard}>
                         <h4>Orders</h4>
-                        <div className={styles.cardContentWrapper}>
+                        <div className={styles.cardContentContainer}>
                             {loading?  (
                                 <Loading />
                             ):(
