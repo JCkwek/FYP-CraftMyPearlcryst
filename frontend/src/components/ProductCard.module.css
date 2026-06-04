@@ -64,3 +64,22 @@
     font-size:0.8rem;
 }
 
+@media (max-width: 768px) {
+    .productCard{
+        width: 8rem;
+        height: 11rem;
+    }
+
+    .productCardImageContainer{
+        max-height: 7rem;
+    }
+
+    .productCardName{
+        font-size: 0.7rem;
+        line-height: 0.8rem;
+    }
+
+    .productCardPrice{
+        font-size:0.6rem;
+    }
+}

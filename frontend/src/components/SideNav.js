@@ -1,16 +1,17 @@
 import styles from './SideNav.module.css'
 import { NavLink } from 'react-router-dom';
 
-function SideNav({ user }){
+function SideNav({ user,isOpen, closeSidebar }){
     const isAdmin = user && user.role === 'admin';
 
     return(
-        <div className={styles.sideNav}>
+        <div className={`${styles.sideNav} ${isOpen ? styles.open : ""}`}>
             <div className={styles.sideNavTabContainer}>
                 {isAdmin ? (
                     <>
                         <NavLink 
                             to="/admin/dashboard"
+                            onClick={closeSidebar}
                             className={({isActive}) =>
                                 isActive ? `${styles.sideNavTab} ${styles.active}` : styles.sideNavTab
                             }
@@ -20,6 +21,7 @@ function SideNav({ user }){
 
                         <NavLink 
                             to="/admin/orderManagement"
+                            onClick={closeSidebar}
                             className={({isActive}) =>
                                 isActive ? `${styles.sideNavTab} ${styles.active}` : styles.sideNavTab
                             }
@@ -30,6 +32,7 @@ function SideNav({ user }){
                 ) : (
                     <NavLink 
                         to="/"
+                        onClick={closeSidebar}
                         className={({isActive}) =>
                             isActive ? `${styles.sideNavTab} ${styles.active}` : styles.sideNavTab
                         }
@@ -40,6 +43,7 @@ function SideNav({ user }){
 
                 <NavLink 
                     to="/products" 
+                    onClick={closeSidebar}
                     className={({isActive}) =>
                         isActive
                             ? `${styles.sideNavTab} ${styles.active}`
@@ -51,6 +55,7 @@ function SideNav({ user }){
                 {isAdmin}
                 <NavLink 
                     to="/aiCustom" 
+                    onClick={closeSidebar}
                     className={({isActive}) =>
                         isActive
                             ? `${styles.sideNavTab} ${styles.active}`
@@ -61,6 +66,7 @@ function SideNav({ user }){
 
                 <NavLink 
                     to="/aiChat" 
+                    onClick={closeSidebar}
                     className={({isActive}) =>
                         isActive
                             ? `${styles.sideNavTab} ${styles.active}`

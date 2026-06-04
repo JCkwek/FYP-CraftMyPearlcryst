@@ -24,3 +24,25 @@
     min-height: 100%;
     box-shadow: 0 4px 12px rgba(0.5, 0.5, 0.5, 0.5);
 }
+
+.sidebarOverlay {
+    display: none;
+}
+
+@media (max-width: 768px) {
+
+    .mainlayout {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "topnav"
+            "content";
+    }
+
+    .sidebarOverlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.4);
+        z-index: 998;
+    }
+}

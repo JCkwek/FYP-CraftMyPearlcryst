@@ -7,9 +7,10 @@
   border-radius: 2rem;
   padding: 0.3rem 0.5rem;
   margin: 0.5rem 0rem;
-  width: 40vw;
+  width: 30rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border: 1px solid #eee;
+  overflow: hidden;
   /* background-color: red; */
 }
 
@@ -43,4 +44,11 @@
 
 .searchButton:hover {
   color: #D8A7B1;
+}
+
+@media (max-width: 768px) {
+  .searchBarContainer {
+    width:20rem;
+  }
+
 }

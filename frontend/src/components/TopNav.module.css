@@ -2,19 +2,33 @@
 
 .topNav{
     padding: 1rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
     grid-area: topnav;
     align-items: center;
     letter-spacing: 1.5px;
     font-family: 'Playfair Display', serif; 
-    /* color: #333; */
     color: white;
     background-color: #D8A7B1;
     user-select: none;
     display: flex;
     justify-content: space-between;
+    gap: 0.5rem;
 }
-
+.topNavLeftSection{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    align-items: center;
+    min-width: 0;
+    flex: 1;
+}
+.topNavLeftSection h4 {
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 .topNavButtonsContainer{
     display: flex;
     justify-content: space-between;
@@ -22,7 +36,7 @@
 }
 
 .topNavButton{
-    padding: 0.5rem 1rem;
+    padding: 0.5rem;
     border-radius: 0.5rem;
     border: none;
     cursor: pointer;
@@ -39,4 +53,41 @@
 
 .topNavButtonIcon:hover{
     font-size: 1.3rem;
+}
+
+.sideNavBtn {
+    display: none;
+    color : white;
+}
+
+@media (max-width: 768px) {
+
+    .topNavLeftSection h4 {
+        font-size: 0.9rem;
+    }
+
+    .sideNavBtn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border: none;
+        background: none;
+        cursor: pointer;
+
+        font-size: 1.2rem;
+    }
+
+    .topNavLeftSection {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .topNavButtonIcon{
+        font-size: 0.9rem;
+        font-weight: bold;
+        color: white;
+        transition: all 0.3s ease;
+    }
 }

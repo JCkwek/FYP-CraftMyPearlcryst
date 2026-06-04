@@ -34,3 +34,29 @@
     box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
+.open {
+    transform: translateX(0);
+}
+
+@media (max-width: 768px) {
+
+    .sideNav {
+        position: fixed;
+        top: 0;
+        left: 0;
+
+        width: 250px;
+        height: 100vh;
+
+        background: white;
+
+        z-index: 999;
+
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .open {
+        transform: translateX(0);
+    }
+}

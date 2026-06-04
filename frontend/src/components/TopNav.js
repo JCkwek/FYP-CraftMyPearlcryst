@@ -1,14 +1,20 @@
 import styles from './TopNav.module.css';
-import { FaShoppingBag, FaUser, FaMagic} from "react-icons/fa";
+import { FaBars, FaShoppingBag, FaUser, FaMagic} from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-function TopNav({ user }){
+function TopNav({ user, toggleSidebar  }){
     const isAdmin = user && user.role === 'admin';
     const navigate = useNavigate();
 
     return(
-        <div className={styles.topNav}>
-            <div><h4>CraftMyPearlcryst</h4></div>
+        <div className={styles.topNav}> 
+            <div className={styles.topNavLeftSection}>
+                <button className={`${styles.topNavButton} ${styles.sideNavBtn}`} onClick={toggleSidebar}>              
+                    <FaBars className={styles.topNavButtonIcon}/>
+                </button>
+                <div><h4>CraftMyPearlcryst</h4></div>
+            </div>
+
             <div className={styles.topNavButtonsContainer}>
                 {!isAdmin && (
                     <>
