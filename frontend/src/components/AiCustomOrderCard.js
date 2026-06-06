@@ -2,7 +2,7 @@ import styles from './AiCustomOrderCard.module.css';
 import buttonStyles from '../components/buttons/ButtonTheme.module.css';
 // import { removeAiCustomOrder } from '../api/aiCustomApi';
 
-function AiCustomOrderCard({order, aiResult, onDelete,currentUser}){
+function AiCustomOrderCard({order, aiResult, onDelete,currentUser, onAccept, onReject}){
     const priceDisplay = order.admin_price > 0 
         ? `RM ${order.admin_price}` 
         : `${order.status}`;
@@ -13,6 +13,9 @@ function AiCustomOrderCard({order, aiResult, onDelete,currentUser}){
                 <div className={styles.aiOrderItemCard}>
                     <u><h4>Request ID #{order.id}</h4></u>
                     <h6>Date:  {new Date(order.created_at).toLocaleString()}</h6>
+                     {order.status !== 'pending' && (
+                        <h6>Updated on: {new Date(order.updated_at || order.updatedAt).toLocaleDateString()}</h6> 
+                    )}
                     <h6>Status: <strong>{order.status.toUpperCase()}</strong></h6>
 
 
@@ -42,11 +45,13 @@ function AiCustomOrderCard({order, aiResult, onDelete,currentUser}){
                     <div className={styles.aiOrderBtnContainer}>
                         <button 
                             className={`${buttonStyles.button} ${buttonStyles.green}`}
+                            onClick={() => onAccept(order)}
                         >
                         Accept
                         </button>
-                                                <button 
+                        <button 
                             className={`${buttonStyles.button} ${buttonStyles.red}`}
+                            onClick={() => onReject(order)}
                         >
                         Reject
                         </button>

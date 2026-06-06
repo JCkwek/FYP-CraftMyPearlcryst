@@ -42,19 +42,12 @@ function AiCustomOrder(){
                         <Loading/>
                     ) : orders.length > 0 ? (
                         orders.map((order) => (
-                            <div key={order.id} className={styles.orderGroup}>
-                                
-                                {order.status !== 'pending' && (
-                                    <small className={styles.updateTime}>
-                                        Updated on: {new Date(order.updated_at || order.updatedAt).toLocaleDateString()}
-                                    </small>
-                                )}
-                                
-                                    <AiCustomOrderCard 
-                                        order={order} 
-                                        aiResult={order.aiResult}
-                                        onDelete={handleDelete}
-                                    />
+                            <div key={order.id} className={styles.orderGroup}>            
+                                <AiCustomOrderCard 
+                                    order={order} 
+                                    aiResult={order.aiResult}
+                                    onDelete={handleDelete}
+                                />
                             </div>
                         ))
                     ) : (

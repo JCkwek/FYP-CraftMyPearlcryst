@@ -60,13 +60,37 @@ const getAllAiCustomOrder = async (req,res) => {
     }catch(error){
         console.error('Fetch All Ai Custom Orders Error:', error);
         res.status(500).json({ error: 'Could not retrieve All Ai Custom Orders.' });
-    }
-    
+    }   
 }
+
+const updateAiCustomOrder = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (req.user.role !== 'admin') {
+            return res.status(403).json({ message: "Forbidden" });
+        }
+
+        const updated = await AiCustomOrderService.updateAiCustomOrder(
+            id,
+            req.body
+        );
+
+        return res.json({
+            message: "AI custom order updated successfully",
+            data: updated
+        });
+
+    } catch (err) {
+        return res.status(400).json({
+            message: err.message
+        });
+    }
+};
 
 module.exports = {
     submitForQuote,
     getAiCustomOrdersByUserId,
     removeAiCustomOrder,
-    getAllAiCustomOrder
+    getAllAiCustomOrder,
+    updateAiCustomOrder
 };

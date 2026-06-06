@@ -11,7 +11,7 @@ export const fetchAiCustomOrder = async () => {
 }
 
 export const removeAiCustomOrder = async (orderId) => {
-    const res = await api.delete(`/aicustomorder/${orderId}`);
+    const res = await api.delete(`/aicustomorder/delete/${orderId}`);
     return res.data;
 };
 
@@ -20,6 +20,12 @@ export const getAllAiCustomOrder = async () => {
     const res = await api.get('/aicustomorder/admin/allAiCustomOrders')
     return res.data;
 }
+
+export const updateAiCustomOrder = async (id,data) => {
+    const res = await api.patch(`/aicustomorder/admin/update/${id}`, data)
+    return res.data;
+}
+
 
 
 

@@ -61,9 +61,43 @@ const getAllAiCustomOrder = async () => {
     });
 }
 
+const updateAiCustomOrder = async (id, adminData) => {
+    const { status, admin_price, admin_note } = adminData;
+    
+    const order = await AiCustomOrder.findByPk(id);
+
+    if (!order) {
+        throw new Error("AI custom order not found.");
+    }
+
+    if (status === 'quoted') {
+        if (admin_price == null || admin_price === '') {
+            throw new Error("Price is required when quoting.");
+        }
+
+        order.admin_price = admin_price;
+        order.admin_note = admin_note || null;
+        order.status = 'quoted';
+    }else if (status === 'declined') {
+        if (!admin_note) {
+            throw new Error("Note is required when declining order.");
+        }
+        order.admin_note = admin_note;
+        order.admin_price = null;
+        order.status = 'declined';
+    }else if (status === 'ordered') {
+        order.status = 'ordered';
+    }else {
+        throw new Error("Invalid status update.");
+    }
+    await order.save();
+    return order;
+};
+
 module.exports = {
     submitForQuote,
     getAiCustomOrdersByUserId,
     removeAiCustomOrder,
-    getAllAiCustomOrder
+    getAllAiCustomOrder,
+    updateAiCustomOrder
 };
