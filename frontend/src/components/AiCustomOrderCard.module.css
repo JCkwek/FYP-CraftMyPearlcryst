@@ -1,29 +1,38 @@
 .aiOrderCard{
-    /* padding: 1rem; */
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-.aiOrderItemCard {
     padding: 2rem;
-    display: flex;
-    justify-content: start;
-    flex-direction: column;
-    border-radius: 1rem;
+    width: 100%;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    overflow: hidden;
-
+    border-radius: 1rem;
 }
-/* .aiOrderItemCard:hover{
-    transform: scale(1.05); 
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); 
-} */
 
-.aiOrderItemInfoContainer{
+.orderInfoContainer{
+    padding: 1rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 1rem;
+}
+.orderInfo{
+    padding: 0rem 1rem;
+    border-left: 2px solid #e0e0e0;
+}
+
+.cancelled , .declined{
+    color: red;
+}
+.paid{
+    color: blue;
+}
+.pending, .quoted ,.ordered{
+    color: orange;
+}
+.completed{
+    color: green;
+}
+
+.aiOrderItemCard{
+    padding: 1rem;
     display: flex;
     justify-content: space-between;
     flex-direction: row;
@@ -32,9 +41,11 @@
 .aiOrderDetails{
     padding: 1rem;
 }
+
 .aiOrderItemImageContainer{
-    width: 7rem;
-    height: 7rem;
+    flex: 1;
+    width: 5rem;
+    height: auto;
 }
 
 .aiOrderItemImageContainer img {
@@ -45,18 +56,8 @@
     background-color: white;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
-
-.statusContainer{
-    padding: 1rem 2rem;
-}
-
-
-.statusBadge {
-    padding: 4px 8px;
-    background-color: #f0f0f0;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    text-transform: capitalize;
+.aiOrderDetails{
+    flex: 5;
 }
 
 .aiOrderBtnContainer{
@@ -64,5 +65,6 @@
     flex-wrap: wrap;
     padding: 0.5rem;
     justify-content: end;
-    gap: 1rem;
+    gap: 0.5rem;
+    align-items: center;
 }

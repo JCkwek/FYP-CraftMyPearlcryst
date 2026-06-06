@@ -7,7 +7,7 @@ function DashboardOrderCard({order}){
             <div className={styles.orderInfoContainer} >
                 <div className={styles.orderInfo} >                                     
                     <h6>Customer: {order.User?.name}</h6>
-                    <h6>Status: <b className={styles[order.order_status]}>{order.order_status}</b></h6>
+                    <h6>Status: <b className={styles[order.order_status]}>{order.order_status.toUpperCase()}</b></h6>
                 </div>
                 <div className={styles.orderInfo} >                                     
                     <h6>Total: RM {order.total_amount}</h6>

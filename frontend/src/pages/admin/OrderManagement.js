@@ -180,7 +180,7 @@ function OrderManagement({ currentUser }){
                                 setPrice('');
                                 setNote('');
                             }}
-                                                    />
+                            />
                         ))
                     ) : (
                         <p>You do not have any orders.</p>

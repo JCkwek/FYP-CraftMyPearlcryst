@@ -24,7 +24,7 @@ const AiCustomOrder = sequelize.define('AiCustomOrder', {
         }
     },
     status: {
-        type: DataTypes.ENUM('pending', 'quoted', 'declined', 'ordered'),
+        type: DataTypes.ENUM('pending', 'quoted', 'declined', 'ordered','paid','cancelled', 'completed'),
         defaultValue: 'pending'
     },
     admin_price: {
