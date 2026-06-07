@@ -2,12 +2,16 @@ import styles from './OrderCard.module.css';
 import buttonStyles from './buttons/ButtonTheme.module.css';
 import OrderItemCard from './OrderItemCard';
 import { ORDER_STATUSES } from '../constants/OrderStatus';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function OrderCard({order, currentUser, onStatusChange }){
     const isAdmin = currentUser?.role === 'admin';
     const [selectedStatus, setSelectedStatus] = useState(order.order_status);
     const [updating, setUpdating] = useState(false);
+
+    useEffect(() => {
+        setSelectedStatus(order.order_status);
+    }, [order.order_status]);
 
     return(
         <div key={order.order_id} className={styles.orderCard}>
@@ -42,7 +46,7 @@ function OrderCard({order, currentUser, onStatusChange }){
                                     value={selectedStatus}
                                     onChange={(e) => setSelectedStatus(e.target.value)}
                                 >
-                                    {ORDER_STATUSES.UPDATE.map(status => (
+                                    {ORDER_STATUSES.BASE.map(status => (
                                         <option key={status} value={status}>
                                             {status}
                                         </option>

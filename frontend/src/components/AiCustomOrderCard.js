@@ -36,7 +36,7 @@ function AiCustomOrderCard({order, aiResult, onDelete,currentUser, onStatusChang
                     Status: <h6 className={styles[order.status]}> <strong>{order.status.toUpperCase()}</strong></h6>
                 </div>
 
-                {isAdmin && (
+                {isAdmin && order.status!== "pending" && (
                     !updating ? (
                         <button 
                             className={`${buttonStyles.button} ${buttonStyles.main}`}
@@ -51,7 +51,7 @@ function AiCustomOrderCard({order, aiResult, onDelete,currentUser, onStatusChang
                                     value={selectedStatus}
                                     onChange={(e) => setSelectedStatus(e.target.value)}
                                 >
-                                    {ORDER_STATUSES.UPDATE.map(status => (
+                                    {ORDER_STATUSES.AI.map(status => (
                                         <option key={status} value={status}>
                                             {status}
                                         </option>

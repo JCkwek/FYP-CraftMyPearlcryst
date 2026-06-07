@@ -16,11 +16,4 @@ export const ORDER_STATUSES = {
         'cancelled',
         'completed'
     ],
-
-    UPDATE: [
-        'in-progress',
-        'cancelled',
-        'completed'
-    ],
-
 };
