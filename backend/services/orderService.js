@@ -39,9 +39,24 @@ const stripeUpdateOrderStatus = async (sessionId, status) => {
     );
 };
 
-const getOrdersByUserId = async (userId) => {
+const getOrdersByUserId = async (userId, query, status) => {
+    let whereClause = {
+        user_id: userId
+    };
+
+    if (query) {
+        whereClause[Op.or] = [
+            { 
+                order_id: { [Op.like]: `%${query}%` } 
+            }, 
+        ];
+    }
+    if (status) {
+        whereClause.order_status = status;
+    }
+
     return await Order.findAll({
-        where: {user_id: userId},
+        where: whereClause,
         include: [{
             model: OrderItem,
             as: 'OrderItems',

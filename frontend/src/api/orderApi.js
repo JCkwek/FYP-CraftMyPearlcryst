@@ -1,6 +1,8 @@
 import api from './api';
-export const getUserOrder = async () => {
-    const res = await api.get('/orders');
+export const getUserOrder = async (filters = {}) => {
+    const res = await api.get('/orders', {
+        params: filters
+    });
     return res.data;
 }
 

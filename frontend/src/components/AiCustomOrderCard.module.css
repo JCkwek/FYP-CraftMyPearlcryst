@@ -12,6 +12,7 @@
     flex-wrap: wrap;
     justify-content: flex-start;
     gap: 1rem;
+    align-items: center;
 }
 .orderInfo{
     padding: 0rem 1rem;
@@ -38,8 +39,10 @@
     flex-direction: row;
     flex-wrap: wrap;
 }
+
 .aiOrderDetails{
     padding: 1rem;
+    flex: 5;
 }
 
 .aiOrderItemImageContainer{
@@ -55,9 +58,6 @@
     border-radius: 0.5rem;
     background-color: white;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-.aiOrderDetails{
-    flex: 5;
 }
 
 .aiOrderBtnContainer{

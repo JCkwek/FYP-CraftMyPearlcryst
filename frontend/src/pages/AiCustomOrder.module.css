@@ -18,12 +18,32 @@
     padding: 1rem;
     display: flex;
     justify-content: center;
-    gap: 3rem;
+    gap: 1rem;
     flex-direction: column;
 }
 
 .orderGroup{
-    padding: 0.5rem 1rem 1.5rem 1rem;
-    border-bottom: 2px solid #e0e0e0;
+    padding: 1rem;
     width: 100%;
+}
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+}
+
+.filterSelect{
+    height: 100%;
+    padding: 0.8rem;
+    border: 1px solid #dcdcdc;
+    border-radius: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.filterSelect:hover,
+.filterSelect:focus-within{
+    outline: 1.5px solid #cfcece ;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }

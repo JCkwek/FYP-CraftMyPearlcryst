@@ -1,4 +1,4 @@
-const { AiCustomOrder, AiGeneratedResult, User } = require('../models');
+const { AiCustomOrder, AiGeneratedResult, User,AiJewelryComponent  } = require('../models');
 const {Op, where} = require('sequelize');
 
 const submitForQuote = async (userId, resultId) => {
@@ -27,9 +27,24 @@ const submitForQuote = async (userId, resultId) => {
     });
 };
 
-const getAiCustomOrdersByUserId = async (userId) => {
-    return await AiCustomOrder.findAll({
-        where: { user_id: userId },
+const getAiCustomOrdersByUserId = async (userId, query, status) => {
+    let whereClause = {
+        user_id: userId
+    };
+
+    if (query) {
+        whereClause[Op.or] = [
+            { 
+                id: { [Op.like]: `%${query}%` } 
+            }, 
+        ];
+    }
+    if (status) {
+        whereClause.status = status;
+    }
+
+    const orders =  await AiCustomOrder.findAll({
+        where: whereClause,
         include: [{
             model: AiGeneratedResult,
             as: 'aiResult',
@@ -37,6 +52,37 @@ const getAiCustomOrdersByUserId = async (userId) => {
         }],
         order: [['updated_at', 'DESC']]
     });
+    return await Promise.all(
+        orders.map(async (order) => {
+            const result = order.aiResult;
+
+            //ensure selections is array
+            const ids = Array.isArray(result.selections)
+                ? result.selections
+                : JSON.parse(result.selections);
+
+            //fetch component names
+            const components = await AiJewelryComponent.findAll({
+                where: {
+                    component_id: ids
+                },
+                attributes: ['component_id', 'name']
+            });
+
+            // rebuild response
+            return {
+                ...order.toJSON(),
+                aiResult: {
+                    image_url: result.image_url,
+                    full_prompt: result.full_prompt,
+                    selectedComponents: components.map(c => ({
+                        id: c.component_id,
+                        name: c.name
+                    }))
+                }
+            };
+        })
+    );
 };
 
 const removeAiCustomOrder = async (userId, orderId) => {
@@ -51,7 +97,7 @@ const removeAiCustomOrder = async (userId, orderId) => {
 
 //admin
 const getAllAiCustomOrder = async () => {
-     return await AiCustomOrder.findAll({
+     const orders = await AiCustomOrder.findAll({
         include: [
             {
                 model: AiGeneratedResult,
@@ -63,9 +109,41 @@ const getAllAiCustomOrder = async () => {
                 as: 'User',
                 attributes: ['name', 'email', 'phone_no']
             }
-        ],
+        ],  
         order: [['updated_at', 'DESC']]
     });
+
+    return await Promise.all(
+        orders.map(async (order) => {
+            const result = order.aiResult;
+
+            //ensure selections is array
+            const ids = Array.isArray(result.selections)
+                ? result.selections
+                : JSON.parse(result.selections);
+
+            //fetch component names
+            const components = await AiJewelryComponent.findAll({
+                where: {
+                    component_id: ids
+                },
+                attributes: ['component_id', 'name']
+            });
+
+            // 3. rebuild response
+            return {
+                ...order.toJSON(),
+                aiResult: {
+                    image_url: result.image_url,
+                    full_prompt: result.full_prompt,
+                    selectedComponents: components.map(c => ({
+                        id: c.component_id,
+                        name: c.name
+                    }))
+                }
+            };
+        })
+    );
 }
 
 const updateAiCustomOrder = async (id, adminData) => {

@@ -21,9 +21,9 @@ function OrderManagement({ currentUser }){
     const [price, setPrice] = useState('');
     const [note, setNote] = useState('');
     const statusOptions =
-    selectedTab === 'regular'
-        ? ORDER_STATUSES.BASE
-        : ORDER_STATUSES.AI;
+        selectedTab === 'regular'
+            ? ORDER_STATUSES.BASE
+            : ORDER_STATUSES.AI;
 
     //fetch regular orders
     const fetchOrders = async () => {
@@ -49,6 +49,7 @@ function OrderManagement({ currentUser }){
     const fetchAiOrders = async () => {
         try{
             const res  =  await getAllAiCustomOrder();
+            console.log("AI orderss: ",res)
             setAiOrders(res);
         }catch(err){
             console.error("Error fetching Ai custom orders", err);
@@ -58,7 +59,7 @@ function OrderManagement({ currentUser }){
     };
 
     useEffect(() => {
-            fetchAiOrders();
+        fetchAiOrders();
     }, [])
 
     const handleStatusChange = async (orderId, newStatus) => {

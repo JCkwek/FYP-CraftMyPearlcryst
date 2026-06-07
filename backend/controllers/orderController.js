@@ -79,8 +79,13 @@ const confirmPayment = async (req, res) => {
 
 const getOrdersByUserId = async (req,res) => {
     try{
+        const {
+            query,
+            status,
+        } = req.query;
+
         const userId = req.user.id;
-        const orders = await orderService.getOrdersByUserId(userId);
+        const orders = await orderService.getOrdersByUserId(userId, query, status);
         res.json(orders);
     }catch(err){
         console.error("Order service error:", err);
@@ -134,19 +139,15 @@ const updateOrderStatus = async (req,res) => {
     try {
         const { orderId } = req.params;
         const { status } = req.body;
-
         if (!orderId || !status) {
             return res.status(400).json({
                 message: "orderId and status are required"
             });
         }
-
         await orderService.updateOrderStatus(orderId, status);
-
         return res.status(200).json({
             message: "Order status updated successfully"
         });
-
     } catch (error) {
         console.error("Update Order Status Error:", error);
         return res.status(500).json({

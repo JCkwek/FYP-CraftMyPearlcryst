@@ -5,8 +5,10 @@ export const submitForQuote = async (resultId) => {
     return res.data;
 }
 
-export const fetchAiCustomOrder = async () => {
-    const res = await api.get('/aicustomorder/my-aicustom-orders')
+export const fetchAiCustomOrder = async (filters = {}) => {
+    const res = await api.get('/aicustomorder/my-aicustom-orders', {
+        params: filters
+    });
     return res.data;
 }
 

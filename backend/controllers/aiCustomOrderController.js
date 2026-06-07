@@ -31,8 +31,13 @@ const submitForQuote = async (req, res) => {
 
 const getAiCustomOrdersByUserId = async (req, res) => {
     try {
+        const {
+            query,
+            status,
+        } = req.query;
+
         const userId = req.user?.id;
-        const orders = await AiCustomOrderService.getAiCustomOrdersByUserId(userId);
+        const orders = await AiCustomOrderService.getAiCustomOrdersByUserId(userId, query, status);
         res.status(200).json(orders);
     } catch (error) {
         console.error('Fetch Custom Orders Error:', error);

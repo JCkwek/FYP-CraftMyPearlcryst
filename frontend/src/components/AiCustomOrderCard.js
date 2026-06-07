@@ -6,6 +6,7 @@ import { useState } from 'react';
 
 function AiCustomOrderCard({order, aiResult, onDelete,currentUser, onStatusChange, onAccept, onReject}){
     const [selectedStatus, setSelectedStatus] = useState(order.status);
+    const selectedComponents = aiResult?.selectedComponents || [];
     const [updating, setUpdating] = useState(false);
     const priceDisplay = order.admin_price > 0 
         ? `RM ${order.admin_price}` 
@@ -91,9 +92,21 @@ function AiCustomOrderCard({order, aiResult, onDelete,currentUser, onStatusChang
                         />
                     </div>
                     <div className={styles.aiOrderDetails}>
+                        {isAdmin && 
+                            <p>
+                                <strong>Prompt:</strong> {aiResult?.full_prompt?.substring(0, 100)}...
+                            </p>
+                        }
+                        
                         <p>
-                            <strong>Prompt:</strong> {aiResult?.full_prompt?.substring(0, 100)}...
+                            <strong>Components:</strong>
+                            <div>
+                                {selectedComponents.map(item => (
+                                    <span key={item.id}>{item.name}, </span>
+                                ))}
+                            </div>
                         </p>
+
                         <p><strong>Quoted Price:</strong> {priceDisplay}</p>
                         {order.admin_note && (
                             <p>
@@ -101,7 +114,7 @@ function AiCustomOrderCard({order, aiResult, onDelete,currentUser, onStatusChang
                             </p>
                         )}
                     </div>
-                    {isAdmin? ( order.status === "pending" &&
+                    {isAdmin && order.status === "pending" &&
                         <div className={styles.aiOrderBtnContainer}>
                                 <button 
                                     className={`${buttonStyles.button} ${buttonStyles.green}`}
@@ -117,19 +130,30 @@ function AiCustomOrderCard({order, aiResult, onDelete,currentUser, onStatusChang
                                     Reject
                                 </button>                          
                             </div>
-                        
-                    ): (
-                        <div className={styles.aiOrderBtnContainer}>
-                            <button 
-                                className={`${buttonStyles.button} ${buttonStyles.cancel}`}
-                                onClick={() => onDelete(order.id)}
-                                title="Remove item"
-                            >
-                            Cancel Request
-                            </button>
-                        </div>
-                    )
                     }
+
+                    {!isAdmin && (
+                        <div className={styles.aiOrderBtnContainer}>
+                            { order.status === "pending" ? (
+                                <button 
+                                    className={`${buttonStyles.button} ${buttonStyles.cancel}`}
+                                    onClick={() => onDelete(order.id)}
+                                    title="Remove item"
+                                >
+                                    Cancel Request
+                                </button>
+                            ): order.status === "quoted" ?  ( 
+                                <button 
+                                    className={`${buttonStyles.button} ${buttonStyles.main}`}
+                                    onClick={() => onDelete(order.id)}
+                                    title="Remove item"
+                                >
+                                    Place Order
+                                </button>
+                            ): null
+                            }    
+                        </div>
+                    )}
                 </div>
 
             

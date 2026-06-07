@@ -27,7 +27,6 @@
 }
 
 .toolbar {
-    padding: 0rem 1rem;
     display: flex;
     justify-content: space-between;
     gap: 1rem;
@@ -59,7 +58,7 @@
 }
 
 .ordersContainer{
-    padding: 1rem;
+    padding: 1rem 0;
     display: flex;
     flex-direction: column;
     gap: 2rem;
