@@ -26,6 +26,11 @@ export const updateAiCustomOrder = async (id,data) => {
     return res.data;
 }
 
+export const updateAiOrderStatus = async (id, status) => {
+    const res = await api.put(`/orders/admin/updateaiOrderStatus/${id}`, {status});
+    return res.data;
+}
+
 
 
 

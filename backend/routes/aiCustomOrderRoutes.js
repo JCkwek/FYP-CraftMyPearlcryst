@@ -11,5 +11,7 @@ router.delete('/delete/:orderId', authMiddleware, aiOrderController.removeAiCust
 //admin
 router.get('/admin/allAiCustomOrders', authMiddleware, adminCheck, aiOrderController.getAllAiCustomOrder);
 router.patch('/admin/update/:id', authMiddleware, adminCheck, aiOrderController.updateAiCustomOrder);
+router.put('/admin/updateAiOrderStatus/:id', authMiddleware, adminCheck, aiOrderController.updateAiOrderStatus);
+
 
 module.exports = router;

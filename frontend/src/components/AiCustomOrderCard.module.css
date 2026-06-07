@@ -67,4 +67,31 @@
     justify-content: end;
     gap: 0.5rem;
     align-items: center;
+    border-left: 2px solid #e0e0e0;
+}
+
+.statusControls{
+    display: flex;
+    flex: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+.statusButtons{
+    display: flex;
+    flex: row;
+    gap: 0.5rem;
+}
+.statusDropDown{
+    height: 100%;
+    padding: 0.8rem;
+    border: 1px solid #dcdcdc;
+    border-radius: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.statusDropDown:hover,
+.statusDropDown:focus-within{
+    outline: 1.5px solid #cfcece ;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }

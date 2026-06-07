@@ -1,4 +1,4 @@
-const { AiCustomOrder, AiGeneratedResult } = require('../models');
+const { AiCustomOrder, AiGeneratedResult, User } = require('../models');
 const {Op, where} = require('sequelize');
 
 const submitForQuote = async (userId, resultId) => {
@@ -52,11 +52,18 @@ const removeAiCustomOrder = async (userId, orderId) => {
 //admin
 const getAllAiCustomOrder = async () => {
      return await AiCustomOrder.findAll({
-        include: [{
-            model: AiGeneratedResult,
-            as: 'aiResult',
-            attributes: ['image_url', 'full_prompt', 'selections']
-        }],
+        include: [
+            {
+                model: AiGeneratedResult,
+                as: 'aiResult',
+                attributes: ['image_url', 'full_prompt', 'selections']
+            },
+            {
+                model: User,
+                as: 'User',
+                attributes: ['name', 'email', 'phone_no']
+            }
+        ],
         order: [['updated_at', 'DESC']]
     });
 }
@@ -94,10 +101,18 @@ const updateAiCustomOrder = async (id, adminData) => {
     return order;
 };
 
+const updateAiOrderStatus = async(id, status) => {
+    return await AiCustomOrder.update(
+        { status: status },
+        { where: { id: id } }
+    );
+}
+
 module.exports = {
     submitForQuote,
     getAiCustomOrdersByUserId,
     removeAiCustomOrder,
     getAllAiCustomOrder,
-    updateAiCustomOrder
+    updateAiCustomOrder,
+    updateAiOrderStatus
 };

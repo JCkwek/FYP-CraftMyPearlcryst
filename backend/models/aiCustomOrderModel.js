@@ -24,7 +24,7 @@ const AiCustomOrder = sequelize.define('AiCustomOrder', {
         }
     },
     status: {
-        type: DataTypes.ENUM('pending', 'quoted', 'declined', 'ordered','paid','cancelled', 'completed'),
+        type: DataTypes.ENUM('pending', 'quoted', 'declined','paid','in-progress', 'cancelled', 'completed'),
         defaultValue: 'pending'
     },
     admin_price: {
@@ -55,7 +55,7 @@ const AiCustomOrder = sequelize.define('AiCustomOrder', {
 AiCustomOrder.associate = (models) => {
     AiCustomOrder.belongsTo(models.User, {
         foreignKey: 'user_id',
-        as: 'user'
+        as: 'User'
     });
 
     // Links to the specific AI result containing image, prompt, and selections

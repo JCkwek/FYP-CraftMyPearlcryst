@@ -42,7 +42,7 @@ function OrderCard({order, currentUser, onStatusChange }){
                                     value={selectedStatus}
                                     onChange={(e) => setSelectedStatus(e.target.value)}
                                 >
-                                    {ORDER_STATUSES.map(status => (
+                                    {ORDER_STATUSES.UPDATE.map(status => (
                                         <option key={status} value={status}>
                                             {status}
                                         </option>

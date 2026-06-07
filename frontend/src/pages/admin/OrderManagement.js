@@ -6,7 +6,7 @@ import { ORDER_STATUSES } from '../../constants/OrderStatus';
 import Loading from '../../components/Loading';
 import OrderCard from '../../components/OrderCard';
 import {getOrders, updateOrderStatus} from '../../api/orderApi';
-import {getAllAiCustomOrder, updateAiCustomOrder} from '../../api/aiCustomOrderApi';
+import {getAllAiCustomOrder, updateAiCustomOrder, updateAiOrderStatus} from '../../api/aiCustomOrderApi';
 import AiCustomOrderCard from '../../components/AiCustomOrderCard';
 
 function OrderManagement({ currentUser }){
@@ -20,6 +20,10 @@ function OrderManagement({ currentUser }){
     const [modalType, setModalType] = useState(null); // 'quote' | 'decline'
     const [price, setPrice] = useState('');
     const [note, setNote] = useState('');
+    const statusOptions =
+    selectedTab === 'regular'
+        ? ORDER_STATUSES.BASE
+        : ORDER_STATUSES.AI;
 
     //fetch regular orders
     const fetchOrders = async () => {
@@ -44,9 +48,7 @@ function OrderManagement({ currentUser }){
     //fetch ai custom orders
     const fetchAiOrders = async () => {
         try{
-            console.log("Fetching AI orders...");
             const res  =  await getAllAiCustomOrder();
-            console.log("AI Orders:", res);
             setAiOrders(res);
         }catch(err){
             console.error("Error fetching Ai custom orders", err);
@@ -60,19 +62,32 @@ function OrderManagement({ currentUser }){
     }, [])
 
     const handleStatusChange = async (orderId, newStatus) => {
-        try {
-            await updateOrderStatus(orderId, newStatus);
-
-            setOrders(prev =>
-                prev.map(order =>
-                    order.order_id === orderId
-                        ? { ...order, order_status: newStatus }
-                        : order
-                )
-            );
-
-        } catch (err) {
-            console.error("Failed to update order status:", err);
+        if(selectedTab === 'regular'){
+            try {
+                await updateOrderStatus(orderId, newStatus);
+                setOrders(prev =>
+                    prev.map(order =>
+                        order.order_id === orderId
+                            ? { ...order, order_status: newStatus }
+                            : order
+                    )
+                );
+            } catch (err) {
+                console.error("Failed to update order status:", err);
+            }
+        }else{
+            try {
+                await updateAiOrderStatus(orderId, newStatus);
+                setOrders(prev =>
+                    prev.map(aiOrder =>
+                        aiOrder.id === orderId
+                            ? { ...aiOrder, status: newStatus }
+                            : aiOrder
+                    )
+                );
+            } catch (err) {
+                console.error("Failed to update Ai order status:", err);
+            }
         }
     };
 
@@ -104,6 +119,8 @@ function OrderManagement({ currentUser }){
             console.error(err);
         }
     };
+
+
 
     return(
         <div className={styles.orderManagement}>
@@ -140,7 +157,7 @@ function OrderManagement({ currentUser }){
                         onChange={(e) => setSelectedStatus(e.target.value)}
                     >
                         <option value="">All Status</option>
-                        {ORDER_STATUSES.map(status => (
+                        {statusOptions.map(status => (
                             <option key={status} value={status}>
                                 {status}
                             </option>
@@ -168,18 +185,19 @@ function OrderManagement({ currentUser }){
                                 key={order.id} 
                                 aiResult={order.aiResult}
                                 currentUser={currentUser}
+                                onStatusChange={handleStatusChange}
                                 onAccept={(order) => {
-                                setSelectedAiOrder(order);
-                                setModalType('quote');
-                                setPrice('');
-                                setNote('');
-                            }}
-                            onReject={(order) => {
-                                setSelectedAiOrder(order);
-                                setModalType('decline');
-                                setPrice('');
-                                setNote('');
-                            }}
+                                    setSelectedAiOrder(order);
+                                    setModalType('quote');
+                                    setPrice('');
+                                    setNote('');
+                                }}
+                                onReject={(order) => {
+                                    setSelectedAiOrder(order);
+                                    setModalType('decline');
+                                    setPrice('');
+                                    setNote('');
+                                }}
                             />
                         ))
                     ) : (
