@@ -10,20 +10,25 @@
 .tabContainer {
     display: flex;
     padding: 1rem 0rem;
+    gap: 0.5rem;
 }
 
 .tabButton {
-    padding: 0.8rem 1.5rem;
+    padding: 0.5rem 1rem;
     border: none;
-    border-radius: 0.5rem;
-    background: #ececec;
+    background: white;
     cursor: pointer;
-    transition: 0.2s ease;
+    border-bottom: 4px solid transparent;
+    transition: border-color 0.5s ease, color 0.5s ease;
 }
 
 .activeTab {
-    background: #D8A7B1;
-    color: white;
+    font-weight: 500;
+    border-bottom-color: #D8A7B1;
+}
+
+.nonActiveTab:hover {
+    border-bottom-color: lightgray;
 }
 
 .toolbar {

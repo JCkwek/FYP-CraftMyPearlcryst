@@ -130,14 +130,14 @@ function OrderManagement({ currentUser }){
 
                 <div className={styles.tabContainer}>
                     <button
-                        className={`${styles.tabButton} ${selectedTab === 'regular' ? styles.activeTab : '' }`}
+                        className={`${styles.tabButton} ${selectedTab === 'regular' ? styles.activeTab : styles.nonActiveTab }`}
                         onClick={() => setSelectedTab('regular')}
                     >
                         Regular Orders
                     </button>
 
                     <button
-                        className={`${styles.tabButton} ${selectedTab === 'ai' ? styles.activeTab : ''}`}
+                        className={`${styles.tabButton} ${selectedTab === 'ai' ? styles.activeTab : styles.nonActiveTab}`}
                         onClick={() => setSelectedTab('ai')}
                     >
                         AI Custom Orders
