@@ -26,7 +26,7 @@
 
 .cardContentContainer {
     width: 100%;
-    height: 20rem; 
+    height: 27rem; 
 }
 
 .newOrdersCard{
@@ -41,6 +41,6 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    max-height: 14rem;
+    max-height: 21rem;
     gap: 0.5rem;
 }

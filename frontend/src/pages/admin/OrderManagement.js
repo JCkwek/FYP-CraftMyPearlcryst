@@ -171,35 +171,47 @@ function OrderManagement({ currentUser }){
                     { loading?(
                         <Loading/>
                     ) : Array.isArray(orders) && orders.length > 0 && selectedTab === 'regular'? (
-                        orders.map((order) => (
-                            <OrderCard 
-                                order={order} 
-                                key={order.order_id} 
-                                currentUser={currentUser} 
-                                onStatusChange={handleStatusChange}
-                            />
+                        orders.map((order, index) => (
+                            <div
+                                key={order.order_id}
+                                className={styles.orderCardWrapper}
+                                style={{ animationDelay: `${index * 0.08}s` }}
+                            >
+                                <OrderCard 
+                                    order={order} 
+                                    key={order.order_id} 
+                                    // currentUser={currentUser} 
+                                    onStatusChange={handleStatusChange}
+                                />
+                            </div>
                         ))
                     ) : Array.isArray(aiOrders) && aiOrders.length > 0 && selectedTab === 'ai'?(
-                        aiOrders.map((order) => (
-                            <AiCustomOrderCard 
-                                order={order} 
-                                key={order.id} 
-                                aiResult={order.aiResult}
-                                currentUser={currentUser}
-                                onStatusChange={handleStatusChange}
-                                onAccept={(order) => {
-                                    setSelectedAiOrder(order);
-                                    setModalType('quote');
-                                    setPrice('');
-                                    setNote('');
-                                }}
-                                onReject={(order) => {
-                                    setSelectedAiOrder(order);
-                                    setModalType('decline');
-                                    setPrice('');
-                                    setNote('');
-                                }}
-                            />
+                        aiOrders.map((order, index) => (
+                             <div
+                                key={order.id}
+                                className={styles.orderCardWrapper}
+                                style={{ animationDelay: `${index * 0.08}s` }}
+                            >
+                                <AiCustomOrderCard 
+                                    order={order} 
+                                    key={order.id} 
+                                    aiResult={order.aiResult}
+                                    currentUser={currentUser}
+                                    onStatusChange={handleStatusChange}
+                                    onAccept={(order) => {
+                                        setSelectedAiOrder(order);
+                                        setModalType('quote');
+                                        setPrice('');
+                                        setNote('');
+                                    }}
+                                    onReject={(order) => {
+                                        setSelectedAiOrder(order);
+                                        setModalType('decline');
+                                        setPrice('');
+                                        setNote('');
+                                    }}
+                                />
+                            </div>
                         ))
                     ) : (
                         <p>You do not have any orders.</p>
