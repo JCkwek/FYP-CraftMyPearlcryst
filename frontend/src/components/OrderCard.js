@@ -77,6 +77,18 @@ function OrderCard({order, currentUser, onStatusChange }){
                         ) 
                     )
                 }
+                {!isAdmin && order.order_status === "pending" && 
+                    <button
+                        className={`${buttonStyles.button} ${buttonStyles.green}`}
+                        // onClick={() =>{
+                        //     setSelectedStatus(order.order_status);
+                        //     setUpdating(false);
+                        // }}
+                    >
+                        Pay Now
+                    </button>
+                    
+                }
             </div> 
 
             <h6>Order item(s): </h6>
