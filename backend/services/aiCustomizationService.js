@@ -3,6 +3,7 @@ const { Op } = require('sequelize');
 const { InferenceClient } = require('@huggingface/inference');
 const fs = require('fs');
 const path = require('path');
+const { GoogleGenAI } = require('@google/genai');
 
 const getComponentsByStep = async (step, requirementName) => {
     const whereClause = { 
@@ -98,6 +99,7 @@ const generateJewelryImage = async ({
         process.env.HF_TOKEN.trim()
     );
 
+    //hugging face
     const imageBlob = await client.textToImage({
         model: 'black-forest-labs/FLUX.1-schnell',
         // model: 'stabilityai/stable-diffusion-3.5-large-turbo',
@@ -109,6 +111,13 @@ const generateJewelryImage = async ({
 
     const arrayBuffer = await imageBlob.arrayBuffer();
     const imageBuffer = Buffer.from(arrayBuffer);
+    //end hugging face
+
+    //gemini testing
+    // console.log("Using Gemini image generation");
+    // const imageBuffer = await generateWithGemini(prompt);
+    //end gemini testing
+
     const filename = `ai_${Date.now()}.png`;
     const uploadDir = path.join(
         __dirname,
@@ -142,6 +151,31 @@ const generateJewelryImage = async ({
         resultId: newResult.result_id
     };
 };
+
+const generateWithGemini = async (prompt) => {
+    const ai = new GoogleGenAI({
+        apiKey: process.env.GEMINI_API_KEY
+    });
+
+    const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash-image',
+        contents: prompt,
+        config: {
+            responseModalities: ['IMAGE']
+        }
+    });
+
+    const imagePart = response.candidates?.[0]?.content?.parts?.find(
+        part => part.inlineData
+    );
+
+    if (!imagePart) {
+        throw new Error('No image returned from Gemini');
+    }
+
+    return Buffer.from(imagePart.inlineData.data, 'base64');
+};
+
 
 //admin
 const getAllComponents = async () => {

@@ -218,3 +218,11 @@
 .generatingLoaderMiddleContainer::before {
     border-radius: 50%;
 }
+
+.alertContainer{
+    padding: 1rem;
+    width:100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

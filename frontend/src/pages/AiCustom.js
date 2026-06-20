@@ -178,6 +178,11 @@ function AiCustom(){
             setError("No design ID found. Please try regenerating.");
             return;
         }
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setError("Please login to submit item for quote.");
+            return;
+        }
         setIsSubmitting(true);
         try{
             await submitForQuote(currentResultId);
@@ -258,6 +263,10 @@ function AiCustom(){
                         </div>
                     ) : finalImage ? (
                             <div className={styles.finalAiResultContainer}>
+                                <div className={styles.alertContainer}>
+                                    {error && <AlertBanner message={error} type="warning" onClose={() => setError(null)}/>}
+                                    {successMessage && <AlertBanner message={successMessage} type="success" onClose={() => setSuccessMessage(null)}/>}
+                                </div>
                                 <div className={styles.finalAiImageContainer}>
                                     <img src={finalImage} alt="AI Generated Jewelry" className={styles.finalAiImage} />
                                 </div>
