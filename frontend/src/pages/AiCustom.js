@@ -23,6 +23,7 @@ function AiCustom(){
     const [finalImage, setFinalImage] = useState(null);
     const [currentResultId, setCurrentResultId] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [quoteSubmitted, setQuoteSubmitted] = useState(false);
 
     useEffect(() => {
         if (!started) return;
@@ -187,6 +188,7 @@ function AiCustom(){
         try{
             await submitForQuote(currentResultId);
             setSuccessMessage("Your custom design has been submitted for a quote!");
+            setQuoteSubmitted(true);
         }catch(err){
             console.error("AI custom quote submission failed", err);
         }finally {
@@ -262,20 +264,31 @@ function AiCustom(){
                             </div>
                         </div>
                     ) : finalImage ? (
-                            <div className={styles.finalAiResultContainer}>
-                                <div className={styles.alertContainer}>
+                        <div className={styles.finalAiResultPage}>
+                            <div className={styles.alertContainer}>
                                     {error && <AlertBanner message={error} type="warning" onClose={() => setError(null)}/>}
                                     {successMessage && <AlertBanner message={successMessage} type="success" onClose={() => setSuccessMessage(null)}/>}
-                                </div>
+                            </div>
+
+                            <div className={styles.finalAiResultContainer}>
                                 <div className={styles.finalAiImageContainer}>
                                     <img src={finalImage} alt="AI Generated Jewelry" className={styles.finalAiImage} />
                                 </div>
                                 <div className={styles.finalAiResultButtons}>
-                                    <button className={`${buttonStyles.button} ${buttonStyles.cancel}`} onClick={handleReset}> Discard & Reset </button>
-                                    <button className={`${buttonStyles.button} ${buttonStyles.main}`} onClick={handleRegenerate}>Regenerate</button>
-                                    <button className={`${buttonStyles.button} ${buttonStyles.green}`} onClick={handleRequestQuote}>Submit for Quote</button>
+                                    {!quoteSubmitted? (
+                                        <>
+                                            <button className={`${buttonStyles.button} ${buttonStyles.cancel}`} onClick={handleReset}> Discard & Reset </button>
+                                            <button className={`${buttonStyles.button} ${buttonStyles.main}`} onClick={handleRegenerate}>Regenerate</button>
+                                            <button className={`${buttonStyles.button} ${buttonStyles.green}`} onClick={handleRequestQuote}>Submit for Quote</button>
+                                        </>
+                                    ): (
+                                        <button className={`${buttonStyles.button} ${buttonStyles.main}`} onClick={handleReset}>Return</button>
+                                    )
+                                    }
+                                    
                                 </div>
                             </div>
+                        </div>
                     ) : (
                         <div className={styles.readyToGenerateContainer}>
                             <div className={styles.readyToGenerate}>
