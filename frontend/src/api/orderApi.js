@@ -11,6 +11,11 @@ export const createCheckoutSession = async (cartItems) => {
     return res.data;
 };
 
+export const payOrder = async (orderId) => {
+    const res = await api.post(`/orders/${orderId}/pay`);
+    return res.data;
+};
+
 //called by orderSuccess page
 export const confirmPayment = async (sessionId) => {
     const res = await api.get('/orders/confirm', {

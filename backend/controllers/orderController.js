@@ -155,4 +155,59 @@ const updateOrderStatus = async (req,res) => {
         });
     }
 }
-module.exports = {checkout, confirmPayment, getOrdersByUserId, getMonthlySalesData, getOrders, updateOrderStatus };
+
+const payPendingOrder = async (req, res) => {
+    try {
+        const { orderId } = req.params;
+        const userId = req.user.id;
+
+        const order = await orderService.payPendingOrder(orderId, userId);
+
+        if (!order) {
+            return res.status(404).json({ message: "Pending order not found" });
+        }
+
+        // Create stripe session
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            mode: 'payment',
+            success_url: `${process.env.CLIENT_URL}/checkout-success?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${process.env.CLIENT_URL}/orders`,
+            customer_email: req.user.email,
+            line_items: order.OrderItems.map(item => {
+                const customDetails = typeof item.customization === 'string' 
+                    ? JSON.parse(item.customization) 
+                    : item.customization;
+
+                return {
+                    price_data: {
+                        currency: 'myr',
+                        product_data: {
+                            name: item.Product.product_name,
+                            description: `Size: ${customDetails?.size || 'Standard'}, Color: ${customDetails?.color || 'N/A'}`,
+                            images: [`${process.env.CLIENT_URL}/${item.Product.product_image}`],
+                        },
+                        unit_amount: Math.round(parseFloat(item.price_at_purchase) * 100),
+                    },
+                    quantity: item.quantity,
+                };
+            }),
+        });
+
+        await orderService.updateOrderSession(orderId, session.id);
+        res.status(200).json({ url: session.url });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message || "Payment session creation failed" });
+    }
+};
+
+module.exports = {
+    checkout,
+    confirmPayment,
+    getOrdersByUserId,
+    getMonthlySalesData,
+    getOrders,
+    updateOrderStatus,
+    payPendingOrder
+};

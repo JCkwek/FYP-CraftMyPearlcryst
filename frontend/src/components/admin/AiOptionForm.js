@@ -107,7 +107,7 @@ function AiOptionForm({ initialData, onSubmit, onCancel }){
             <div className={styles.aiOptionDetailsContentContainer}>
                 <div className={styles.aiOptionCard}>
                     <div className={styles.formInput}>
-                        <label>Label</label>
+                        <label><b>Label</b></label>
                         <input
                             type="text"
                             name="name"
@@ -179,7 +179,7 @@ function AiOptionForm({ initialData, onSubmit, onCancel }){
                             /> */}
                         </div>
                         <div className={styles.formInput}>
-                            <label>Requirement</label>
+                            <label><b>Requirement</b></label>
                                 {!isNewRequirement ? (
                                     <select
                                         name="requirement"
@@ -223,7 +223,7 @@ function AiOptionForm({ initialData, onSubmit, onCancel }){
                                 </button>
                         </div>
                         <div className={styles.formInput}>
-                            <label>Prompt Fragment</label>
+                            <label><b>Prompt Fragment</b></label>
                             <textarea
                                 name="prompt_fragment"
                                 value={formData.prompt_fragment}

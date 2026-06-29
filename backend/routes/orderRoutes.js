@@ -5,6 +5,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 const adminCheck = require('../middleware/adminCheck');
 
 router.post('/checkout', authMiddleware, orderController.checkout);
+router.post('/:orderId/pay', authMiddleware, orderController.payPendingOrder);
 router.get('/confirm', authMiddleware, orderController.confirmPayment);
 router.get('/',authMiddleware, orderController.getOrdersByUserId);
 

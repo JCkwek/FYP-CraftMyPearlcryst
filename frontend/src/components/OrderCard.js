@@ -3,15 +3,30 @@ import buttonStyles from './buttons/ButtonTheme.module.css';
 import OrderItemCard from './OrderItemCard';
 import { ORDER_STATUSES } from '../constants/OrderStatus';
 import { useState, useEffect } from 'react';
+import { payOrder } from '../api/orderApi';
 
 function OrderCard({order, currentUser, onStatusChange }){
     const isAdmin = currentUser?.role === 'admin';
     const [selectedStatus, setSelectedStatus] = useState(order.order_status);
     const [updating, setUpdating] = useState(false);
+    const [loadingPay, setLoadingPay] = useState(false);
 
     useEffect(() => {
         setSelectedStatus(order.order_status);
     }, [order.order_status]);
+
+    const handlePayNow = async () => {
+        try {
+            setLoadingPay(true);
+            const res = await payOrder(order.order_id);
+            if (res.url) {
+                window.location.href = res.url;
+            }
+        } catch (err) {
+            console.error("Payment redirect failed:", err);
+            setLoadingPay(false);
+        }
+    };
 
     return(
         <div key={order.order_id} className={styles.orderCard}>
@@ -84,6 +99,7 @@ function OrderCard({order, currentUser, onStatusChange }){
                         //     setSelectedStatus(order.order_status);
                         //     setUpdating(false);
                         // }}
+                        onClick={handlePayNow}
                     >
                         Pay Now
                     </button>

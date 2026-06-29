@@ -151,6 +151,27 @@ const updateOrderStatus = async(orderId, status) => {
     );
 }
 
+const payPendingOrder = async (orderId, userId) => {
+    return await Order.findOne({
+        where: { order_id: orderId, user_id: userId, order_status: 'pending' },
+        include: [{
+            model: OrderItem,
+            as: 'OrderItems',
+            include: [{
+                model: Product,
+                as: 'Product'
+            }]
+        }]
+    });
+};
+
+const updateOrderSession = async (orderId, stripeSessionId) => {
+    return await Order.update(
+        { stripe_session_id: stripeSessionId },
+        { where: { order_id: orderId } }
+    );
+};
+
 module.exports = {
     createOrder,
     stripeUpdateOrderStatus,
@@ -158,6 +179,8 @@ module.exports = {
     getOrderDetails,
     getMonthlySalesData,
     getOrders,
-    updateOrderStatus
+    updateOrderStatus,
+    payPendingOrder,
+    updateOrderSession
 };
 
