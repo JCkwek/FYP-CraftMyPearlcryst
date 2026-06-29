@@ -2,13 +2,15 @@ import styles from './AiOptionDetails.module.css';
 import buttonStyles from '../../components/buttons/ButtonTheme.module.css';
 import BackButton from '../../components/buttons/BackButton';
 import Loading from '../../components/Loading';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { fetchAiComponents , updateAiComponent } from '../../api/aiCustomApi';
+import { fetchAiComponents, updateAiComponent, deleteAiComponent } from '../../api/aiCustomApi';
 import AiOptionForm from '../../components/admin/AiOptionForm';
+import sweetAlert from '../../components/SweetAlert';
 
 function AiOptionDetails(){
     const { id } = useParams();
+    const navigate = useNavigate();
     const [item, setItem] = useState(null);
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
@@ -36,8 +38,16 @@ function AiOptionDetails(){
         try {
             setSaving(true);
 
-            const res = await updateAiComponent(id, updatedData);
-            const updatedItem = res.data;
+            // const res = await updateAiComponent(id, updatedData);
+            const formData = new FormData();
+            Object.entries(updatedData).forEach(([key, value]) => {
+                if (value !== null && value !== undefined) {
+                    formData.append(key, value);
+                }
+            });
+
+            const res = await updateAiComponent(id, formData);
+            const updatedItem = res;
 
             setItem(updatedItem);
             setIsEditing(false);
@@ -46,6 +56,27 @@ function AiOptionDetails(){
             console.error(err);
         } finally {
             setSaving(false);
+        }
+    };
+
+    const handleDelete = async () => {
+        const result = await sweetAlert.confirm({
+            title: 'Delete this option?',
+            text: 'This action cannot be undone.',
+            confirmText: 'Delete',
+            cancelText: 'Cancel'
+        });
+
+        if (result.isConfirmed) {
+            try {
+                setSaving(true);
+                await deleteAiComponent(id);
+                navigate('/aiCustom');
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setSaving(false);
+            }
         }
     };
 
@@ -86,12 +117,20 @@ function AiOptionDetails(){
                         <p>{item.prompt_fragment}</p>
                     </div>
 
-                    <button
-                        className={`${buttonStyles.button} ${buttonStyles.main}`}
-                        onClick={() => setIsEditing(true)}
-                    >
-                        Edit
-                    </button>
+                    <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+                        <button
+                            className={`${buttonStyles.button} ${buttonStyles.main}`}
+                            onClick={() => setIsEditing(true)}
+                        >
+                            Edit
+                        </button>
+                        <button
+                            className={`${buttonStyles.button} ${buttonStyles.cancel}`}
+                            onClick={handleDelete}
+                        >
+                            Delete
+                        </button>
+                    </div>
                 </div>
             )}
         </div>

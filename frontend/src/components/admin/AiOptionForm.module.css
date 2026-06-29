@@ -24,11 +24,12 @@
     background-color: white;
 }
 .imageContainer{
-    height: 12rem;
+    height: auto;
     width: 10rem;
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     overflow: hidden;
 }
 
@@ -108,4 +109,8 @@
     border: 1px solid #D8A7B1;
     box-shadow: 0 0 0 1px #D8A7B1;
     outline: none;
+}
+
+label{
+    font-weight: bold;
 }

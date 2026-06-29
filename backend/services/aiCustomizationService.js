@@ -26,12 +26,16 @@ const getComponentsByStep = async (step, requirementName) => {
     });
 };
 
+// Builds a detailed AI image generation prompt based on selected jewelry components
 const buildPromptFromSelections = async (selectionIds, length =null) => {
+
+    // Fetch all selected jewelry components from database
     const components = await AiJewelryComponent.findAll({
         where: { component_id: selectionIds },
         order: [['step', 'ASC']]
     });
 
+    // Identify core jewelry structure based on predefined design steps
     const jewelryType = components.find(c => c.step === 1)?.name || 'jewelry';
     const mainMaterial = components.find(c => c.step === 2)?.name || '';
     const variantComponent = components.find(c => c.step === 3);
@@ -56,6 +60,7 @@ const buildPromptFromSelections = async (selectionIds, length =null) => {
         pieceDescription = `crafted from high-end ${colorValue} ${mainMaterial}`;
     }
     
+    // Final AI image prompt combining all attributes into a photography-style description
     const masterPrompt = `A professional macro gallery photograph of a ${colorValue} ${mainMaterial} ${jewelryType}. 
         The piece is ${pieceDescription}. 
         ${otherDetails}. ${lengthContext}. 
@@ -84,11 +89,13 @@ const getLengthConstraints = (baseType, necklaceStyleName = null) => {
     return necklaceMap[necklaceStyleName] || { default: 18, min: 16, max: 24, unit: 'inch' };
 };
 
+// Generates an AI jewelry image from selected components and stores the result
 const generateJewelryImage = async ({
     selectionIds,
     length,
     userId
 }) => {
+    // Build a structured AI prompt from selected jewelry components
     const prompt = await buildPromptFromSelections(
         selectionIds,
         length
@@ -99,7 +106,7 @@ const generateJewelryImage = async ({
         process.env.HF_TOKEN.trim()
     );
 
-    //hugging face
+    // Send text prompt to image generation model using FLUX.1-schnell
     const imageBlob = await client.textToImage({
         model: 'black-forest-labs/FLUX.1-schnell',
         // model: 'stabilityai/stable-diffusion-3.5-large-turbo',
@@ -109,15 +116,11 @@ const generateJewelryImage = async ({
         }
     });
 
+    // Convert returned Blob into a Node.js Buffer for file storage
     const arrayBuffer = await imageBlob.arrayBuffer();
     const imageBuffer = Buffer.from(arrayBuffer);
-    //end hugging face
 
-    //gemini testing
-    // console.log("Using Gemini image generation");
-    // const imageBuffer = await generateWithGemini(prompt);
-    //end gemini testing
-
+    // Generate unique filename using timestamp
     const filename = `ai_${Date.now()}.png`;
     const uploadDir = path.join(
         __dirname,
@@ -130,6 +133,7 @@ const generateJewelryImage = async ({
         });
     }
 
+    // Save generated image to filesystem
     fs.writeFileSync(
         path.join(uploadDir, filename),
         imageBuffer
@@ -137,6 +141,7 @@ const generateJewelryImage = async ({
 
     const publicUrl = `/uploads/ai_generated/${filename}`;
 
+    // Store generation result in database for history/tracking
     const newResult = await AiGeneratedResult.create({
         full_prompt: prompt,
         image_url: publicUrl,
@@ -152,29 +157,29 @@ const generateJewelryImage = async ({
     };
 };
 
-const generateWithGemini = async (prompt) => {
-    const ai = new GoogleGenAI({
-        apiKey: process.env.GEMINI_API_KEY
-    });
+// const generateWithGemini = async (prompt) => {
+//     const ai = new GoogleGenAI({
+//         apiKey: process.env.GEMINI_API_KEY
+//     });
 
-    const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-image',
-        contents: prompt,
-        config: {
-            responseModalities: ['IMAGE']
-        }
-    });
+//     const response = await ai.models.generateContent({
+//         model: 'gemini-2.5-flash-image',
+//         contents: prompt,
+//         config: {
+//             responseModalities: ['IMAGE']
+//         }
+//     });
 
-    const imagePart = response.candidates?.[0]?.content?.parts?.find(
-        part => part.inlineData
-    );
+//     const imagePart = response.candidates?.[0]?.content?.parts?.find(
+//         part => part.inlineData
+//     );
 
-    if (!imagePart) {
-        throw new Error('No image returned from Gemini');
-    }
+//     if (!imagePart) {
+//         throw new Error('No image returned from Gemini');
+//     }
 
-    return Buffer.from(imagePart.inlineData.data, 'base64');
-};
+//     return Buffer.from(imagePart.inlineData.data, 'base64');
+// };
 
 
 //admin
@@ -231,6 +236,14 @@ const createComponent = async (data) => {
     });
 };
 
+const deleteComponent = async (componentId) => {
+    const component = await AiJewelryComponent.findByPk(componentId);
+    if (!component) {
+        throw new Error('Component not found');
+    }
+    await component.destroy();
+};
+
 module.exports = {
     getComponentsByStep,
     buildPromptFromSelections,
@@ -239,5 +252,6 @@ module.exports = {
     getAllComponents,
     getAllRequirements,
     updateComponent,
-    createComponent
+    createComponent,
+    deleteComponent
 };

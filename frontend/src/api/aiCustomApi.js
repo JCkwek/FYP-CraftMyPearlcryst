@@ -19,3 +19,8 @@ export const addAiComponent = async (data) => {
     const res = await api.post(`/aicustomjewelry/admin/components`, data);
     return res.data;
 };
+
+export const deleteAiComponent = async (id) => {
+    const res = await api.delete(`/aicustomjewelry/admin/components/${id}`);
+    return res.data;
+};

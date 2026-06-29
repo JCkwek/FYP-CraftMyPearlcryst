@@ -1,7 +1,7 @@
 import styles from './AiCustomManagement.module.css';
 import React, { useState, useEffect } from 'react';
 import AiOptionCard from '../../components/AiOptionCard';
-import { fetchAiComponents, addAiComponent } from '../../api/aiCustomApi';
+import { fetchAiComponents, addAiComponent, updateAiComponent } from '../../api/aiCustomApi';
 import { useNavigate } from 'react-router-dom';
 import AiOptionForm from '../../components/admin/AiOptionForm';
 
@@ -81,8 +81,26 @@ return (
                     <AiOptionForm
                         initialData={{ step: selectedStep }}
                         onCancel={() => setIsCreating(false)}
-                        onSubmit={async (data) => {
-                            await addAiComponent(data);
+                        // onSubmit={async (data) => {
+                        //     await addAiComponent(data);
+                        //     setIsCreating(false);
+                        //     const refreshed = await fetchAiComponents();
+                        //     setItems(refreshed);
+                        // }}
+                        onSubmit={async (data, id, isEditMode) => {
+                            const formData = new FormData();
+
+                            Object.entries(data).forEach(([key, value]) => {
+                                if (value !== null && value !== undefined) {
+                                    formData.append(key, value);
+                                }
+                            });
+
+                            if (isEditMode) {
+                                await updateAiComponent(id, formData);
+                            } else {
+                                await addAiComponent(formData);
+                            }
                             setIsCreating(false);
                             const refreshed = await fetchAiComponents();
                             setItems(refreshed);

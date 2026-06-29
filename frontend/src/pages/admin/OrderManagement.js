@@ -79,7 +79,7 @@ function OrderManagement({ currentUser }){
         }else{
             try {
                 await updateAiOrderStatus(orderId, newStatus);
-                setOrders(prev =>
+                setAiOrders(prev =>
                     prev.map(aiOrder =>
                         aiOrder.id === orderId
                             ? { ...aiOrder, status: newStatus }
@@ -180,7 +180,7 @@ function OrderManagement({ currentUser }){
                                 <OrderCard 
                                     order={order} 
                                     key={order.order_id} 
-                                    // currentUser={currentUser} 
+                                    currentUser={currentUser} 
                                     onStatusChange={handleStatusChange}
                                 />
                             </div>

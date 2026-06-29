@@ -1,0 +1,6 @@
+projectKey=SC-Project-TechTribe
+serverUrl=http://localhost:9000
+serverVersion=26.6.0.123539
+dashboardUrl=http://localhost:9000/dashboard?id=SC-Project-TechTribe
+ceTaskId=06d68f82-4d13-4ba9-a843-f1f8eb10ac74
+ceTaskUrl=http://localhost:9000/api/ce/task?id=06d68f82-4d13-4ba9-a843-f1f8eb10ac74

@@ -3,7 +3,7 @@ import buttonStyles from '../components/buttons/ButtonTheme.module.css';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { FaCheck } from 'react-icons/fa';
-import axios from 'axios';
+import { confirmPayment } from '../api/orderApi';
 
 function OrderSuccess(){
     const navigate = useNavigate();
@@ -14,10 +14,7 @@ function OrderSuccess(){
     useEffect(() => {
         const finalizeOrder = async () => {
             try{
-                const token = localStorage.getItem('token');
-                await axios.get(`http://localhost:3000/orders/confirm?session_id=${sessionId}` ,{
-                    headers: { Authorization: `Bearer ${token}`}
-                });
+                await confirmPayment(sessionId);
                 setStatus('success');
             }catch(err){
                 console.error("Order finalization failed:", err);
@@ -29,17 +26,21 @@ function OrderSuccess(){
 
     }, [sessionId]);
 
-    if(status === 'processing') return <h2>Verifying your payment...</h2>;
-    
 
     return (
         <div className={styles.orderSuccess}>
             <div className={styles.orderSuccessContentContainer}>
-                <h2><FaCheck /> Payment Successful</h2>
-                <p>Your order has been placed.</p>
-                <button onClick={() => navigate('/orders')} className={`${buttonStyles.button} ${buttonStyles.main}`}>View My Orders</button>
+                {status === 'processing'? (
+                    <h2>Verifying your payment...</h2>
+                ): (
+                    <>
+                        <h2><FaCheck /> Payment Successful</h2>
+                        <p>Your order has been placed.</p>
+                        <button onClick={() => navigate('/orders')} className={`${buttonStyles.button} ${buttonStyles.main}`}>View My Orders</button>
+                    </>
+                )
+                }
             </div>
-
         </div>
     )
 }

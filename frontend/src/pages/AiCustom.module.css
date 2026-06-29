@@ -235,3 +235,15 @@
     justify-content: center;
     align-items: center;
 }
+
+.placeholder {
+    width: 200px;
+    height: 200px;
+    border: 2px dashed #ccc;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #888;
+    border-radius: 8px;
+}

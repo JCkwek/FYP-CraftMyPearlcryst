@@ -29,7 +29,7 @@ export const updateAiCustomOrder = async (id,data) => {
 }
 
 export const updateAiOrderStatus = async (id, status) => {
-    const res = await api.put(`/orders/admin/updateaiOrderStatus/${id}`, {status});
+    const res = await api.put(`/aicustomorder/admin/updateaiOrderStatus/${id}`, {status});
     return res.data;
 }
 

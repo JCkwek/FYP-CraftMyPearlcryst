@@ -279,7 +279,7 @@ function AiCustom(){
                                         <>
                                             <button className={`${buttonStyles.button} ${buttonStyles.cancel}`} onClick={handleReset}> Discard & Reset </button>
                                             <button className={`${buttonStyles.button} ${buttonStyles.main}`} onClick={handleRegenerate}>Regenerate</button>
-                                            <button className={`${buttonStyles.button} ${buttonStyles.green}`} onClick={handleRequestQuote}>Submit for Quote</button>
+                                            <button className={`${buttonStyles.button} ${buttonStyles.green}`} onClick={handleRequestQuote} disabled={isSubmitting}>Submit for Quote</button>
                                         </>
                                     ): (
                                         <button className={`${buttonStyles.button} ${buttonStyles.main}`} onClick={handleReset}>Return</button>

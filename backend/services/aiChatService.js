@@ -3,7 +3,9 @@ const { Product } = require("../models");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
+// Generates product recommendations using Gemini based on user input
 const generateRecommendation = async (userPrompt) => {
+  // Fetch all available products from database
     const products = await Product.findAll({
       where: {
         product_availability: 1
@@ -11,8 +13,10 @@ const generateRecommendation = async (userPrompt) => {
         attributes: ['product_id','product_name', 'product_desc', 'product_price', 'product_material']
     });
 
+    // Define AI models
     const models = ["gemini-3.1-flash-lite-preview", "gemini-2.5-flash-lite"];
 
+    // Construct strict system prompt to control AI behavior
     const productContext = `
       You are an expert luxury jewelry concierge for CraftMyPearlCryst.
       
@@ -39,6 +43,8 @@ const generateRecommendation = async (userPrompt) => {
     If the user asks something completely unrelated to jewelry/fashion, politely inform them you are only trained to assist with CraftMyPearlCryst inquiries.
     `;
 
+
+    //Combine system rules + user question into final prompt
     const fullPrompt = `${productContext}\n\nUser Question: ${userPrompt}`;
 
     // call API
@@ -50,7 +56,7 @@ const generateRecommendation = async (userPrompt) => {
           const response = await result.response;
           return response.text();
       }catch(err){
-          console.error(`Error with ${modelName}:`, error.message);
+          console.error(`Error with ${modelName}:`, err.message);
           if (modelName === models[models.length - 1]) {
                 throw new Error("All AI models are currently unavailable.");
           }

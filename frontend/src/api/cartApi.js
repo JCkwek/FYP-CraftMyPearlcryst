@@ -20,7 +20,3 @@ export const deleteCartItem = async (cartItemId) => {
     return res.data;
 };
 
-export const createCheckoutSession = async (cartItems) => {
-    const res = await api.post('/orders/checkout', { cartItems });
-    return res.data;
-};

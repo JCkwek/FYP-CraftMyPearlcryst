@@ -6,6 +6,21 @@ export const getUserOrder = async (filters = {}) => {
     return res.data;
 }
 
+export const createCheckoutSession = async (cartItems) => {
+    const res = await api.post('/orders/checkout', { cartItems });
+    return res.data;
+};
+
+//called by orderSuccess page
+export const confirmPayment = async (sessionId) => {
+    const res = await api.get('/orders/confirm', {
+        params: {
+            session_id: sessionId
+        }
+    });
+    return res.data;
+};
+
 //admin
 export const getSalesData = async () => {
     const res = await api.get('/orders/admin/salesData');

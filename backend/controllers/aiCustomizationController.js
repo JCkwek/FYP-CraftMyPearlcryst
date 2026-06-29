@@ -80,12 +80,26 @@ const getAllRequirements = async (req, res) => {
 
 const updateComponent = async (req, res) => {
     try {
-        const { id } = req.params;
-        const updated = await aiService.updateComponent(id, req.body);
-        res.json({
-            message: 'Component updated successfully',
-            data: updated
-        });
+        // const { id } = req.params;
+        // const updated = await aiService.updateComponent(id, req.body);
+        // res.json({
+        //     message: 'Component updated successfully',
+        //     data: updated
+        // });
+        const data = {
+            ...req.body,
+
+            ...(req.file && {
+                image_preview: `/uploads/${req.file.filename}`
+            })
+        };
+
+        const result = await aiService.updateComponent(
+            req.params.id,
+            data
+        );
+
+        res.json(result);
     } catch (error) {
         console.error(error);
         res.status(500).json({
@@ -96,14 +110,35 @@ const updateComponent = async (req, res) => {
 
 const createComponent = async (req, res) => {
     try {
-        const created = await aiService.createComponent(req.body);
-        res.json({
-            message: 'Component created successfully',
-            data: created
-        });
+        // const created = await aiService.createComponent(req.body);
+        // res.json({
+        //     message: 'Component created successfully',
+        //     data: created
+        // });
+        const data = {
+            ...req.body,
+            image_preview: req.file
+                ? `/uploads/${req.file.filename}`
+                : null
+        };
+
+        const result = await aiService.createComponent(data);
+
+        res.status(201).json(result);
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Failed to create component' });
+    }
+};
+
+const deleteComponent = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await aiService.deleteComponent(id);
+        res.json({ message: 'Component deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Failed to delete component' });
     }
 };
 
@@ -114,5 +149,6 @@ module.exports = {
     getAllComponents,
     getAllRequirements,
     updateComponent,
-    createComponent
+    createComponent,
+    deleteComponent
 };
