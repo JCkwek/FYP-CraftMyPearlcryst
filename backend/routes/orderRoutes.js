@@ -8,6 +8,7 @@ router.post('/checkout', authMiddleware, orderController.checkout);
 router.post('/:orderId/pay', authMiddleware, orderController.payPendingOrder);
 router.get('/confirm', authMiddleware, orderController.confirmPayment);
 router.get('/',authMiddleware, orderController.getOrdersByUserId);
+router.post('/webhook', express.raw({ type: 'application/json' }),orderController.handleStripeWebhook);
 
 //admin
 router.get('/admin/salesData', authMiddleware, adminCheck, orderController.getMonthlySalesData);

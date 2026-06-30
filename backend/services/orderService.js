@@ -76,6 +76,12 @@ const getOrderDetails = async (orderId, userId) => {
     });
 };
 
+const getOrderDetailsBySessionId = async (stripeSessionId) => {
+    return await Order.findOne({
+        where: { stripe_session_id: stripeSessionId }
+    });
+};
+
 //admin
 const getMonthlySalesData = async () => {
     return await Order.findAll({
@@ -181,6 +187,7 @@ module.exports = {
     getOrders,
     updateOrderStatus,
     payPendingOrder,
-    updateOrderSession
+    updateOrderSession,
+    getOrderDetailsBySessionId
 };
 

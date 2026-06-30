@@ -11,7 +11,8 @@ import Account from './pages/Account';
 import Login from './pages/Login';
 import Orders from './pages/Orders';
 import OrderSuccess from './pages/OrderSuccess';
-import Register from './pages/Register';
+import OrderUnsuccess from './pages/OrderUnsuccess';
+import Register from './pages/Register'; 
 import Profile from './pages/Profile';
 import AiCustom from './pages/AiCustom';
 import AiChat from './pages/AiChat';
@@ -85,6 +86,7 @@ function App() {
           <Route path="/login" element={<Login onLoginSuccess={setCurrentUser}/>}/>
           <Route path="/orders" element={<Orders />}/>
           <Route path="/checkout-success" element={<OrderSuccess />} />
+          <Route path="/checkout-unsuccess" element={<OrderUnsuccess />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />}/>
           {/* <Route path="/aiCustom" element={<AiCustom />}/> */}

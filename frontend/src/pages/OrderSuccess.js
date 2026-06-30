@@ -12,17 +12,32 @@ function OrderSuccess(){
     const [status, setStatus] = useState('processing');
     
     useEffect(() => {
+        let isMounted = true;
+        let attempts = 0;
         const finalizeOrder = async () => {
             try{
                 await confirmPayment(sessionId);
-                setStatus('success');
+                // setStatus('success');
+                if (isMounted) setStatus('success');
             }catch(err){
-                console.error("Order finalization failed:", err);
-                setStatus('error');
+                console.warn(`Attempt ${attempts + 1} failed, webhook might still be processing...`);
+                attempts++;
+                // Retry up to 5 times (every 2 seconds) before giving up
+                if (attempts < 5 && isMounted) {
+                    setTimeout(finalizeOrder, 2000);
+                } else {
+                    if (isMounted) setStatus('error');
+                }
             }
         };
 
-        if(sessionId) finalizeOrder();
+        if (sessionId) {
+            finalizeOrder();
+        } else {
+            setStatus('error');
+        }
+
+        return () => { isMounted = false; }; // Clean up to avoid memory leaks
 
     }, [sessionId]);
 

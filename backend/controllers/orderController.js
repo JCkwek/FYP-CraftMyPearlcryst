@@ -3,6 +3,24 @@ const orderService = require('../services/orderService');
 const cartService = require ('../services/cartService');
 const { OrderItem } = require('../models/orderItemModel');
 
+
+const getOrdersByUserId = async (req,res) => {
+    try{
+        const {
+            query,
+            status,
+        } = req.query;
+
+        const userId = req.user.id;
+        const orders = await orderService.getOrdersByUserId(userId, query, status);
+        res.json(orders);
+    }catch(err){
+        console.error("Order service error:", err);
+        res.status(500).json({error: "Failed to fetch orders"});
+    }
+};
+
+//payment
 const checkout = async (req, res) => {
     try{
         const userId = req.user.id;
@@ -25,8 +43,11 @@ const checkout = async (req, res) => {
             payment_method_types: ['card'],
             mode: 'payment',
             success_url: `${process.env.CLIENT_URL}/checkout-success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${process.env.CLIENT_URL}/cart`,
+            cancel_url: `${process.env.CLIENT_URL}/checkout-unsuccess`,
             customer_email: req.user.email,
+            metadata: {
+                userId: userId.toString() 
+            },
             line_items: cartItems.map(item => {
                 const customDetails = typeof item.customization === 'string' 
                     ? JSON.parse(item.customization) 
@@ -48,7 +69,8 @@ const checkout = async (req, res) => {
             }
             }),
         });
-        await orderService.createOrder(userId, cartItems, totalAmount, session.id);
+        // await orderService.createOrder(userId, cartItems, totalAmount, session.id);
+        // await cartService.clearCart(userId);
         res.status(200).json({ url: session.url });
     }catch(err){
         console.error(err);
@@ -64,12 +86,45 @@ const confirmPayment = async (req, res) => {
             return res.status(400).json({message: "Session ID is required"});
         }
 
+        // const session = await stripe.checkout.sessions.retrieve(session_id);
+        const existingOrder = await orderService.getOrderDetailsBySessionId(session_id);
+        if (existingOrder) {
+            console.log(`[Success Page] Order already created by webhook for session: ${session_id}`);
+            return res.status(200).json({ message: "Order placed successfully!" });
+        }
+
+        console.log(`[Success Page] Webhook not detected. Running fallback verification...`);
         const session = await stripe.checkout.sessions.retrieve(session_id);
 
         if(session.payment_status === 'paid'){
-            await orderService.stripeUpdateOrderStatus(session_id, 'paid');
+            const cartItems = await cartService.getAllCartItem(userId);
+            if (!cartItems || cartItems.length === 0) {
+                // If the cart is already empty and no order exists, the user might have refreshed. 
+                const doubleCheckOrder = await orderService.getOrderDetailsBySessionId(session_id);
+                if (doubleCheckOrder) {
+                    return res.status(200).json({ message: "Order placed successfully!" });
+                }
+                return res.status(400).json({ message: "Cart is empty or order already processed." });
+            }
+            // await orderService.stripeUpdateOrderStatus(session_id, 'paid');
+            // await cartService.clearCart(userId);
+
+            // Recalculate total amount
+            const totalAmount = cartItems.reduce((acc, item) => {
+                const price = parseFloat(item.price_at_addition) || 0;
+                return acc + (price * item.quantity);
+            }, 0);
+
+            // Create the order manually inside the database as 'paid'
+            await orderService.createOrder(userId, cartItems, totalAmount, session.id);
+            await orderService.stripeUpdateOrderStatus(session.id, 'paid');
+
+            // Wipe out the user's shopping cart
             await cartService.clearCart(userId);
-            return res.status(200).json({message: "Order placed successfully!"});
+
+            console.log(`[Success Page] Fallback successfully created order and cleared cart for User: ${userId}`);
+            return res.status(200).json({ message: "Order placed successfully via fallback handler!" });
+            // return res.status(200).json({message: "Order placed successfully!"});
         }
         res.status(400).json({message: "Payment not verified"});
     }catch(err){
@@ -77,21 +132,112 @@ const confirmPayment = async (req, res) => {
     }
 };
 
-const getOrdersByUserId = async (req,res) => {
-    try{
-        const {
-            query,
-            status,
-        } = req.query;
+const handleStripeWebhook = async (req, res) => {
+    const sig = req.headers['stripe-signature'];
+    let event;
 
+    try {
+        // Verify that the request actually came securely from Stripe
+        event = stripe.webhooks.constructEvent(
+            req.body, 
+            sig, 
+            process.env.STRIPE_WEBHOOK_SECRET
+        );
+    } catch (err) {
+        console.error(`Webhook Signature Verification Failed: ${err.message}`);
+        return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    // Handle the checkout.session.completed event
+    if (event.type === 'checkout.session.completed') {
+        const session = event.data.object;
+        const userId = session.metadata.userId;
+
+        try {
+            // Fetch current cart items to populate order items
+            const cartItems = await cartService.getAllCartItem(userId);
+
+            if (cartItems && cartItems.length > 0) {
+                // Recalculate total amount
+                const totalAmount = cartItems.reduce((acc, item) => {
+                    const price = parseFloat(item.price_at_addition) || 0;
+                    return acc + (price * item.quantity);
+                }, 0);
+
+                // Create the order in your database (Sets to 'pending' via your service)
+                const newOrder = await orderService.createOrder(userId, cartItems, totalAmount, session.id);
+
+                // Instantly mark it 'paid' since Stripe confirmed payment
+                await orderService.stripeUpdateOrderStatus(session.id, 'paid');
+
+                // Empty out their cart
+                await cartService.clearCart(userId);
+
+                console.log(`Order created and cart cleared successfully for User: ${userId}`);
+            }
+        } catch (error) {
+            console.error("Fulfillment error inside webhook:", error);
+            return res.status(500).json({ error: "Fulfillment failed" });
+        }
+    }
+    res.json({ received: true });
+};
+
+const payPendingOrder = async (req, res) => {
+    try {
+        const { orderId } = req.params;
         const userId = req.user.id;
-        const orders = await orderService.getOrdersByUserId(userId, query, status);
-        res.json(orders);
-    }catch(err){
-        console.error("Order service error:", err);
-        res.status(500).json({error: "Failed to fetch orders"});
+
+        const order = await orderService.payPendingOrder(orderId, userId);
+
+        if (!order) {
+            return res.status(404).json({ message: "Pending order not found" });
+        }
+
+        // Create stripe session
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            mode: 'payment',
+            success_url: `${process.env.CLIENT_URL}/checkout-success?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${process.env.CLIENT_URL}/orders`,
+            customer_email: req.user.email,
+            metadata: {
+                userId: userId.toString() 
+            },
+            line_items: order.OrderItems.map(item => {
+                const customDetails = typeof item.customization === 'string' 
+                    ? JSON.parse(item.customization) 
+                    : item.customization;
+
+                return {
+                    price_data: {
+                        currency: 'myr',
+                        product_data: {
+                            name: item.Product.product_name,
+                            description: `Size: ${customDetails?.size || 'Standard'}, Color: ${customDetails?.color || 'N/A'}`,
+                            images: [`${process.env.CLIENT_URL}/${item.Product.product_image}`],
+                        },
+                        unit_amount: Math.round(parseFloat(item.price_at_purchase) * 100),
+                    },
+                    quantity: item.quantity,
+                };
+            }),
+        });
+
+        await orderService.updateOrderSession(orderId, session.id);
+        res.status(200).json({ url: session.url });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message || "Payment session creation failed" });
     }
 };
+
+
+//end payment
+
+
+
+
 
 //admin
 const getMonthlySalesData = async (req, res) => {
@@ -156,51 +302,6 @@ const updateOrderStatus = async (req,res) => {
     }
 }
 
-const payPendingOrder = async (req, res) => {
-    try {
-        const { orderId } = req.params;
-        const userId = req.user.id;
-
-        const order = await orderService.payPendingOrder(orderId, userId);
-
-        if (!order) {
-            return res.status(404).json({ message: "Pending order not found" });
-        }
-
-        // Create stripe session
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            mode: 'payment',
-            success_url: `${process.env.CLIENT_URL}/checkout-success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${process.env.CLIENT_URL}/orders`,
-            customer_email: req.user.email,
-            line_items: order.OrderItems.map(item => {
-                const customDetails = typeof item.customization === 'string' 
-                    ? JSON.parse(item.customization) 
-                    : item.customization;
-
-                return {
-                    price_data: {
-                        currency: 'myr',
-                        product_data: {
-                            name: item.Product.product_name,
-                            description: `Size: ${customDetails?.size || 'Standard'}, Color: ${customDetails?.color || 'N/A'}`,
-                            images: [`${process.env.CLIENT_URL}/${item.Product.product_image}`],
-                        },
-                        unit_amount: Math.round(parseFloat(item.price_at_purchase) * 100),
-                    },
-                    quantity: item.quantity,
-                };
-            }),
-        });
-
-        await orderService.updateOrderSession(orderId, session.id);
-        res.status(200).json({ url: session.url });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: err.message || "Payment session creation failed" });
-    }
-};
 
 module.exports = {
     checkout,
@@ -209,5 +310,6 @@ module.exports = {
     getMonthlySalesData,
     getOrders,
     updateOrderStatus,
-    payPendingOrder
+    payPendingOrder,
+    handleStripeWebhook
 };

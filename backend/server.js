@@ -3,13 +3,20 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const PORT = 3000;
-app.use(express.json());
+// app.use(express.json());
 
 // Middleware
 app.use(cors({                          // enable CORS
   origin: 'http://localhost:3001'       // allow React frontend
 }));
-app.use(express.json());  
+app.use((req, res, next) => {
+  if (req.originalUrl === '/orders/webhook') {
+    next(); // Skip JSON parsing for this route so express.raw handles it inside your route file
+  } else {
+    express.json()(req, res, next);
+  }
+});
+// app.use(express.json());  
 app.use('/uploads', express.static('uploads'));
 
 // Routes

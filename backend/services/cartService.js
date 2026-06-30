@@ -67,5 +67,3 @@ const clearCart = async (userId) => {
 };
 
 module.exports = {addToCart, getAllCartItem, updateQuantity, deleteCartItem ,clearCart}
-
-
