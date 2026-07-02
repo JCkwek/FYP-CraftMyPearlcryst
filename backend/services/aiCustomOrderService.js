@@ -148,7 +148,6 @@ const getAllAiCustomOrder = async () => {
 
 const updateAiCustomOrder = async (id, adminData) => {
     const { status, admin_price, admin_note } = adminData;
-    
     const order = await AiCustomOrder.findByPk(id);
 
     if (!order) {

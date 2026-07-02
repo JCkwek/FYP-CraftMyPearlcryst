@@ -9,6 +9,7 @@ import { getUserOrder } from '../api/orderApi';
 import { fetchAiCustomOrder, removeAiCustomOrder, updateMyAiOrderStatus, createAiCheckoutSession } from '../api/aiCustomOrderApi';
 import SearchBar from '../components/SearchBar';
 import { ORDER_STATUSES } from '../constants/OrderStatus';
+import sweetAlert from '../components/SweetAlert';
 
 function Orders(){
     const navigate = useNavigate();
@@ -96,15 +97,34 @@ function Orders(){
 
     // Customer places an order (quoted → ordered, awaiting payment)
     const handlePlaceOrder = async (orderId) => {
-        if (window.confirm("Confirm place order at the quoted price? You will need to complete payment.")) {
-            try {
-                await updateMyAiOrderStatus(orderId, 'ordered');
-                setAiOrders(prev =>
-                    prev.map(o => o.id === orderId ? { ...o, status: 'ordered' } : o)
-                );
-            } catch (err) {
-                alert("Failed to place order: " + (err.response?.data?.message || err.message));
-            }
+        const result = await sweetAlert.confirm({
+            title: 'Place Order?',
+            text: 'Confirm placing this order at the quoted price. You will need to complete payment afterwards.',
+            confirmText: 'Place Order',
+            cancelText: 'Cancel'
+        });
+
+        if (!result.isConfirmed) return;
+
+        try {
+            await updateMyAiOrderStatus(orderId, 'ordered');
+            setAiOrders(prev =>
+                prev.map(o =>
+                    o.id === orderId
+                        ? { ...o, status: 'ordered' }
+                        : o
+                )
+            );
+
+            await sweetAlert.success(
+                'Your order has been placed successfully. You may proceed with payment.',
+                'Order Placed'
+            );
+        } catch (err) {
+            sweetAlert.error(
+                err.response?.data?.message || err.message,
+                'Failed to Place Order'
+            );
         }
     };
 
@@ -140,7 +160,6 @@ function Orders(){
             <div className={styles.orderContentContainer}>
                 <h2>My Orders</h2>
 
-                {/* Tab switcher */}
                 <div className={styles.tabContainer}>
                     <button
                         className={`${styles.tabButton} ${selectedTab === 'regular' ? styles.activeTab : styles.nonActiveTab}`}

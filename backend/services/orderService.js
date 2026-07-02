@@ -82,6 +82,20 @@ const getOrderDetailsBySessionId = async (stripeSessionId) => {
     });
 };
 
+const payPendingOrder = async (orderId, userId) => {
+    return await Order.findOne({
+        where: { order_id: orderId, user_id: userId, order_status: 'pending' },
+        include: [{
+            model: OrderItem,
+            as: 'OrderItems',
+            include: [{
+                model: Product,
+                as: 'Product'
+            }]
+        }]
+    });
+};
+
 //admin
 const getMonthlySalesData = async () => {
     return await Order.findAll({
@@ -157,19 +171,7 @@ const updateOrderStatus = async(orderId, status) => {
     );
 }
 
-const payPendingOrder = async (orderId, userId) => {
-    return await Order.findOne({
-        where: { order_id: orderId, user_id: userId, order_status: 'pending' },
-        include: [{
-            model: OrderItem,
-            as: 'OrderItems',
-            include: [{
-                model: Product,
-                as: 'Product'
-            }]
-        }]
-    });
-};
+
 
 const updateOrderSession = async (orderId, stripeSessionId) => {
     return await Order.update(
