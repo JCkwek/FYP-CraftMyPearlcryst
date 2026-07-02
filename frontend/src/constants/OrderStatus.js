@@ -11,6 +11,7 @@ export const ORDER_STATUSES = {
         'pending',
         'quoted',
         'declined',
+        'ordered',
         'paid',
         'in-progress',
         'cancelled',

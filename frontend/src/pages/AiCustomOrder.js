@@ -55,7 +55,7 @@ function AiCustomOrder(){
     return(
         <div className={styles.aiOrder}>
             <div className={styles.aiOrderContentContainer}>
-                <h2>Custom Lab Orders</h2>
+                <h2>Custom Lab Requests</h2>
                 <div className={styles.toolbar}>
                     <SearchBar 
                         placeholder="Search orders by id"

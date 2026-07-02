@@ -7,6 +7,9 @@ const adminCheck = require('../middleware/adminCheck');
 router.post('/submit-quote', authMiddleware, aiOrderController.submitForQuote);
 router.get('/my-aicustom-orders', authMiddleware, aiOrderController.getAiCustomOrdersByUserId);
 router.delete('/delete/:orderId', authMiddleware, aiOrderController.removeAiCustomOrder);
+router.put('/my-aicustom-orders/:id/status', authMiddleware, aiOrderController.updateMyAiOrderStatus);
+router.post('/my-aicustom-orders/:id/checkout', authMiddleware, aiOrderController.createAiCheckoutSession);
+router.get('/my-aicustom-orders/confirm', authMiddleware, aiOrderController.confirmAiPayment);
 
 //admin
 router.get('/admin/allAiCustomOrders', authMiddleware, adminCheck, aiOrderController.getAllAiCustomOrder);

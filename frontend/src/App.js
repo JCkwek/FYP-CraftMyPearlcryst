@@ -102,6 +102,7 @@ function App() {
           />
           <Route path="/aiChat" element={<AiChat />}/>
           <Route path="/aiCustomOrder" element={<AiCustomOrder />}/>
+          <Route path="/aiCustomOrder" element={<Navigate to="/orders" replace />}/>
           {/*Admin routes */}
           <Route element={<AdminRouteGuard />}>
             <Route path="/admin/dashboard" element={<AdminDashboard />} />

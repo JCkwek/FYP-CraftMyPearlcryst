@@ -4,10 +4,11 @@ import buttonStyles from '../components/buttons/ButtonTheme.module.css';
 import { ORDER_STATUSES } from '../constants/OrderStatus';
 import { useState } from 'react';
 
-function AiCustomOrderCard({order, aiResult, onDelete,currentUser, onStatusChange, onAccept, onReject}){
+function AiCustomOrderCard({order, aiResult, onDelete, onCancel, onPlaceOrder, onPayNow, currentUser, onStatusChange, onAccept, onReject}){
     const [selectedStatus, setSelectedStatus] = useState(order.status);
     const selectedComponents = aiResult?.selectedComponents || [];
     const [updating, setUpdating] = useState(false);
+    const [payingNow, setPayingNow] = useState(false);
     const priceDisplay = order.admin_price > 0 
         ? `RM ${order.admin_price}` 
         : "-";
@@ -137,18 +138,43 @@ function AiCustomOrderCard({order, aiResult, onDelete,currentUser, onStatusChang
                             { order.status === "pending" ? (
                                 <button 
                                     className={`${buttonStyles.button} ${buttonStyles.cancel}`}
-                                    onClick={() => onDelete(order.id)}
+                                    onClick={() => (onDelete ? onDelete(order.id) : onCancel && onCancel(order.id))}
                                     title="Remove item"
                                 >
                                     Cancel Request
                                 </button>
                             ): order.status === "quoted" ?  ( 
+                                <>
+                                    <button 
+                                        className={`${buttonStyles.button} ${buttonStyles.main}`}
+                                        onClick={() => onPlaceOrder && onPlaceOrder(order.id)}
+                                        title="Place order at quoted price"
+                                    >
+                                        Place Order
+                                    </button>
+                                    <button 
+                                        className={`${buttonStyles.button} ${buttonStyles.cancel}`}
+                                        onClick={() => onCancel && onCancel(order.id)}
+                                        title="Cancel this order"
+                                    >
+                                        Cancel
+                                    </button>
+                                </>
+                            ): order.status === "ordered" ? (
                                 <button 
-                                    className={`${buttonStyles.button} ${buttonStyles.main}`}
-                                    onClick={() => onDelete(order.id)}
-                                    title="Remove item"
+                                    className={`${buttonStyles.button} ${buttonStyles.green}`}
+                                    disabled={payingNow}
+                                    onClick={async () => {
+                                        setPayingNow(true);
+                                        try {
+                                            await onPayNow(order.id);
+                                        } finally {
+                                            setPayingNow(false);
+                                        }
+                                    }}
+                                    title="Pay for this order"
                                 >
-                                    Place Order
+                                    {payingNow ? 'Redirecting...' : 'Pay Now'}
                                 </button>
                             ): null
                             }    

@@ -25,10 +25,10 @@
 .paid{
     color: blue;
 }
-.pending, .quoted ,.ordered{
+.in-progress,.pending,.ordered{
     color: orange;
 }
-.completed{
+.quoted, .completed{
     color: green;
 }
 

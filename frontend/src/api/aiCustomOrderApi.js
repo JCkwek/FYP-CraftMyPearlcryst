@@ -17,6 +17,23 @@ export const removeAiCustomOrder = async (orderId) => {
     return res.data;
 };
 
+export const updateMyAiOrderStatus = async (orderId, status) => {
+    const res = await api.put(`/aicustomorder/my-aicustom-orders/${orderId}/status`, { status });
+    return res.data;
+};
+
+export const createAiCheckoutSession = async (orderId) => {
+    const res = await api.post(`/aicustomorder/my-aicustom-orders/${orderId}/checkout`);
+    return res.data;
+};
+
+export const confirmAiPayment = async (sessionId, orderId) => {
+    const res = await api.get('/aicustomorder/my-aicustom-orders/confirm', {
+        params: { session_id: sessionId, orderId }
+    });
+    return res.data;
+};
+
 //admin
 export const getAllAiCustomOrder = async () => {
     const res = await api.get('/aicustomorder/admin/allAiCustomOrders')
