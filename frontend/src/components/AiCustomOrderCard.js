@@ -95,25 +95,29 @@ function AiCustomOrderCard({order, aiResult, onDelete, onCancel, onPlaceOrder, o
                     <div className={styles.aiOrderDetails}>
                         {isAdmin && 
                             <p>
-                                <strong>Prompt:</strong> {aiResult?.full_prompt?.substring(0, 100)}...
+                                {/* <strong>Prompt:</strong> {aiResult?.full_prompt?.substring(0, 100)}... */}
+                                <strong>Prompt:</strong> {aiResult?.full_prompt}
                             </p>
                         }
                         
-                        <p>
+                        <div>
                             <strong>Components:</strong>
                             <div>
                                 {selectedComponents.map(item => (
                                     <span key={item.id}>{item.name}, </span>
                                 ))}
                             </div>
-                        </p>
+                            <br></br>
+                        </div>
 
-                        <p><strong>Quoted Price:</strong> {priceDisplay}</p>
-                        {order.admin_note && (
-                            <p>
-                                <strong>Note from Artisan:</strong> {order.admin_note}
-                            </p>
-                        )}
+                        <div>
+                            <strong>Quoted Price:</strong> {priceDisplay}
+                            {order.admin_note && (
+                                <p>
+                                    <strong>Note from Artisan:</strong> {order.admin_note}
+                                </p>
+                            )}
+                        </div>
                     </div>
                     {isAdmin && order.status === "pending" &&
                         <div className={styles.aiOrderBtnContainer}>

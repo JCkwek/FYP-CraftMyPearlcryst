@@ -35,20 +35,24 @@
 .aiOrderItemCard{
     padding: 1rem;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     flex-direction: row;
     flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
 .aiOrderDetails{
-    padding: 1rem;
-    flex: 5;
+    padding: 0.5rem;
+    width: 45rem;
+    /* flex: 5; */
 }
 
 .aiOrderItemImageContainer{
-    flex: 1;
-    width: 5rem;
-    height: auto;
+    /* flex: 2; */
+    padding: 0.5rem;
+    width: 15rem;
+    height: 20rem;
+    /* height: auto; */
 }
 
 .aiOrderItemImageContainer img {

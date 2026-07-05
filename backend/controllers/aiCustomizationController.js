@@ -17,7 +17,7 @@ const getStepOptions = async (req, res) => {
 // Step 8 — generates a single image/ regenerate
 const generateImage = async (req, res) => {
     try {
-        const { selectionIds, length } = req.body;
+        const { selectionIds, length, spacerInterval } = req.body;
 
         if (!selectionIds || selectionIds.length === 0) {
             return res.status(400).json({
@@ -28,6 +28,7 @@ const generateImage = async (req, res) => {
         const result = await aiService.generateJewelryImage({
             selectionIds,
             length,
+            spacerInterval,
             userId: req.user?.user_id ?? null
         });
 

@@ -24,6 +24,7 @@ function AiCustom(){
     const [currentResultId, setCurrentResultId] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [quoteSubmitted, setQuoteSubmitted] = useState(false);
+    const [spacerInterval, setSpacerInterval] = useState(2);
 
     useEffect(() => {
         if (!started) return;
@@ -115,6 +116,10 @@ function AiCustom(){
         } else {
             setStep(step - 1);
         }
+
+        if (step <= 5) {
+            setSpacerInterval(2);
+        }
     };
 
     const getDynamicStepName = (step, selections) => {
@@ -139,7 +144,8 @@ function AiCustom(){
             
             const res = await api.post('/aicustomjewelry/generate', {
                 selectionIds,
-                length: lengthValue
+                length: lengthValue,
+                spacerInterval
             });
 
             if (res.data.success) {
@@ -167,6 +173,7 @@ function AiCustom(){
         setFinalImage(null);
         setGenerating(false);
         setError(null);
+        setSpacerInterval(2);
     };
 
     const handleRegenerate = () => {
@@ -284,8 +291,14 @@ function AiCustom(){
                                     ): (
                                         <button className={`${buttonStyles.button} ${buttonStyles.main}`} onClick={handleReset}>Return</button>
                                     )
-                                    }
-                                    
+                                    }                    
+                                </div>
+                                <div className={styles.disclaimer}>
+                                    <p>
+                                        <i>Disclaimer: The generated image is AI-assisted and may not be fully accurate in every detail. 
+                                            It is used as a visual reference, and we will strictly follow the selected components when creating your custom design.
+                                        </i>
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -312,6 +325,31 @@ function AiCustom(){
                         </div>                  
                         ))
                 )}
+                
+
+                {/* Spacer interval */}
+                {step === 5 &&
+                    selections[5] &&
+                    selections[5].name !== "No Spacer" && (
+                        <div className={styles.spacerIntervalContainer}>
+                            <label>
+                                Place spacer every
+                            </label>
+
+                            <input
+                                type="number"
+                                min="1"
+                                max="20"
+                                value={spacerInterval}
+                                onChange={(e) =>
+                                    setSpacerInterval(Number(e.target.value))
+                                }
+                            />
+
+                            <span>beads</span>
+                        </div>
+                    )}
+
             </div>
 
             {!finalImage && !generating &&(

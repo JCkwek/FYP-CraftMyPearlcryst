@@ -27,7 +27,7 @@ const getComponentsByStep = async (step, requirementName) => {
 };
 
 // Builds a detailed AI image generation prompt based on selected jewelry components
-const buildPromptFromSelections = async (selectionIds, length =null) => {
+const buildPromptFromSelections = async (selectionIds, length =null, spacerInterval = null) => {
 
     // Fetch all selected jewelry components from database
     const components = await AiJewelryComponent.findAll({
@@ -39,38 +39,53 @@ const buildPromptFromSelections = async (selectionIds, length =null) => {
     const jewelryType = components.find(c => c.step === 1)?.name || 'jewelry';
     const mainMaterial = components.find(c => c.step === 2)?.name || '';
     const variantComponent = components.find(c => c.step === 3);
+    const spacerComponent = components.find(c => c.step === 5);
     const colorValue = (variantComponent?.prompt_fragment || variantComponent?.name || '').toLowerCase();
     const materialDisplay = colorValue.includes(mainMaterial.toLowerCase()) ? '' : mainMaterial;
+    let spacerDescription = '';
+    if (spacerComponent &&spacerComponent.name !== 'No Spacer'){
+        const interval = Number(spacerInterval);
+        if (!Number.isInteger(interval) || interval < 1 || interval > 20) {
+            throw new Error("Invalid spacer interval"); 
+        }
 
-    const otherDetails = components
-        .filter(c => [4,6,7].includes(c.step))
-        .map(c => {
-            if (c.name === 'No Pendant') return null;   
-            return c.prompt_fragment || c.name;
-        })
-        .filter(Boolean)
-        .join(', ');
+        spacerDescription =
+            `${spacerComponent.prompt_fragment}, placed evenly after every ${spacerInterval} beads`;
+    }
+
+    const otherDetails = [
+        ...components
+            .filter(c => [4,6,7].includes(c.step))
+            .map(c => {
+                if (c.name === 'No Pendant') return null;
+                return c.prompt_fragment || c.name;
+            }),
+        spacerDescription
+    ]
+    .filter(Boolean)
+    .join(', ');
 
     const lengthContext = length ? `${length} inch length` : '';
     const materialMapping = ['Pearl', 'Crystal', 'Stone', 'Beaded'];
+
+   
     let pieceDescription = "";
     if (materialMapping.includes(mainMaterial)) {
-        pieceDescription = `made of matching ${colorValue} ${mainMaterial}s, where every single bead is a consistent ${colorValue} hue`;
-    } else {
-        pieceDescription = `crafted from high-end ${colorValue} ${mainMaterial}`;
+        pieceDescription = ` ${colorValue} ${mainMaterial}, where every single bead is a consistent ${colorValue} hue`;
     }
-    
+        // The composition includes a ${colorValue} ${mainMaterial} base with consistent high-end craftsmanship and symmetrical arrangement.
+            // Length is ${lengthContext}.
+                // Design structure: a clearly visible repeating bead pattern that defines the necklace layout with symmetrical arrangement.
     // Final AI image prompt combining all attributes into a photography-style description
-    const masterPrompt = `A professional macro gallery photograph of a ${colorValue} ${mainMaterial} ${jewelryType}. 
-        The piece is ${pieceDescription}. 
-        ${otherDetails}. ${lengthContext}. 
-        The ${colorValue} color is vibrant and saturated. 
-        Perfectly centered on a clean white marble surface. 
-        Soft studio lighting, sharp focus, 8k resolution. 
-        Pristine minimalist product photography. 
-        Clean background, no text, no watermarks, no logos, no branding, no letters, no signatures.`
-        .replace(/\s+/g, ' ')
-        .trim();
+    const masterPrompt = `
+    A macro studio product photograph of a luxury handcrafted ${jewelryType} made of ${pieceDescription} with consistent high-end craftsmanship and symmetrical arrangement.. 
+    It features a ${otherDetails}. 
+    If a pendant is present, it is the focal point of the design and is centered naturally within the necklace flow.
+    Soft diffused studio lighting, ultra realistic product photography, sharp focus, 8k detail, professional jewelry catalog style.
+    Clean white neutral studio background. Minimalist composition. No text, no watermark, no logos, no branding, no letters, no signatures.
+    `
+    .replace(/\s+/g, ' ')
+    .trim();
 
     return masterPrompt;
 };
@@ -93,12 +108,14 @@ const getLengthConstraints = (baseType, necklaceStyleName = null) => {
 const generateJewelryImage = async ({
     selectionIds,
     length,
+    spacerInterval,
     userId
 }) => {
     // Build a structured AI prompt from selected jewelry components
     const prompt = await buildPromptFromSelections(
         selectionIds,
-        length
+        length,
+        spacerInterval
     );
     console.log("Generated Prompt:", prompt);
 
@@ -106,17 +123,20 @@ const generateJewelryImage = async ({
         process.env.HF_TOKEN.trim()
     );
 
+    // Alternatively use gemini
+    // const imageBuffer = await generateWithGemini(prompt);
+
     // Send text prompt to image generation model using FLUX.1-schnell
     const imageBlob = await client.textToImage({
         model: 'black-forest-labs/FLUX.1-schnell',
-        // model: 'stabilityai/stable-diffusion-3.5-large-turbo',
+        // model: 'stabilityai/stable-diffusion-3.5-large-large',
         inputs: prompt,
         parameters: {
             num_inference_steps: 4
         }
     });
 
-    // Convert returned Blob into a Node.js Buffer for file storage
+    // Convert returned Blob into a Node.js Buffer for file storage (HF only)
     const arrayBuffer = await imageBlob.arrayBuffer();
     const imageBuffer = Buffer.from(arrayBuffer);
 
@@ -157,29 +177,29 @@ const generateJewelryImage = async ({
     };
 };
 
-// const generateWithGemini = async (prompt) => {
-//     const ai = new GoogleGenAI({
-//         apiKey: process.env.GEMINI_API_KEY
-//     });
+const generateWithGemini = async (prompt) => {
+    const ai = new GoogleGenAI({
+        apiKey: process.env.GEMINI_API_KEY
+    });
 
-//     const response = await ai.models.generateContent({
-//         model: 'gemini-2.5-flash-image',
-//         contents: prompt,
-//         config: {
-//             responseModalities: ['IMAGE']
-//         }
-//     });
+    const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash-image',
+        contents: prompt,
+        config: {
+            responseModalities: ['IMAGE']
+        }
+    });
 
-//     const imagePart = response.candidates?.[0]?.content?.parts?.find(
-//         part => part.inlineData
-//     );
+    const imagePart = response.candidates?.[0]?.content?.parts?.find(
+        part => part.inlineData
+    );
 
-//     if (!imagePart) {
-//         throw new Error('No image returned from Gemini');
-//     }
+    if (!imagePart) {
+        throw new Error('No image returned from Gemini');
+    }
 
-//     return Buffer.from(imagePart.inlineData.data, 'base64');
-// };
+    return Buffer.from(imagePart.inlineData.data, 'base64');
+};
 
 
 //admin

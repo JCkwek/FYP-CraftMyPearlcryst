@@ -247,3 +247,9 @@
     color: #888;
     border-radius: 8px;
 }
+
+.disclaimer{
+    padding: 1rem;
+    /* width: 50%; */
+    font-size: small;
+}
