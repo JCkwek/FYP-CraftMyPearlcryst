@@ -10,7 +10,30 @@
 .contentFirstRow{
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
+
+.contentFirstRowLeftColumn{
+    display: flex;
+    justify-content: start;
+    gap: 2rem;
+    align-items: center;
+}
+
+.filterSelect{
+    height: 100%;
+    padding: 0.8rem;
+    border: 1px solid #dcdcdc;
+    border-radius: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.filterSelect:hover,
+.filterSelect:focus-within{
+    outline: 1.5px solid #cfcece ;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
 
 .noProductContainer{
     height: 60vh;
@@ -32,7 +55,6 @@
     gap: 0.3rem;
     flex-wrap: wrap;
 }
-
 .productCardEntry {
     opacity: 0; /* Start invisible */
     animation: cardEntrance 0.5s ease-out forwards;
@@ -48,3 +70,4 @@
         transform: translateY(0);
     }
 }
+

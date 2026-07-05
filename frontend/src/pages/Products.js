@@ -19,6 +19,7 @@ function Products(){
     const { currentUser }  = useOutletContext();
     const isAdmin = currentUser?.role === 'admin';
     const location = useLocation();
+    const [productType, setProductType] = useState('');
 
     useEffect(() => {
         if (location.state?.message) {
@@ -31,12 +32,13 @@ function Products(){
         fetchProducts('', isAdmin);
     },[isAdmin]);
 
-    const fetchProducts = async (searchValue = '', adminStatus = false) => {
+    const fetchProducts = async (searchValue = '', adminStatus = false, typeValue = '') => {
         try{
             setLoading(true);
             const res = await getProducts({
                 query: searchValue,
-                onlyAvailable: !adminStatus
+                onlyAvailable: !adminStatus,
+                type: typeValue || undefined
             });
             console.log(res);
             setProducts(res);
@@ -70,7 +72,7 @@ function Products(){
 
     const handleSearch = async () =>{
         setSearchQuery(search);
-        fetchProducts(search, isAdmin);     
+        fetchProducts(search, isAdmin, productType);     
     };
 
 
@@ -79,21 +81,43 @@ function Products(){
         <div className={styles.productsContentContainer}>
         <h2>Products</h2>
         <div className={styles.contentFirstRow}>
-            <SearchBar 
-                value={search}
-                onChange={setSearch}
-                onSearch={handleSearch}
-                placeholder="Search products"
-            />
-            {successMessage && <AlertBanner message={successMessage} type="success" onClose={() => setSuccessMessage(null)}/>}
-            {isAdmin && (
-                <button 
-                    className={`${buttonStyles.button} ${buttonStyles.main}`} 
-                    onClick={() => navigate('/admin/addProducts')} 
-                >
-                + New Product
-                </button>
-            )}
+            <div className={styles.contentFirstRowLeftColumn}>
+                <SearchBar 
+                    value={search}
+                    onChange={setSearch}
+                    onSearch={handleSearch}
+                    placeholder="Search products"
+                />
+                
+                {isAdmin && (
+                    <button 
+                        className={`${buttonStyles.button} ${buttonStyles.main}`} 
+                        onClick={() => navigate('/admin/addProducts')} 
+                    >
+                    + New Product
+                    </button>
+                )}
+
+                {successMessage && <AlertBanner message={successMessage} type="success" onClose={() => setSuccessMessage(null)}/>}
+                
+            </div>
+
+            {/*product type filter */}
+            <select
+                className={styles.filterSelect}
+                value={productType}
+                onChange={(e) => {
+                    const value = e.target.value;
+                    setProductType(value);
+                    fetchProducts(search, isAdmin, value);
+                }}
+            >
+                <option value="">All Types</option>
+                <option value="Necklace">Necklace</option>
+                <option value="Bracelet">Bracelet</option>
+                <option value="Ring">Ring</option>
+                <option value="Earring">Earring</option>
+            </select>
         </div>
 
         {loading ? (
@@ -103,7 +127,7 @@ function Products(){
         ) : (
             <>
                 {/*Latest Creatiokn*/}
-                {!searchQuery && 
+                {!searchQuery && !productType &&
                     <section className={styles.productList}> 
                         <h4>Latest Creations</h4>
                         <div className={styles.productCardContainer}>
