@@ -68,7 +68,6 @@
     flex-direction: column;
 }
 
-/* ✅ UNIFIED INPUT STYLE (MATCH EDIT PAGE) */
 .formInput input,
 .formInput select {
     padding: 0.5rem;

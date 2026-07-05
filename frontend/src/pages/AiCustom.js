@@ -323,33 +323,29 @@ function AiCustom(){
                                 onClick={() => handleSelect(item)}
                             />     
                         </div>                  
-                        ))
+                    ))
                 )}
                 
-
                 {/* Spacer interval */}
-                {step === 5 &&
-                    selections[5] &&
-                    selections[5].name !== "No Spacer" && (
-                        <div className={styles.spacerIntervalContainer}>
-                            <label>
-                                Place spacer every
-                            </label>
+                {step === 5 && selections[5] && selections[5].name !== "No Spacer" && (
+                    <div className={styles.spacerIntervalContainer}>
+                        <label>
+                            Place spacer every
+                        </label>
+                        <input
+                            type="number"
+                            min="1"
+                            max="20"
+                            value={spacerInterval}
+                            onChange={(e) =>
+                                setSpacerInterval(Number(e.target.value))
+                            }
+                        />
 
-                            <input
-                                type="number"
-                                min="1"
-                                max="20"
-                                value={spacerInterval}
-                                onChange={(e) =>
-                                    setSpacerInterval(Number(e.target.value))
-                                }
-                            />
-
-                            <span>beads</span>
-                        </div>
-                    )}
-
+                        <span>beads</span>
+                    </div>
+                )}
+                
             </div>
 
             {!finalImage && !generating &&(
