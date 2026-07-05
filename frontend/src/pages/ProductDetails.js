@@ -137,9 +137,11 @@ function ProductDetails() {
             opt.option_name.toLowerCase().includes('length')
         );
         if (sizeOption && sizeOption.option_type === 'range') {
-            // const base = sizeOption.values[0]?.visual_value.split(',')[2];
-            // setSelectedSize(base);
             setSelectedSize(sizeOption.default_value);
+        }
+         if (sizeOption.option_type === 'list') {
+            const firstValue = sizeOption.values?.[0]?.visual_value || '';
+            setSelectedSize(firstValue);
         }
     }
 
@@ -208,13 +210,20 @@ function ProductDetails() {
                                         ) : (
                                             <div className={styles.fixedSizeContainer}>
                                                 <label>{option.option_name}: </label>
-                                                <select value={selectedSize} onChange={(e) => setSelectedSize(e.target.value)}>
-                                                    {option.values.map(val => (
-                                                        <option key={val.value_id} value={val.visual_value}>
-                                                            {val.visual_value}
-                                                        </option>
-                                                    ))}
-                                                </select>
+                                                {!isCustomising ? (
+                                                    <span> {selectedSize}</span>
+                                                ) : (
+                                                    <select 
+                                                        value={selectedSize} 
+                                                        onChange={(e) => setSelectedSize(e.target.value)}
+                                                    >
+                                                        {option.values.map(val => (
+                                                            <option key={val.value_id} value={val.visual_value}>
+                                                                {val.visual_value}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                )}
                                             </div>
                                         )}
                                     </div>

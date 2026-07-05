@@ -149,7 +149,22 @@ function Products(){
                 }
                 {/*Collection*/}
                 <section className={styles.productList}>
-                    <h4>Collections</h4>
+                   {!searchQuery && !productType ? (
+                        <h4>Collections</h4>
+                    ) : searchQuery && productType ? (
+                        <h4>
+                            Results for "{searchQuery}" in {productType}
+                        </h4>
+                    ) : searchQuery ? (
+                        <h4>
+                            Results for "{searchQuery}"
+                        </h4>
+                    ) : (
+                        <h4>
+                            {productType}
+                        </h4>
+                    )}
+                    
                     <div className={styles.productCardContainer}>
                         {products.map((product, index) => (
                             <div 
