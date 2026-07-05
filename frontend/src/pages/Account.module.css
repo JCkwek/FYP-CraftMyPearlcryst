@@ -26,12 +26,12 @@
     padding: 1rem;
     border-radius: 0.5rem;
     width: 40rem;
-    color: white;
-    background-color: green;
+    color: black;
+    background-color: lightgray;
     cursor: pointer;
 }
 
 .accountOrdersSection:hover, .accountProfileSection:hover{
-    background-color: rgb(1, 103, 1);
+    background-color: gray;
 }
 

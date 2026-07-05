@@ -1,8 +1,9 @@
 .specialtyCardContainer{
     padding: 2rem;
+     position: relative;
     align-items: center;
     background-color: #f8dde3;
-    width: 20rem;
+    width: 30rem;
     height: 20rem;
     border-radius: 1rem;
     display: flex;
@@ -13,11 +14,30 @@
     flex-wrap: wrap;
     overflow: hidden;
 }
+
+.specialtyCardImage {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.specialtyCardOverlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+}
 .specialtyCardInfo{
+    position: absolute;
     text-align: start;
+    z-index: 2;
+    color: white;
+    padding: 1rem;
 }
 
 .specialtyCardIcon{
     font-size: 2rem;
     padding: 1rem;
+    z-index: 2;
 }

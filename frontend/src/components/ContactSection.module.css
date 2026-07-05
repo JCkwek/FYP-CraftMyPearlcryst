@@ -1,0 +1,41 @@
+.contactSection {
+    padding: 2rem 0rem;
+    text-align: center;
+}
+
+.title {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    margin-bottom: 2rem;
+}
+
+.contactContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 2rem;
+}
+
+.contactCard {
+    padding: 1.5rem;
+}
+
+
+.icon {
+    font-size: 1.8rem;
+    color: #d8a7b1; 
+    margin-bottom: 0.5rem;
+}
+
+.contactCard h4 {
+    margin-bottom: 0.5rem;
+}
+
+.contactCard p {
+    color: #555;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}

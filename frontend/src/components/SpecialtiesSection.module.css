@@ -1,12 +1,24 @@
 .specialtiesContainer{
-    padding: 2rem;
+    padding-top: 2rem;
     text-align: center;
 }
 
 .specialtiesCardContainer{
+    flex-shrink: 0;
     padding: 1rem;
     display: flex;
     justify-content: space-evenly;
     gap: 1rem;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
+    /* overflow-x: auto; */
+     width: max-content;
+}
+
+.scrollContainer{
+    overflow-x: auto;
+    padding: 1rem 0;
+    scroll-behavior: smooth;
+}
+.scrollContainer::-webkit-scrollbar {
+    display: none;
 }
