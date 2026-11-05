@@ -23,6 +23,15 @@ function OrderItemCard({ item , customization}) {
         customDetails = {}; // Fallback to empty object
     }
 
+    // Get API base URL from environment or fallback to localhost
+    const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+    const imagePath = product?.product_image || '';
+
+    // Handle external URLs, frontend public assets, and backend paths dynamically
+    const productImgSrc = imagePath.startsWith('http') || imagePath.startsWith('/assets')
+        ? imagePath
+        : `${API_BASE_URL}${imagePath.startsWith('/') ? '' : '/'}${imagePath}`;
+
     return (
         <div className={styles.orderItemCardContainer}>
             <div className={styles.orderItemCardContentContainer}>
@@ -31,7 +40,8 @@ function OrderItemCard({ item , customization}) {
                 <div className={styles.orderItemDetailsContainer}>
                     <div className={styles.orderItemImageContainer}>
                         <img 
-                            src={`http://localhost:3000${product?.product_image}`} 
+                            // src={`http://localhost:3000${product?.product_image}`} 
+                            src = {productImgSrc}
                             alt={product?.product_name} 
                         />
                     </div>

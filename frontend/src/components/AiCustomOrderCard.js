@@ -14,6 +14,15 @@ function AiCustomOrderCard({order, aiResult, onDelete, onCancel, onPlaceOrder, o
         : "-";
     const isAdmin = currentUser?.role === 'admin';
 
+// Get API base URL from environment or fallback to localhost
+    const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+
+    // Format image path safely for AI generated images
+    const imagePath = aiResult?.image_url || '';
+    const imageSrc = imagePath.startsWith('http')
+        ? imagePath
+        : `${API_BASE_URL}${imagePath.startsWith('/') ? '' : '/'}${imagePath}`;
+
     return(
         <div className={styles.aiOrderCard}>
             <u><h3>Custom Lab-Order#{order.id}</h3></u>
@@ -88,7 +97,8 @@ function AiCustomOrderCard({order, aiResult, onDelete, onCancel, onPlaceOrder, o
                 <div className={styles.aiOrderItemCard}>
                     <div className={styles.aiOrderItemImageContainer}>
                         <img 
-                            src={`http://localhost:3000${aiResult?.image_url}`} 
+                            // src={`http://localhost:3000${aiResult?.image_url}`} 
+                            src={imageSrc}
                             alt="Custom Ai design" 
                         />
                     </div>
