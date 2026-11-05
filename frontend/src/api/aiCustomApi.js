@@ -1,5 +1,10 @@
 import api from './api';
 
+export const generateAiCustomJewelry = async (payload) => {
+    const res = await api.post('/aicustomjewelry/generate',payload);
+    return res.data
+}
+
 
 //admin
 export const fetchAiComponents = async () => {
