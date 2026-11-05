@@ -3,6 +3,7 @@ import buttonStyles from '../components/buttons/ButtonTheme.module.css';
 import React, { useState, useEffect } from 'react';
 import Loading from '../components/Loading';
 import api from '../api/api';
+import {generateAiCustomJewelry} from '../api/aiCustomApi'
 import {submitForQuote} from '../api/aiCustomOrderApi';
 import LengthSlider from '../components/LengthSlider';
 import RotatingCarousel from '../components/RotatingCarousel';
@@ -142,18 +143,20 @@ function AiCustom(){
                 ? parseInt(selections[7].name)
                 : null;
             
-            const res = await api.post('/aicustomjewelry/generate', {
+            const res = await generateAiCustomJewelry({
                 selectionIds,
                 length: lengthValue,
                 spacerInterval
             });
 
-            if (res.data.success) {
+            if (res.success) {
                 // Point to your backend for newly saved image
                 const newId = res.data.resultId; 
                 setCurrentResultId(newId);
+                const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
                 setTimeout(() => {
-                    setFinalImage(`http://localhost:3000${res.data.imageUrl}`);
+                    // setFinalImage(`http://localhost:3000${res.data.imageUrl}`);
+                    setFinalImage(`${backendUrl}${res.imageUrl}`);
                     setGenerating(false);
                 }, 2000);
             }else {
