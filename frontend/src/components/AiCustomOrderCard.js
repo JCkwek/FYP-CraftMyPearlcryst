@@ -14,7 +14,7 @@ function AiCustomOrderCard({order, aiResult, onDelete, onCancel, onPlaceOrder, o
         : "-";
     const isAdmin = currentUser?.role === 'admin';
 
-// Get API base URL from environment or fallback to localhost
+    // Get API base URL from environment or fallback to localhost
     const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
 
     // Format image path safely for AI generated images
