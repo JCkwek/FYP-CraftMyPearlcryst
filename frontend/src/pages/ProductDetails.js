@@ -28,13 +28,16 @@ function ProductDetails() {
     const navigate = useNavigate();
     const location = useLocation();
 
+    // Get API base URL from environment or fallback to localhost
+    const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+
     useEffect(() => {
         if (location.state?.message) {
             setSuccessMessage(location.state.message);
             navigate(location.pathname, { replace: true, state: {} });
         }
     }, [location, navigate]);
-
+    
 
     // Fetch Product
     useEffect(() => {
@@ -147,6 +150,12 @@ function ProductDetails() {
 
     if (!product) return <Loading />;
 
+    // Format product image path safely for local and cloud production
+    const imagePath = product.product_image || '';
+    const productImgSrc = imagePath.startsWith('http') || imagePath.startsWith('/assets')
+        ? imagePath
+        : `${API_BASE_URL}${imagePath.startsWith('/') ? '' : '/'}${imagePath}`;
+
     return (
         <div className={styles.productDetails}>
             <div className={styles.productDetailsTopSection}>
@@ -157,7 +166,8 @@ function ProductDetails() {
             </div>
             <div className={styles.productDetailsContentContainer}>
                 {/* <ProductImage product={product} /> */}
-                <ProductImage image={`http://localhost:3000${product.product_image}`} alt={product.product_name}/>
+                {/* <ProductImage image={`http://localhost:3000${product.product_image}`} alt={product.product_name}/> */}
+                <ProductImage image={productImgSrc} alt={product.product_name}/>
                 
                 <div className={styles.productDetailsInfo}>
                     {isAdmin && (productAvailability !== "Available") && <b style={{ color: 'red' }}>{productAvailability}</b>}
