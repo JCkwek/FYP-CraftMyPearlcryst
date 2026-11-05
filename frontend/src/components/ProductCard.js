@@ -16,6 +16,14 @@ function ProductCard({product}){
         navigate(`/products/${product.product_id}`); 
      }
 
+     // Get API base URL from environment or fallback to empty string if path is relative/absolute
+    const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+
+    // Format image path safely whether product_image starts with '/' or not
+    const imageSrc = product.product_image.startsWith('http')
+        ? product.product_image
+        : `${API_BASE_URL}${product.product_image.startsWith('/') ? '' : '/'}${product.product_image}`;
+
     return(
         <div 
             className={styles.productCard}
@@ -24,7 +32,8 @@ function ProductCard({product}){
             <div className={styles.productCardImageContainer}>
                 {product.product_image && (
                     <img
-                        src={`http://localhost:3000${product.product_image}`}
+                        // src={`http://localhost:3000${product.product_image}`}
+                        src={imageSrc}
                         alt={product.product_name}
                         width="150"
                     />  
