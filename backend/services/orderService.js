@@ -107,7 +107,8 @@ const getMonthlySalesData = async () => {
             [sequelize.fn('SUM', sequelize.col('total_amount')), 'Sales'] // Sum total
         ],
         group: [sequelize.fn('DATE_FORMAT', sequelize.col('createdAt'), '%b')],
-        order: [[sequelize.col('createdAt'), 'ASC']] 
+        // order: [[sequelize.col('createdAt'), 'ASC']] 
+        order: [[sequelize.fn('MIN', sequelize.col('createdAt')), 'ASC']]
     });
 };
 
