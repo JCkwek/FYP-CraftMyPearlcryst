@@ -7,8 +7,8 @@ const PORT = 3000;
 
 const allowedOrigins = [
   'http://localhost:3001',
-  'https://fyp-craft-my-pearlcryst.vercel.app', // <-- live production domain 
-  'https://fyp-craft-my-pearlcryst-git-main-jc-kwek.vercel.app' // <-- live Vercel URL 
+  'https://fyp-craft-my-pearlcryst.vercel.app', //  live production domain 
+  'https://fyp-craft-my-pearlcryst-git-main-jc-kwek.vercel.app' //  live Vercel URL 
 ];
 
 // Middleware
@@ -46,7 +46,6 @@ const authRoutes = require("./routes/auth");
 const cartRoutes = require('./routes/cartRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const aiCustomJewelryRoutes = require('./routes/aiCustomizationRoutes');
-const rotateImageRoutes = require('./routes/rotateImageRoutes');
 const aiChatRoutes = require('./routes/aiChatRoutes');
 const aiCustomOrderRoutes = require('./routes/aiCustomOrderRoutes');
 const path = require('path');
@@ -59,7 +58,6 @@ app.use('/auth', authRoutes);
 app.use('/cart', cartRoutes);
 app.use('/orders', orderRoutes);
 app.use('/aicustomjewelry', aiCustomJewelryRoutes);
-app.use('/rotateimages',rotateImageRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/aichat', aiChatRoutes);
 app.use('/aicustomorder',aiCustomOrderRoutes);
