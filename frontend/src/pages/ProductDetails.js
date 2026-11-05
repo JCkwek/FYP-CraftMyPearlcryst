@@ -169,6 +169,7 @@ function ProductDetails() {
                 {/* <ProductImage image={`http://localhost:3000${product.product_image}`} alt={product.product_name}/> */}
                 <ProductImage image={productImgSrc} alt={product.product_name}/>
                 
+                
                 <div className={styles.productDetailsInfo}>
                     {isAdmin && (productAvailability !== "Available") && <b style={{ color: 'red' }}>{productAvailability}</b>}
                     <ProductInfo product={product} displayPrice={calculatedPrice} />
