@@ -1,6 +1,6 @@
 const { Sequelize } = require('sequelize');
 
-// const sequelize = new Sequelize('craftmypearlcryst_db', 'root', '', {
+// const sequelize = new Sequelize('craftmypearlcryst_db', 'root', '', { //local db
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   // host: 'localhost',
   dialect: 'mysql',

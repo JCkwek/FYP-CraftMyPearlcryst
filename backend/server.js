@@ -5,10 +5,29 @@ const app = express();
 const PORT = 3000;
 // app.use(express.json());
 
+const allowedOrigins = [
+  'http://localhost:3001',
+  'http://localhost:5173',
+  'https://craftmypearlcryst.vercel.app' // <-- live Vercel URL 
+];
+
 // Middleware
-app.use(cors({                          // enable CORS
-  origin: 'http://localhost:3001'       // allow React frontend
+// app.use(cors({                          // enable CORS
+//   origin: 'http://localhost:3001'       // allow React frontend
+// }));
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl, or Postman)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true
 }));
+
 app.use((req, res, next) => {
   if (req.originalUrl === '/orders/webhook') {
     next(); // Skip JSON parsing for this route so express.raw handles it inside your route file
