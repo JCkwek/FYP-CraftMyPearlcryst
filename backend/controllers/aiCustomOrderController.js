@@ -1,4 +1,4 @@
-const AiCustomOrderService = require('../services/AiCustomOrderService');
+const AiCustomOrderService = require('../services/aiCustomOrderService');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const { AiCustomOrder } = require('../models');
 
