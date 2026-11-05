@@ -8,7 +8,7 @@ const PORT = 3000;
 const allowedOrigins = [
   'http://localhost:3001',
   'http://localhost:5173',
-  'https://fyp-craft-my-pearlcryst-git-main-jc-kwek.vercel.app' // <-- live Vercel URL 
+  'https://fyp-craft-my-pearlcryst.vercel.app/' // <-- live Vercel URL 
 ];
 
 // Middleware
