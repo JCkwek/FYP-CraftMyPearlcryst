@@ -9,6 +9,15 @@ function CartItemCard({ item, onUpdateQty, onDelete }) {
         ? JSON.parse(item.customization)
         : item.customization
 
+    // Get API base URL from environment or fallback to localhost
+    const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+    const imagePath = product?.product_image || '';
+
+    // Handle external URLs, frontend public assets, and backend paths dynamically
+    const productImgSrc = imagePath.startsWith('http') || imagePath.startsWith('/assets')
+        ? imagePath
+        : `${API_BASE_URL}${imagePath.startsWith('/') ? '' : '/'}${imagePath}`;
+
     return (
         <div className={styles.cartItemCardContainer}>
             <div className={styles.cartItemCardContentContainer}>
@@ -17,7 +26,8 @@ function CartItemCard({ item, onUpdateQty, onDelete }) {
                 <div className={styles.cardItemDetailsContainer}>
                     <div className={styles.cartItemImageContainer}>
                         <img 
-                            src={`http://localhost:3000${product?.product_image}`} 
+                            // src={`http://localhost:3000${product?.product_image}`} 
+                            src={productImgSrc}
                             alt={product?.product_name} 
                         />
                     </div>
